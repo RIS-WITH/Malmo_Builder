@@ -1,0 +1,37 @@
+--------------------
+[Timestamp] 2023-05-15 14:42:32
+[Builder Position] 
+	Agent_1 (x, y, z): (-4.0, 227.0, -3.0) (yaw, pitch): (0.0, 0.0)
+	Agent_2 (x, y, z): (1.0, 227.0, 5.0) (yaw, pitch): (0.0, 0.0)
+[Screenshot Path] ./screenshots/8f54bb30-91e7-494b-94eb-5dedacf90c89-Builder/2023-05-15 14:42:32-Builder.png
+[Chat Log]
+[Builders Inventory] 
+	Agent_1
+		{'type': 'wooden_pickaxe', 'index': 0, 'quantity': 1, 'inventory': 'inventory'}
+		{'colour': 'WHITE', 'type': 'wool', 'index': 1, 'quantity': 20, 'inventory': 'inventory'}
+		{'colour': 'RED', 'type': 'wool', 'index': 2, 'quantity': 20, 'inventory': 'inventory'}
+		{'colour': 'GREEN', 'type': 'wool', 'index': 3, 'quantity': 20, 'inventory': 'inventory'}
+		{'colour': 'BLUE', 'type': 'wool', 'index': 4, 'quantity': 20, 'inventory': 'inventory'}
+		{'colour': 'YELLOW', 'type': 'wool', 'index': 5, 'quantity': 20, 'inventory': 'inventory'}
+		{'colour': 'ORANGE', 'type': 'wool', 'index': 6, 'quantity': 20, 'inventory': 'inventory'}
+		{'colour': 'PINK', 'type': 'wool', 'index': 7, 'quantity': 20, 'inventory': 'inventory'}
+		{'colour': 'MAGENTA', 'type': 'wool', 'index': 8, 'quantity': 20, 'inventory': 'inventory'}
+		{'colour': 'CYAN', 'type': 'wool', 'index': 9, 'quantity': 20, 'inventory': 'inventory'}
+		{'colour': 'BROWN', 'type': 'wool', 'index': 10, 'quantity': 20, 'inventory': 'inventory'}
+		{'colour': 'BLACK', 'type': 'wool', 'index': 11, 'quantity': 20, 'inventory': 'inventory'}
+		{'colour': 'GRAY', 'type': 'wool', 'index': 12, 'quantity': 20, 'inventory': 'inventory'}
+	Agent_2
+		{'type': 'wooden_pickaxe', 'index': 0, 'quantity': 1, 'inventory': 'inventory'}
+		{'colour': 'WHITE', 'type': 'wool', 'index': 1, 'quantity': 20, 'inventory': 'inventory'}
+		{'colour': 'RED', 'type': 'wool', 'index': 2, 'quantity': 20, 'inventory': 'inventory'}
+		{'colour': 'GREEN', 'type': 'wool', 'index': 3, 'quantity': 20, 'inventory': 'inventory'}
+		{'colour': 'BLUE', 'type': 'wool', 'index': 4, 'quantity': 20, 'inventory': 'inventory'}
+		{'colour': 'YELLOW', 'type': 'wool', 'index': 5, 'quantity': 20, 'inventory': 'inventory'}
+		{'colour': 'ORANGE', 'type': 'wool', 'index': 6, 'quantity': 20, 'inventory': 'inventory'}
+		{'colour': 'PINK', 'type': 'wool', 'index': 7, 'quantity': 20, 'inventory': 'inventory'}
+		{'colour': 'MAGENTA', 'type': 'wool', 'index': 8, 'quantity': 20, 'inventory': 'inventory'}
+		{'colour': 'CYAN', 'type': 'wool', 'index': 9, 'quantity': 20, 'inventory': 'inventory'}
+		{'colour': 'BROWN', 'type': 'wool', 'index': 10, 'quantity': 20, 'inventory': 'inventory'}
+		{'colour': 'BLACK', 'type': 'wool', 'index': 11, 'quantity': 20, 'inventory': 'inventory'}
+		{'colour': 'GRAY', 'type': 'wool', 'index': 12, 'quantity': 20, 'inventory': 'inventory'}
+[Blocks In Grid] 

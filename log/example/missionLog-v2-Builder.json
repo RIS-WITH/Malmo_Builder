@@ -1,0 +1,194 @@
+{
+	"WorldStates": [
+		{
+			"Agent_1Position": {
+				"X": -4.0,
+				"Y": 227.0,
+				"Z": -3.0,
+				"Yaw": 0.0,
+				"Pitch": 0.0
+			},
+			"Agent_2Position": {
+				"X": 1.0,
+				"Y": 227.0,
+				"Z": 5.0,
+				"Yaw": 0.0,
+				"Pitch": 0.0
+			},
+			"ChatHistory": [
+
+			],
+			"Timestamp": "2023-05-15 14:42:32",
+			"BlocksInGrid": [
+
+			],
+			"BuilderInventory": [
+				{
+					"Name": "Agent_1",
+					"Items": [
+						{
+							"Index": 0,
+							"Type": "wooden_pickaxe",
+							"Quantity": 1
+						},
+						{
+							"Index": 1,
+							"Type": "wool",
+							"Colour": "WHITE",
+							"Quantity": 20
+						},
+						{
+							"Index": 2,
+							"Type": "wool",
+							"Colour": "RED",
+							"Quantity": 20
+						},
+						{
+							"Index": 3,
+							"Type": "wool",
+							"Colour": "GREEN",
+							"Quantity": 20
+						},
+						{
+							"Index": 4,
+							"Type": "wool",
+							"Colour": "BLUE",
+							"Quantity": 20
+						},
+						{
+							"Index": 5,
+							"Type": "wool",
+							"Colour": "YELLOW",
+							"Quantity": 20
+						},
+						{
+							"Index": 6,
+							"Type": "wool",
+							"Colour": "ORANGE",
+							"Quantity": 20
+						},
+						{
+							"Index": 7,
+							"Type": "wool",
+							"Colour": "PINK",
+							"Quantity": 20
+						},
+						{
+							"Index": 8,
+							"Type": "wool",
+							"Colour": "MAGENTA",
+							"Quantity": 20
+						},
+						{
+							"Index": 9,
+							"Type": "wool",
+							"Colour": "CYAN",
+							"Quantity": 20
+						},
+						{
+							"Index": 10,
+							"Type": "wool",
+							"Colour": "BROWN",
+							"Quantity": 20
+						},
+						{
+							"Index": 11,
+							"Type": "wool",
+							"Colour": "BLACK",
+							"Quantity": 20
+						},
+						{
+							"Index": 12,
+							"Type": "wool",
+							"Colour": "GRAY",
+							"Quantity": 20
+						}					]
+				},
+				{
+					"Name": "Agent_2",
+					"Items": [
+						{
+							"Index": 0,
+							"Type": "wooden_pickaxe",
+							"Quantity": 1
+						},
+						{
+							"Index": 1,
+							"Type": "wool",
+							"Colour": "WHITE",
+							"Quantity": 20
+						},
+						{
+							"Index": 2,
+							"Type": "wool",
+							"Colour": "RED",
+							"Quantity": 20
+						},
+						{
+							"Index": 3,
+							"Type": "wool",
+							"Colour": "GREEN",
+							"Quantity": 20
+						},
+						{
+							"Index": 4,
+							"Type": "wool",
+							"Colour": "BLUE",
+							"Quantity": 20
+						},
+						{
+							"Index": 5,
+							"Type": "wool",
+							"Colour": "YELLOW",
+							"Quantity": 20
+						},
+						{
+							"Index": 6,
+							"Type": "wool",
+							"Colour": "ORANGE",
+							"Quantity": 20
+						},
+						{
+							"Index": 7,
+							"Type": "wool",
+							"Colour": "PINK",
+							"Quantity": 20
+						},
+						{
+							"Index": 8,
+							"Type": "wool",
+							"Colour": "MAGENTA",
+							"Quantity": 20
+						},
+						{
+							"Index": 9,
+							"Type": "wool",
+							"Colour": "CYAN",
+							"Quantity": 20
+						},
+						{
+							"Index": 10,
+							"Type": "wool",
+							"Colour": "BROWN",
+							"Quantity": 20
+						},
+						{
+							"Index": 11,
+							"Type": "wool",
+							"Colour": "BLACK",
+							"Quantity": 20
+						},
+						{
+							"Index": 12,
+							"Type": "wool",
+							"Colour": "GRAY",
+							"Quantity": 20
+						}					]
+				}			],
+			"Screenshots": {
+				"Path": "./screenshots/8f54bb30-91e7-494b-94eb-5dedacf90c89-Builder/2023-05-15 14:42:32-Builder.png",
+				"Timestamp": "2023-05-15 14:42:32"
+			}
+		}
+	]
+}

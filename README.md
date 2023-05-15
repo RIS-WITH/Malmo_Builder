@@ -63,6 +63,13 @@ cmake --build .
 
 1. clone the project in the MamloPlatform repositorie
 
-2. navigate to Malmo_Builder
+2. launch 3 terminals and run in each one of them:
+in the malmo platform repositorie:
+```sh 
+cd Minecraft
+./launchClient.sh
+```
 
-3. run in the terminal ```sh python3 main.py```
+3. navigate to Malmo_Builder
+
+4. run in the terminal ```sh python3 main.py```
