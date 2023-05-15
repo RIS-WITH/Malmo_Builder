@@ -58,4 +58,7 @@ cd Minecraft
 ```
 3. navigate to Malmo_Builder
 
-4. run in the terminal ```sh python3 main.py```
+4. run in the terminal 
+```sh 
+python3 main.py
+```
