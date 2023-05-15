@@ -13,6 +13,8 @@ How to install on ubuntu 18.04.6 LTS for other ways to install look at https://g
 sudo apt-get install libboost-all-dev libpython3.5 openjdk-8-jdk ffmpeg python-tk python-imaging-tk
 
 sudo update-ca-certificates
+
+pip install Pillow
 ```
 **notice:** if you have more than one version of java then you must select openjdk version "1.8.0_362" or launching will fail 
 ```sh
