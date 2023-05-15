@@ -29,8 +29,8 @@ sudo update-java-alternatives --set /path/to/java/version
 ### where /path/to/java/version is one of those listed by the previous command (e.g. /usr/lib/jvm/java-1.8.0-openjdk-amd64).
 ```
 
-3. expoert malmo schemas
-Add ```export MALMO_XSD_PATH=~/MalmoPlatform/Schemas``` (or your Schemas location) to your ```~/.bashrc``` and do ```source ~/.bashrc```
+3. export malmo schemas
+Add ```export MALMO_XSD_PATH=~/MalmoPlatform/Schemas``` (or your Schemas location) to your ```~/.bashrc``` and then ```source ~/.bashrc```
 
 4. launch
 ```sh
@@ -49,15 +49,13 @@ python3 run_mission.py
 ```
 ## Using Malmo Builder
 
-1. clone the project in the MamloPlatform repositorie
+1. clone the project in the MamloPlatform repository
 
-2. launch 3 terminals and run in each one of them:
-in the malmo platform repositorie:
+2. launch 3 terminals and run a client in each one of them:
 ```sh 
 cd Minecraft
 ./launchClient.sh
 ```
-
 3. navigate to Malmo_Builder
 
 4. run in the terminal ```sh python3 main.py```
