@@ -7,7 +7,7 @@ from builtins import range
 from past.utils import old_div
 import MalmoPython
 from PIL import Image
-import math
+import config
 import json
 import os
 import random
@@ -359,93 +359,19 @@ for mission_no in range(1, num_missions + 1):
                             chat_log.append(ob["Chat"])
                             added = True
                     
-                    # get builder inventory maybe?
+                    # get builder inventory
                     if "inventory" in ob:
                         if len(inventory) == 0:
                             for e in entities:
                                 inventory[e.name] = ob["inventory"]
                         else:
                             inventory[ob["Name"]] = ob["inventory"]
-                    ## method one (nope) :
-                    # needs those <HumanLevelCommands/><ObservationFromHuman/><ObservationFromRay/>
-                    # # get blocks in grid    get the actual block position  
-                    # if u'LineOfSight' in ob and u'events' in ob:
-                    #     los = ob[u'LineOfSight']
-                    #     # 'events': [{'time': 9000, 'type': 'key', 'command': 'use', 'pressed': True}]
-                    #     events = ob[u'events']
-                    #     # find use event
-                    #     for event in events:
-                    #         #print(str(event))
-                    #         if u'command' in event and event[u'command'] == "use":
-                    #             pressed = event[u'pressed']
-                    #         # if only wool : los[u'type'] == "wool"
-                    #         if los[u'hitType'] == "block" and los[u'inRange'] and los[u'type'] == "wool" and pressed:
-                    #             # create a blockInfo object
-                    #             blockPres = BlockInfo(los[u'x'], los[u'y'], los[u'z'], los[u'type'], los[u'colour'])
-                    #             agentPos = EntityInfo(ob[u'XPos'], ob[u'YPos'], ob[u'ZPos'], ob[u'Yaw'], ob[u'Pitch'], "Builder")
-                    #             block = AbsolutePositionBlock(agentPos, blockPres, los[u'distance'])
-                    #             # if not already a similar blockInfo in grid then add it
-                    #             if not blockInGrid(grid, block):
-                    #                 print("event :", str(event))
-                    #                 print("block :", str(los))
-                    #                 grid.append(block)
-                    #                 added = True
-
-                    ## method two (nope) :
-                    # get blocks using ObservationFromGrid
-                    # <ObservationFromGrid>
-                        # <Grid name="floor3x3">
-                        # <min x="-1" y="-1" z="-1"/>
-                        # <max x="1" y="-1" z="1"/>
-                        # </Grid>
-                        # </ObservationFromGrid>
-                        # Observations are returned as JSON and are accessed via agent_host.getWorldState().observations
-                        # ObservationFromGrid returns a flattened array of the names of the blocks surrounding the player.
-                        # The above code asks for the platform to provide the 3x3 grid of blocks directly under the player’s
-                        # feet, and to return it in a JSON array named “floor3x3”. A typical output might be:
-                        # floor3x3: ['lava', 'obsidian', 'obsidian', 'lava', 'obsidian', 'obsidian', 'lava', 'obsidian', 'obsidian']
-                        # The grid is ordered by x, then z, then y – this diagram might help (the numbers are the index of the
-                        # cell in the flattened array).
-                        # For an agent facing west (towards negative x), for example, the square directly in front of him would
-                        # be at position 3
                     
-                    # transfromedGrid = []
-                    # if "floor3x3x3" in ob:
-                    #     # get the grid
-                    #     gridflat = ob["floor3x3x3"]
-                    #     # get the agent position
-                    #     agentPos = EntityInfo(ob[u'XPos'], ob[u'YPos'], ob[u'ZPos'], ob[u'Yaw'], ob[u'Pitch'], "Builder")
-                    #     # get the block position
-                    #     gridSize = 3
-                    #     transfromedGrid = [[[None for k in range(gridSize)] for j in range(gridSize)] for i in range(gridSize)]
-
-                    #     for i, block_type in enumerate(gridflat):
-                    #         if block_type == "wool":
-                    #             x = i % gridSize
-                    #             y = (i // gridSize) % gridSize
-                    #             z = (i // gridSize // gridSize) % gridSize
-                    #             xa = x
-                    #             ya = y 
-                    #             za = z
-                    #             transfromedGrid[x][y][z] = block_type
-                    #             # create a blockInfo object
-                    #             block = BlockInfo(xa, ya, za, block_type, "", xa, ya, za)
-                    #             # if not already a similar blockInfo in grid then add it
-                    #             if not blockInGrid(grid, block):
-                    #                 grid.append(block)
-                    #                 added = True
-
                     # method two point one :
                     # get blocks using ObservationFromGrid absolute position
                     if "floor" in ob and u"LineOfSight" in ob:
                         floor = ob["floor"]
                         los = ob["LineOfSight"]
-                        #   <ObservationFromGrid>
-                        #     <Grid name="floor" absoluteCoords="true">
-                        #         <min x="'''+str(-x)+'''" y="227" z="'''+str(-z)+'''"/>
-                        #         <max x="'''+str(x)+'''" y="247" z="'''+str(z)+'''"/>
-                        #     </Grid>
-                        #   </ObservationFromGrid>
 
                         # transform the grid to a 3d array
                         # floor is of 21x21x21

@@ -45,20 +45,6 @@ Running a Python agent:
 cd Python_Examples
 python3 run_mission.py
 ```
-Running a C++ agent:
-```sh
-cd Cpp_Examples
-```
-To run the pre-built sample:
-```sh
-./run_mission
-```
-To build the sample yourself (dont work for me):
-```sh
-cmake .
-cmake --build .
-./run_mission
-```
 ## Using Malmo Builder
 
 1. clone the project in the MamloPlatform repositorie
