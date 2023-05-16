@@ -1,0 +1,54 @@
+{
+    "name" : "Malmo Builder Config",
+    "mission" : {
+        "name" : "mission_1",
+        "summary" : "Build a house",
+        "ms_per_tick" : 50,
+        "time_of_day" : 9000,
+        "allow_time_passage" : 0,
+        "time_limit" : 300000,
+        "quit_from_time_up_description" : "Time up",
+        "force_reset" : 1,
+        "building_area_dimention" : 21
+    },
+    "agents" : {
+        "builder_1" : {
+            "name" : "builder_1",
+            "role" : "builder",
+            "placement" : "random"
+        },
+        "builder_2" : {
+            "name" : "builder_2",
+            "role" : "builder",
+            "placement" : "random"
+        }
+    },
+    "inventory" : {
+        "type" : "wool",
+        "quantity" : 64,
+        "color" : ["red", "blue", "green", "yellow", "orange", "purple", "pink", "black", "white", "brown", "cyan", "gray", "light_blue", "lime", "magenta", "silver"]
+    },
+    "server" : {
+        "ip" : "127.0.0.1",
+        "port" : 10000
+    },
+    "collect" : {
+        "agents_position" : {
+            "track" : 1,
+            "precision" : 0.01,
+            "angle_precision" : 30
+        },
+        "agents_inventory" : 1,
+        "chat_history" : 1,
+        "blocks_in_area" : 1,
+        "screebshot" : {
+            "track" : 1,
+            "interval" : "every_move"
+        },
+        "log" :{
+            "txt" : 1,
+            "json" : 1,
+            "console" : 1
+        }
+    }
+}

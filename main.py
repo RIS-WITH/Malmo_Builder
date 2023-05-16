@@ -7,7 +7,6 @@ from builtins import range
 from past.utils import old_div
 import MalmoPython
 from PIL import Image
-import config
 import json
 import os
 import random
@@ -23,6 +22,10 @@ EntityInfo = namedtuple('EntityInfo', 'x, y, z, yaw, pitch, name, colour, variat
 EntityInfo.__new__.__defaults__ = (0, 0, 0, 0, 0, "", "", "", 1, 1)
 BlockInfo = namedtuple('BlockInfo', 'x, y, z, type, colour')
 BlockInfo.__new__.__defaults__ = (0, 0, 0, "", "")
+
+# read config file
+with open('config.json') as config_file:
+    config = json.load(config_file)
 
 # Create one agent host for parsing:
 agent_hosts = [MalmoPython.AgentHost()]
@@ -45,7 +48,6 @@ DEBUG = agent_hosts[0].receivedArgument("debug")
 INTEGRATION_TEST_MODE = agent_hosts[0].receivedArgument("test")
 agents_requested = agent_hosts[0].getIntArgument("agents")
 NUM_AGENTS = agents_requested - 1
-NUM_ITEMS = NUM_AGENTS * 10
 
 # Create the rest of the agent hosts - one for each human agent and one to control the observer:
 agent_hosts += [MalmoPython.AgentHost() for x in range(1, NUM_AGENTS + 1) ]
@@ -61,7 +63,9 @@ else:
     print = functools.partial(print, flush=True)
 
 def agentName(i):
-    return "Agent_" + str(i + 1)
+    agents = config["agents"]
+    i += 1
+    return agents["builder_" + str(i)]["name"]
 
 def safeStartMission(agent_host, my_mission, my_client_pool, my_mission_record, role, expId):
     used_attempts = 0
@@ -142,7 +146,7 @@ def getXML(reset, generatorString):
         <ServerHandlers>
           <FlatWorldGenerator forceReset="'''+reset+'''" generatorString="'''+generatorString+'''" seed=""/>
           <DrawingDecorator>
-            <DrawCuboid x1="-'''+str(x)+'''" y1="200" z1="-'''+str(z)+'''" x2="'''+str(x)+'''" y2="226" z2="'''+str(z)+'''" type="dirt"/>
+            <DrawCuboid x1="-'''+str(x)+'''" y1="200" z1="-'''+str(z)+'''" x2="'''+str(x)+'''" y2="226" z2="'''+str(z)+'''" type="bedrock"/>
             <DrawBlock x="0" y="236" z="-20" type="fence"/>
           </DrawingDecorator>
           <ServerQuitFromTimeUp description="" timeLimitMs="500000"/>
@@ -159,7 +163,7 @@ def getXML(reset, generatorString):
         <AgentStart>
           <Placement x="''' + str(random.randint(-x+3,x-3)) + '''" y="228" z="''' + str(random.randint(-z+3,z-3)) + '''"/>
           <Inventory>
-            <InventoryObject type="wooden_pickaxe" slot="0" quantity="1"/>
+            <InventoryItem slot="0" type="wool" quantity="20" colour="GRAY"/>
             <InventoryItem slot="1" type="wool" quantity="20" colour="WHITE"/>
             <InventoryItem slot="2" type="wool" quantity="20" colour="RED"/>
             <InventoryItem slot="3" type="wool" quantity="20" colour="GREEN"/>
@@ -171,12 +175,10 @@ def getXML(reset, generatorString):
             <InventoryItem slot="9" type="wool" quantity="20" colour="CYAN"/>
             <InventoryItem slot="10" type="wool" quantity="20" colour="BROWN"/>
             <InventoryItem slot="11" type="wool" quantity="20" colour="BLACK"/>
-            <InventoryItem slot="12" type="wool" quantity="20" colour="GRAY"/>
           </Inventory>
         </AgentStart>
         <AgentHandlers>
           <ContinuousMovementCommands turnSpeedDegs="360"/>
-          <ChatCommands/>
           <MissionQuitCommands/>
           <ObservationFromFullStats/>
           <ObservationFromChat/>
@@ -204,6 +206,7 @@ def getXML(reset, generatorString):
         </AgentStart>
         <AgentHandlers>
           <ContinuousMovementCommands turnSpeedDegs="360"/>
+          <ChatCommands/>
           <MissionQuitCommands/>
           <VideoProducer>
             <Width>640</Width>
@@ -214,6 +217,30 @@ def getXML(reset, generatorString):
 
     xml += '</Mission>'
     return xml
+
+def getEntitiesInfo(observations):
+    # get builder 1 and 2 position
+    if "entities" in observations:
+        entities = [EntityInfo(k["x"], k["y"], k["z"], k["yaw"], k["pitch"], k["name"]) for k in ob["entities"]]
+    # order entities by name
+    return sorted(entities, key=lambda x: x.name)
+
+def updateChatLog(observations, chat_log):
+    if "Chat" in observations:
+        if len(chat_log) == 0 or chat_log[-1] != ob["Chat"]:
+            chat_log.append(ob["Chat"])
+            return True
+    return False
+
+def getInventoryInfo(observation):
+    inventory = {}
+    if "inventory" in observation:
+        if len(inventory) == 0:
+            for e in entities:
+                inventory[e.name] = ob["inventory"]
+        else:
+            inventory[ob["Name"]] = ob["inventory"]
+    return inventory
 
 def samePosition(ents1, ents2, precision=0.1, anglePrecision=30):
     if ents1 == ents2:
@@ -255,18 +282,204 @@ def compareBlock(blockorg, blockhit):
 def verfiyGridEntegrity(grid, gridFound, cords):
     # grid is a dictionry of BlockInfo with x y z and type
     # gridFound is a 3d array with key x y z and value BlockInfo
+    change = False
     for key, block in list(grid.items()):
         if gridFound[(block.x + 10) % 21][(block.y - 227) % 21][(block.z + 10) % 21] == None:
             grid.pop(key)
+            change = True
     # check for missing blocks
     for cord in cords:
         key = "block" + str(cord[0]) + "_" + str(cord[1]) + "_" + str(cord[2])
         if key not in grid:
             grid[key] = BlockInfo(cord[0], cord[1], cord[2], "wool")
+            change = True
+    return change
+
+def updateGrid(observation, grid):
+    # get blocks using ObservationFromGrid absolute position
+    if "floor" in observation and u"LineOfSight" in observation:
+        floor = observation["floor"]
+        los = observation["LineOfSight"]
+        # transform the grid to a 3d array
+        # floor is of 21x21x21
+        gridSize = 21
+        gridFound = [[[None for k in range(gridSize)] for j in range(gridSize)] for i in range(gridSize)]
+        cords= []
+        for i, block_type in enumerate(floor):
+            x = i % gridSize
+            z = (i // gridSize) % gridSize
+            y = (i // gridSize // gridSize) % gridSize
+            # add world position to block
+            xa = x - 10
+            ya = y + 227
+            za = z - 10
+            # if block is the type wanted then store it
+            if block_type == "wool":
+                gridFound[x][y][z] = block_type
+                cords.append([xa, ya, za])
+            # add color to block
+            if los[u'hitType'] == "block" and los[u'inRange'] and los[u'type'] == "wool":
+                blockGrid = BlockInfo(xa, ya, za, block_type, "")
+                blockLos = BlockInfo(los[u'x'], los[u'y'], los[u'z'], los[u'type'], los[u'colour'])
+                block = BlockInfo(xa, ya, za, block_type, blockLos.colour)
+                
+                # make a unique key for the block
+                key = "block" + str(block.x) + "_" + str(block.y) + "_" + str(block.z)
+
+                # if not already a similar blockInfo in grid then add it
+                if key not in grid and compareBlock(blockGrid, blockLos):
+                    grid[key] = block
+                    return True
+        # check all blocks in grid are in the observation  
+        return verfiyGridEntegrity(grid, gridFound, cords)
+    
+def saveScreenShot(agent, experimentID, timestamp):
+    observer = agent.getWorldState()
+    if observer.number_of_video_frames_since_last_state > 0:
+        frame = observer.video_frames[-1]
+        image = Image.frombytes('RGB', (frame.width, frame.height), bytes(frame.pixels) )
+        # remove unwanted charecters from timestamp
+        timestring = str(timestamp).replace(":", "-")
+        timeString = timestring.replace(" ", "_")
+        #make a directory for the mission
+        if not os.path.exists("./screenshots"):
+            os.makedirs("./screenshots")
+        imagePrePath = "./screenshots/" + str(experimentID) + "-Builder"
+        if not os.path.exists(imagePrePath):
+            os.makedirs(imagePrePath)
+        imagePath = imagePrePath + "/" + str(timestamp) + "-Builder.png"
+        image.save(str(imagePath))
+        return imagePath
+    return ""
+
+def printWorldState(timestamp, entities, chat_log, inventory, grid, imagePath):
+     # print to console
+    print("--------------------")
+    print("[Timestamp] " + str(timestamp))
+    print("[Builder Position] ")
+    for entity in entities:
+        print("\t" + str(entity.name) + " (x, y, z): (" + str(entity.x) + ", " + str(entity.y) + ", " + str(entity.z) + ") (yaw, pitch): (" + str(entity.yaw) + ", " + str(entity.pitch) + ")"  )
+    print("[Screenshot Path] " + imagePath)
+    print("[Chat Log]")
+    for chat in chat_log:
+        print("\t" + str(chat))
+    print("[Blocks In Inventory] " + str(inventory))
+    print("[Blocks In Grid] " + str(grid))
+
+def writeWorldStateTxt(pathLog, timestamp, entities, chat_log, inventory, grid, imagePath):
+    # open a file in append mode in texts folder named with mission id
+    file = open(pathLog + "/missionLog-Builder.txt", "a")
+    # write the data to file
+    file.write("--------------------\n")
+    file.write("[Timestamp] " + str(timestamp) + "\n")
+    file.write("[Builder Position] \n")
+    for entity in entities:
+        file.write("\t" + str(entity.name) + " (x, y, z): (" + str(entity.x) + ", " + str(entity.y) + ", " + str(entity.z) + ") (yaw, pitch): (" + str(entity.yaw) + ", " + str(entity.pitch) + ")\n"  )
+    file.write("[Screenshot Path] " + imagePath + "\n")
+    file.write("[Chat Log]\n")
+    for chat in chat_log:
+        file.write("\t" + str(chat) + "\n")
+    file.write("[Builders Inventory] \n")
+    for agent_name, items in list(inventory.items()):
+        file.write("\t" + str(agent_name) + "\n")
+        for item in items:
+            file.write("\t\t" + str(item) + "\n")
+    file.write("[Blocks In Grid] \n")
+    for key, block in list(grid.items()):
+        file.write("\t" + str(block) + "\n")
+    # close the file
+    file.close()
 
 def removeLastComma(file):
     file.seek(file.tell() - 2, os.SEEK_SET)
     file.truncate()
+
+def removeLastBrakets(file):
+    file.seek(file.tell() - 6, os.SEEK_SET)
+    file.truncate()
+
+def writeWorldStateJson(pathLog, timestamp, entities, chat_log, inventory, grid, imagePath):
+    file = open(pathLog + "/missionLog-v2-Builder.json", "a")
+    # if empty, write the first line
+    if os.stat(pathLog + "/missionLog-v2-Builder.json").st_size == 0:
+        file.write("{\n")
+        file.write("\t\"WorldStates\": [\n")
+    else:
+        # reomve the last \n")file.write("\t]\n")file.write("}\n") and add a comma and a new line
+        removeLastBrakets(file)
+        file.write(",\n")
+
+    # write the world state
+    file.write("\t\t{\n")
+    # use entites position
+    for ent in entities:
+        file.write("\t\t\t\""+ ent.name + "Position\": {\n")
+        file.write("\t\t\t\t\"X\": " + str(ent.x) + ",\n")
+        file.write("\t\t\t\t\"Y\": " + str(ent.y) + ",\n")
+        file.write("\t\t\t\t\"Z\": " + str(ent.z) + ",\n")
+        file.write("\t\t\t\t\"Yaw\": " + str(ent.yaw) + ",\n")
+        file.write("\t\t\t\t\"Pitch\": " + str(ent.pitch) + "\n")
+        file.write("\t\t\t},\n")
+    # write the chat history
+    file.write("\t\t\t\"ChatHistory\": [\n")
+    for chat in chat_log:
+        file.write("\t\t\t\t\"" + str(chat) + "\",\n")
+    # remove the last comma if there is at - 2
+    if len(chat_log) > 0:
+        removeLastComma(file)
+    file.write("\n")
+    file.write("\t\t\t],\n")
+    # write the timestamp
+    file.write("\t\t\t\"Timestamp\": \"" + str(timestamp) + "\",\n")
+    # write the blocks in grid
+    file.write("\t\t\t\"BlocksInGrid\": [\n")
+    for key, block in list(grid.items()):
+        file.write("\t\t\t\t{\n")
+        file.write("\t\t\t\t\t\"X\": " + str(block.x) + ",\n")
+        file.write("\t\t\t\t\t\"Y\": " + str(block.y) + ",\n")
+        file.write("\t\t\t\t\t\"Z\": " + str(block.z) + ",\n")
+        file.write("\t\t\t\t\t\"Type\": \"" + block.type + "\",\n")
+        file.write("\t\t\t\t\t\"Colour\": \"" + block.colour + "\"\n")
+        file.write("\t\t\t\t},\n")
+    # remove the last comma
+    if len(grid) > 0:
+        removeLastComma(file)
+    file.write("\n")
+    file.write("\t\t\t],\n")
+    # write the builder inventory
+    file.write("\t\t\t\"BuilderInventory\": [\n")
+    for key, items in list(inventory.items()):
+        file.write("\t\t\t\t{\n")
+        file.write("\t\t\t\t\t\"Name\": \"" + key + "\",\n")
+        file.write("\t\t\t\t\t\"Items\": [\n")
+        for item in items:
+            # write the item index type colour and quantity
+            file.write("\t\t\t\t\t\t{\n")
+            file.write("\t\t\t\t\t\t\t\"Index\": " + str(item['index']) + ",\n")
+            file.write("\t\t\t\t\t\t\t\"Type\": \"" + item['type'] + "\",\n")
+            if 'colour' in item:
+                file.write("\t\t\t\t\t\t\t\"Colour\": \"" + str(item['colour']) + "\",\n")
+            file.write("\t\t\t\t\t\t\t\"Quantity\": " + str(item['quantity']) + "\n")
+            file.write("\t\t\t\t\t\t},\n")
+        # remove the last comma
+        if (len(items) > 0):
+            removeLastComma(file)
+        file.write("\t\t\t\t\t]\n")
+        file.write("\t\t\t\t},\n")
+    # remove the last comma
+    if len(inventory) > 0:
+        removeLastComma(file)
+    file.write("\t\t\t],\n")
+    # write the screenshots
+    file.write("\t\t\t\"Screenshots\": {\n")
+    file.write("\t\t\t\t\"Path\": \"" + str(imagePath) + "\",\n")
+    file.write("\t\t\t\t\"Timestamp\": \"" + str(timestamp) + "\"\n")
+    file.write("\t\t\t}\n")
+    file.write("\t\t}\n")
+    file.write("\t]\n")
+    file.write("}\n")
+    # close the file
+    file.close()
 
 # Set up a client pool.
 # IMPORTANT: If ANY of the clients will be on a different machine, then you MUST
@@ -311,12 +524,14 @@ for mission_no in range(1, num_missions + 1):
         safeStartMission(agent_hosts[i], my_mission, client_pool, MalmoPython.MissionRecordSpec(), i, experimentID)
 
     safeWaitForStart(agent_hosts)
+
     time.sleep(1)
     running = True
     lastEntities = None
     grid = {}
-    inventory = {}
     pressed = False
+    # /effect @p haste 1000000 255 true 
+    agent_hosts[2].sendCommand("chat /effect @a haste 1000000 255 true")
     while running:
         running = False
         for i in range(len(agent_hosts)):
@@ -328,284 +543,45 @@ for mission_no in range(1, num_missions + 1):
                 if obsv_num > 0:
                     msg = world_state.observations[-1].text
                     ob = json.loads(msg)
-                    """ Generate a txt file for each timestamp :
-                    --------------------
-                    [Timestamp] 2018-03-30 18:47:02
-                    [Builder Position] (x, y, z): (-3.97713906986, 1.0, -1.8846418295) (yaw, pitch): (2.9999986, 38.249992)
-                    [Screenshot Path] 116313-Builder-putdown.png
 
-                    [Chat Log]
-                        <Builder> Mission has started.
-                        <Builder> hello. what are we building this time?
-                        <Architect> hello builder, i will tell you this. it appears we are creating a belltower. but first i will start with step by step instructions. we will start with green blocks
-                        <Architect> please start with 8 green blocks extending straight up. this will need to be placed as far right as you can, preferably centered along the other axis
-                        <Builder> here?
-
-                    [Blocks In Grid]
-                        Type: cwc_minecraft_green_rn  Absolute (x, y, z): (-5, 1, 0)  Perspective (x, y, z): -0.893957672349, 1.26889164072, 1.60958183519)
-
-                    --------------------"""
                     # get timestamp
                     timestamp = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
-                    # get builder 1 and 2 position
-                    if "entities" in ob:
-                        entities = [EntityInfo(k["x"], k["y"], k["z"], k["yaw"], k["pitch"], k["name"]) for k in ob["entities"]]
-                    # order entities by name
-                    entities = sorted(entities, key=lambda x: x.name)
-                    # get chat log
-                    added = False
-                    if "Chat" in ob:
-                        if len(chat_log) == 0 or chat_log[-1] != ob["Chat"]:
-                            chat_log.append(ob["Chat"])
-                            added = True
+
+                    # get agents informations
+                    entities = getEntitiesInfo(ob)
+
+                    # update chat log and get true if a new message has been added
+                    change = updateChatLog(ob, chat_log)
                     
                     # get builder inventory
-                    if "inventory" in ob:
-                        if len(inventory) == 0:
-                            for e in entities:
-                                inventory[e.name] = ob["inventory"]
-                        else:
-                            inventory[ob["Name"]] = ob["inventory"]
+                    inventory = getInventoryInfo(ob)
                     
-                    # method two point one :
-                    # get blocks using ObservationFromGrid absolute position
-                    if "floor" in ob and u"LineOfSight" in ob:
-                        floor = ob["floor"]
-                        los = ob["LineOfSight"]
-
-                        # transform the grid to a 3d array
-                        # floor is of 21x21x21
-                        gridSize = 21
-                        gridFound = [[[None for k in range(gridSize)] for j in range(gridSize)] for i in range(gridSize)]
-                        cords= []
-                        for i, block_type in enumerate(floor):
-                            x = i % gridSize
-                            z = (i // gridSize) % gridSize
-                            y = (i // gridSize // gridSize) % gridSize
-                            xa = x - 10
-                            ya = y + 227
-                            za = z - 10
-                            if block_type == "wool":
-                                gridFound[x][y][z] = block_type
-                                cords.append([xa, ya, za])
-                            # add color to block
-                            if los[u'hitType'] == "block" and los[u'inRange'] and los[u'type'] == "wool":
-                                blockGrid = BlockInfo(xa, ya, za, block_type, "")
-                                blockLos = BlockInfo(los[u'x'], los[u'y'], los[u'z'], los[u'type'], los[u'colour'])
-                                block = BlockInfo(xa, ya, za, block_type, blockLos.colour)
-                                key = "block" + str(block.x) + "_" + str(block.y) + "_" + str(block.z)
-                                # if not already a similar blockInfo in grid then add it
-                                if key not in grid and compareBlock(blockGrid, blockLos):
-                                    grid[key] = block
-                                    added = True
-                        verfiyGridEntegrity(grid, gridFound, cords)
+                    # update grid and get true if a new block has been added
+                    change = updateGrid(ob, grid) or change
                     
-                    # TODO : add a RecordHumanCommand to track put and destroy commands
                     # print to console - if no change since last observation at the precision level, don't bother printing again.
-                    if samePosition(entities, lastEntities) and not added:
+                    if samePosition(entities, lastEntities) and not change:
                         # no change since last observation - don't bother printing again.
                         continue
+                    
+                    # update lastEntities for next observation
                     lastEntities = entities
-                    # get screenshot path
-                    observer = agent_hosts[2].getWorldState()
-                    if observer.number_of_video_frames_since_last_state > 0:
-                        frame = observer.video_frames[-1]
-                        image = Image.frombytes('RGB', (frame.width, frame.height), bytes(frame.pixels) )
-                        # remove unwanted charecters from timestamp
-                        timestring = str(timestamp).replace(":", "-")
-                        timeString = timestring.replace(" ", "_")
-                        #make a directory for the mission
-                        if not os.path.exists("./screenshots"):
-                            os.makedirs("./screenshots")
-                        imagePrePath = "./screenshots/" + str(experimentID) + "-Builder"
-                        if not os.path.exists(imagePrePath):
-                            os.makedirs(imagePrePath)
-                        imagePath = imagePrePath + "/" + str(timestamp) + "-Builder.png"
-                        image.save(str(imagePath))
 
-                    print("--------------------")
-                    print("[Timestamp] " + str(timestamp))
-                    print("[Builder Position] ")
-                    for entity in entities:
-                        print("\t" + str(entity.name) + " (x, y, z): (" + str(entity.x) + ", " + str(entity.y) + ", " + str(entity.z) + ") (yaw, pitch): (" + str(entity.yaw) + ", " + str(entity.pitch) + ")"  )
-                    print("[Screenshot Path] " + imagePath)
-                    print("[Chat Log]")
-                    for chat in chat_log:
-                        print("\t" + str(chat))
-                    print("[Blocks In Inventory] " + str(inventory))
-                    print("[Blocks In Grid] " + str(grid))
+                    # get screenshot path and save screenshot
+                    imagePath = saveScreenShot(agent_hosts[2], experimentID, timestamp)
 
+                    # print to console
+                    printWorldState(timestamp, entities, chat_log, inventory, grid, imagePath)
 
-                    # save those info in txt and json files
                     #make a directory for the mission
                     pathLog = "./log/" + str(experimentID) + "-Builder"
                     if not os.path.exists(pathLog):
                         os.makedirs(pathLog)
-                    # open a file in append mode in texts folder named with mission id
-                    file = open(pathLog + "/missionLog-Builder.txt", "a")
-                    # write the data to file
-                    file.write("--------------------\n")
-                    file.write("[Timestamp] " + str(timestamp) + "\n")
-                    file.write("[Builder Position] \n")
-                    for entity in entities:
-                        file.write("\t" + str(entity.name) + " (x, y, z): (" + str(entity.x) + ", " + str(entity.y) + ", " + str(entity.z) + ") (yaw, pitch): (" + str(entity.yaw) + ", " + str(entity.pitch) + ")\n"  )
-                    file.write("[Screenshot Path] " + imagePath + "\n")
-                    file.write("[Chat Log]\n")
-                    for chat in chat_log:
-                        file.write("\t" + str(chat) + "\n")
-                    file.write("[Builders Inventory] \n")
-                    for agent_name, items in list(inventory.items()):
-                        file.write("\t" + str(agent_name) + "\n")
-                        for item in items:
-                            file.write("\t\t" + str(item) + "\n")
-                    file.write("[Blocks In Grid] \n")
-                    for key, block in list(grid.items()):
-                        file.write("\t" + str(block) + "\n")
-                    # close the file
-                    file.close()
 
-                    #JSON file
-                    # open a file in append mode in texts folder named with mission id and read it
-                    file = open(pathLog +"/missionLog-Builder.json" , "a")
-                    # write the data to file
-                    file.write("{\n")
-                    file.write("\t\"timestamp\": \"" + str(timestamp) + "\",\n")
-                    file.write("\t\"builder_position\": [\n")
-                    for entity in entities:
-                        file.write("\t\t{\n")
-                        file.write("\t\t\t\"name\": \"" + str(entity.name) + "\",\n")
-                        file.write("\t\t\t\"x\": " + str(entity.x) + ",\n")
-                        file.write("\t\t\t\"y\": " + str(entity.y) + ",\n")
-                        file.write("\t\t\t\"z\": " + str(entity.z) + ",\n")
-                        file.write("\t\t\t\"yaw\": " + str(entity.yaw) + ",\n")
-                        file.write("\t\t\t\"pitch\": " + str(entity.pitch) + "\n")
-                        file.write("\t\t},\n")
-                    if len(entities) > 0:
-                        removeLastComma(file)
-                    file.write("\t],\n")
-                    file.write("\t\"screenshot_path\": \"" + imagePath + "\",\n")
-                    file.write("\t\"chat_log\": [\n")
-                    for chat in chat_log:
-                        file.write("\t\t\"" + str(chat) + "\",\n")
-                    if len(chat_log) > 0:
-                        removeLastComma(file)
-                    file.write("\t],\n")
-                    file.write("\t\"builders_inventory\": [\n")
-                    for agent_name, items in list(inventory.items()):
-                        file.write("\t\t{\n")
-                        file.write("\t\t\t\"name\": \"" + str(agent_name) + "\",\n")
-                        file.write("\t\t\t\"items\": [\n")
-                        for item in items:
-                            file.write("\t\t\t\t\"" + str(item) + "\",\n")
-                        if len(items) > 0:
-                            removeLastComma(file)
-                        file.write("\t\t\t]\n")
-                        file.write("\t\t},\n")
-                    if len(inventory) > 0:
-                        removeLastComma(file)
-                    file.write("\t],\n")
-                    file.write("\t\"blocks_in_grid\": [\n")
-                    for key, block in list(grid.items()):
-                        file.write("\t\t{\n")
-                        file.write("\t\t\t\"name\": \"" + str(block.colour) + " " + str(block.type) + "\",\n")
-                        file.write("\t\t\t\"x\": " + str(block.x) + ",\n")
-                        file.write("\t\t\t\"y\": " + str(block.y) + ",\n")
-                        file.write("\t\t\t\"z\": " + str(block.z) + "\n")
-                        file.write("\t\t},\n")
-                    if len(grid) > 0:
-                        removeLastComma(file)
-                    file.write("\t]\n")
-                    file.write("}\n")
-                    # close the file
-                    file.close()
-
-
-                    file = open(pathLog + "/missionLog-v2-Builder.json", "a")
-                    # if empty, write the first line
-                    if os.stat(pathLog + "/missionLog-v2-Builder.json").st_size == 0:
-                        file.write("{\n")
-                        file.write("\t\"WorldStates\": [\n")
-                    # write the world state
-                    file.write("\t\t{\n")
-                    # use entites position
-                    for ent in entities:
-                        file.write("\t\t\t\""+ ent.name + "Position\": {\n")
-                        file.write("\t\t\t\t\"X\": " + str(ent.x) + ",\n")
-                        file.write("\t\t\t\t\"Y\": " + str(ent.y) + ",\n")
-                        file.write("\t\t\t\t\"Z\": " + str(ent.z) + ",\n")
-                        file.write("\t\t\t\t\"Yaw\": " + str(ent.yaw) + ",\n")
-                        file.write("\t\t\t\t\"Pitch\": " + str(ent.pitch) + "\n")
-                        file.write("\t\t\t},\n")
-                    # write the chat history
-                    file.write("\t\t\t\"ChatHistory\": [\n")
-                    for chat in chat_log:
-                        file.write("\t\t\t\t\"" + str(chat) + "\",\n")
-                    # remove the last comma if there is at - 2
-                    if len(chat_log) > 0:
-                        removeLastComma(file)
-                    file.write("\n")
-                    file.write("\t\t\t],\n")
-                    # write the timestamp
-                    file.write("\t\t\t\"Timestamp\": \"" + str(timestamp) + "\",\n")
-                    # write the blocks in grid
-                    file.write("\t\t\t\"BlocksInGrid\": [\n")
-                    for key, block in list(grid.items()):
-                        file.write("\t\t\t\t{\n")
-                        file.write("\t\t\t\t\t\"X\": " + str(block.x) + ",\n")
-                        file.write("\t\t\t\t\t\"Y\": " + str(block.y) + ",\n")
-                        file.write("\t\t\t\t\t\"Z\": " + str(block.z) + ",\n")
-                        file.write("\t\t\t\t\t\"Type\": \"" + block.type + "\",\n")
-                        file.write("\t\t\t\t\t\"Colour\": \"" + block.colour + "\"\n")
-                        file.write("\t\t\t\t},\n")
-                    # remove the last comma
-                    if len(grid) > 0:
-                        removeLastComma(file)
-                    file.write("\n")
-                    file.write("\t\t\t],\n")
-                    # write the builder inventory
-                    file.write("\t\t\t\"BuilderInventory\": [\n")
-                    for key, items in list(inventory.items()):
-                        file.write("\t\t\t\t{\n")
-                        file.write("\t\t\t\t\t\"Name\": \"" + key + "\",\n")
-                        file.write("\t\t\t\t\t\"Items\": [\n")
-                        for item in items:
-                            # write the item index type colour and quantity
-                            file.write("\t\t\t\t\t\t{\n")
-                            file.write("\t\t\t\t\t\t\t\"Index\": " + str(item['index']) + ",\n")
-                            file.write("\t\t\t\t\t\t\t\"Type\": \"" + item['type'] + "\",\n")
-                            if 'colour' in item:
-                                file.write("\t\t\t\t\t\t\t\"Colour\": \"" + str(item['colour']) + "\",\n")
-                            file.write("\t\t\t\t\t\t\t\"Quantity\": " + str(item['quantity']) + "\n")
-                            file.write("\t\t\t\t\t\t},\n")
-                        # remove the last comma
-                        if (len(items) > 0):
-                            removeLastComma(file)
-                        file.write("\t\t\t\t\t]\n")
-                        file.write("\t\t\t\t},\n")
-                    # remove the last comma
-                    if len(inventory) > 0:
-                        removeLastComma(file)
-                    file.write("\t\t\t],\n")
-                    # write the screenshots
-                    file.write("\t\t\t\"Screenshots\": {\n")
-                    file.write("\t\t\t\t\"Path\": \"" + str(imagePath) + "\",\n")
-                    file.write("\t\t\t\t\"Timestamp\": \"" + str(timestamp) + "\"\n")
-                    file.write("\t\t\t}\n")
-                    file.write("\t\t},\n")
-                    # close the file
-                    file.close()
+                    # save those info in txt and json files
+                    writeWorldStateTxt(pathLog, timestamp, entities, chat_log, inventory, grid, imagePath)
+                    writeWorldStateJson(pathLog, timestamp, entities, chat_log, inventory, grid, imagePath)
         time.sleep(0.05)       
-    # end the json file
-    file = open(pathLog + "/missionLog-v2-Builder.json", "a")
-    # remove the last comma
-    removeLastComma(file)
-    # end the json file
-    file.write("\n")
-    file.write("\t]\n")
-    file.write("}\n")
-    # close the file
-    file.close()
-
     print()
 
     print("Waiting for mission to end ", end=' ')
