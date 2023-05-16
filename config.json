@@ -6,6 +6,7 @@
         "ms_per_tick" : 50,
         "time_of_day" : 9000,
         "allow_time_passage" : 0,
+        "flat_world_generator" : "3;7,220*1,5*3,2;3;,biome_1",
         "time_limit" : 300000,
         "quit_from_time_up_description" : "Time up",
         "force_reset" : 1,
