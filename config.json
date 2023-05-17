@@ -1,55 +1,119 @@
 {
     "name" : "Malmo Builder Config",
     "mission" : {
-        "name" : "mission_1",
+        "name" : "mission",
         "summary" : "Build a house",
+        "num_missions" : 3,
         "ms_per_tick" : 50,
         "time_of_day" : 9000,
         "allow_time_passage" : 0,
-        "flat_world_generator" : "3;7,220*1,5*3,2;3;,biome_1",
+        "flat_world_generator_str" : "3;7,220*1,5*3,2;3;,biome_1",
         "time_limit" : 300000,
         "quit_from_time_up_description" : "Time up",
         "force_reset" : 1,
-        "building_area_dimention" : 21
+        "area_side_size" : 21
     },
     "agents" : {
         "builder_1" : {
             "name" : "builder_1",
-            "role" : "builder",
             "placement" : "random"
         },
         "builder_2" : {
             "name" : "builder_2",
-            "role" : "builder",
-            "placement" : "random"
+            "placement" : [1, 2]
         }
     },
-    "inventory" : {
-        "type" : "wool",
-        "quantity" : 64,
-        "color" : ["red", "blue", "green", "yellow", "orange", "purple", "pink", "black", "white", "brown", "cyan", "gray", "light_blue", "lime", "magenta", "silver"]
-    },
+    "inventory" : [
+        {
+            "slot" : 0,
+            "type" : "wool",
+            "quantity" : 20,
+            "color" : "white"
+        },
+        {
+            "slot" : 1,
+            "type" : "wool",
+            "quantity" : 20,
+            "color" : "red"
+        },
+        {
+            "slot" : 2,
+            "type" : "wool",
+            "quantity" : 20,
+            "color" : "blue"
+        },
+        {
+            "slot" : 3,
+            "type" : "wool",
+            "quantity" : 20,
+            "color" : "green"
+        },
+        {
+            "slot" : 4,
+            "type" : "wool",
+            "quantity" : 20,
+            "color" : "yellow"
+        },
+        {
+            "slot" : 5,
+            "type" : "wool",
+            "quantity" : 20,
+            "color" : "orange"
+        },
+        {
+            "slot" : 6,
+            "type" : "wool",
+            "quantity" : 20,
+            "color" : "purple"
+        },
+        {
+            "slot" : 7,
+            "type" : "wool",
+            "quantity" : 20,
+            "color" : "black"
+        },
+        {
+            "slot" : 8,
+            "type" : "wool",
+            "quantity" : 20,
+            "color" : "brown"
+        },
+        {
+            "slot" : 9,
+            "type" : "wool",
+            "quantity" : 20,
+            "color" : "cyan"
+        },
+        {
+            "slot" : 10,
+            "type" : "wool",
+            "quantity" : 20,
+            "color" : "gray"
+        }
+    ],
     "server" : {
         "ip" : "127.0.0.1",
         "port" : 10000
     },
     "collect" : {
         "agents_position" : {
-            "track" : 1,
-            "precision" : 0.01,
-            "angle_precision" : 30
+            "save" : 1,
+            "precision" : 0.1,
+            "angle_precision" : 360
         },
-        "agents_inventory" : 1,
+        "agents_inventory" : 0,
         "chat_history" : 1,
-        "blocks_in_area" : 1,
-        "screebshot" : {
-            "track" : 1,
-            "interval" : "every_move"
+        "blocks_in_grid" : 1,
+        "screenshot" : {
+            "save" : 1,
+            "interval" : "every_5_seconds",
+            "path" : "./screenshots"
         },
         "log" :{
             "txt" : 1,
             "json" : 1,
-            "console" : 1
+            "console" : 1,
+            "path" : "./logs"
         }
     }
 }

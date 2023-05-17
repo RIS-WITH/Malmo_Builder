@@ -58,13 +58,17 @@ for x in range(10000, 10000 + NUM_AGENTS + 1):
     client_pool.add( MalmoPython.ClientInfo('127.0.0.1', x) )
 
 chat_log = []
-num_missions = 3
+grid_types = set()
+for item in config['inventory']:
+    grid_types.add(item['type'])
+num_missions = config['mission']['num_missions']
 for mission_no in range(1, num_missions + 1):
     print("Running mission #" + str(mission_no))
     # Create mission xml - use forcereset if this is the first mission.
     # generate a simple world
-    generatorStr = "3;7,220*1,5*3,2;3;,biome_1"
-    my_mission = MalmoPython.MissionSpec(getXML("true" if mission_no == 1 else "false", generatorStr, NUM_AGENTS), True)
+    generatorStr = config['mission']['flat_world_generator_str']
+    # can add if mission_no == 1 else "false" to prevent reset after first mission
+    my_mission = MalmoPython.MissionSpec(getXML(NUM_AGENTS, config), True)
 
     # Generate an experiment ID for this mission.
     # This is used to make sure the right clients join the right servers -
@@ -114,37 +118,63 @@ for mission_no in range(1, num_missions + 1):
                     # get agents informations
                     entities = getEntitiesInfo(ob)
 
-                    # update chat log and get true if a new message has been added
-                    change = updateChatLog(ob, chat_log)
                     
-                    # get builders inventory
-                    inventory = getInventoryInfo(ob , entities)
+                    if config['collect']['chat_history']:
+                        # update chat log and get true if a new message has been added
+                        change = updateChatLog(ob, chat_log)
+                    else:
+                        chaty_log = None
+                        change = False
+                    
+                    if config['collect']['agents_inventory']:
+                        # get builders inventory
+                        inventory = getInventoryInfo(ob , entities)
+                    else:
+                        inventory = None
                     
                     # update grid and get true if a new block has been added
-                    change = updateGrid(ob, grid) or change
+                    if config['collect']['blocks_in_grid']:
+                        change = updateGrid(ob, grid, config['mission']['area_side_size'], grid_types) or change
+                    else:
+                        grid = None
                     
+                    precision = config['collect']['agents_position']['precision']
+                    angle_precision = config['collect']['agents_position']['angle_precision']
                     # print to console - if no change since last observation at the precision level, don't bother printing again.
-                    if samePosition(entities, lastEntities) and not change:
+                    if samePosition(entities, lastEntities, precision, angle_precision) and not change:
                         # no change since last observation - don't bother printing again.
                         continue
                     
                     # update lastEntities for next observation
                     lastEntities = entities
 
+                    # clear entities position if not needed
+                    if not config['collect']['agents_position']['save']:
+                        entities = None
+
                     # get screenshot path and save screenshot
-                    imagePath = saveScreenShot(agent_hosts[2], experimentID, timestamp)
+                    imagePath = None
+                    if config['collect']['screenshot']["save"]:
+                        folderPath = config['collect']['screenshot']["path"]
+                        interval = config['collect']['screenshot']["interval"]
+                        imagePath = saveScreenShot(agent_hosts[2], experimentID, timestamp, folderPath, interval)
 
                     # print to console
-                    printWorldState(timestamp, entities, chat_log, inventory, grid, imagePath)
+                    if config['collect']['log']['console']:
+                        printWorldState(timestamp, entities, chat_log, inventory, grid, imagePath)
 
-                    #make a directory for the mission
-                    pathLog = "./log/" + str(experimentID) + "-Builder"
-                    if not os.path.exists(pathLog):
-                        os.makedirs(pathLog)
-
-                    # save those info in txt and json files
-                    writeWorldStateTxt(pathLog, timestamp, entities, chat_log, inventory, grid, imagePath)
-                    writeWorldStateJson(pathLog, timestamp, entities, chat_log, inventory, grid, imagePath)
+                    saveTxt = config['collect']['log']['txt']
+                    saveJson = config['collect']['log']['json']
+                    if saveTxt or saveJson:
+                        #make a directory for the mission
+                        pathLog = config['collect']['log']['path'] + "/" + str(experimentID) + "-Builder"
+                        if not os.path.exists(pathLog):
+                            os.makedirs(pathLog)
+                        # save those info in txt and json files
+                        if saveTxt:
+                            writeWorldStateTxt(pathLog, timestamp, entities, chat_log, inventory, grid, imagePath)
+                        if saveJson:
+                            writeWorldStateJson(pathLog, timestamp, entities, chat_log, inventory, grid, imagePath)
         time.sleep(0.05)       
     print()
 

@@ -66,30 +66,32 @@ def compareBlock(blockorg, blockhit):
         return False
     return True
 
-def verfiyGridEntegrity(grid, gridFound, cords):
+def verfiyGridEntegrity(grid, gridFound, cords, side_size, xzToCenter):
     # grid is a dictionry of BlockInfo with x y z and type
     # gridFound is a 3d array with key x y z and value BlockInfo
     change = False
     for key, block in list(grid.items()):
-        if gridFound[(block.x + 10) % 21][(block.y - 227) % 21][(block.z + 10) % 21] == None:
+        if gridFound[(block.x + xzToCenter) % side_size][(block.y - 227) % side_size][(block.z + xzToCenter) % side_size] == None:
             grid.pop(key)
             change = True
     # check for missing blocks
     for cord in cords:
         key = "block" + str(cord[0]) + "_" + str(cord[1]) + "_" + str(cord[2])
         if key not in grid:
-            grid[key] = BlockInfo(cord[0], cord[1], cord[2], "wool")
+            typeGrid = gridFound[(cord[0] + xzToCenter) % side_size][(cord[1] - 227) % side_size][(cord[2] + xzToCenter) % side_size]
+            grid[key] = BlockInfo(cord[0], cord[1], cord[2], typeGrid)
             change = True
     return change
 
-def updateGrid(observation, grid):
+def updateGrid(observation, grid, side_size, gridTypes):
     # get blocks using ObservationFromGrid absolute position
     if "floor" in observation and u"LineOfSight" in observation:
         floor = observation["floor"]
         los = observation["LineOfSight"]
         # transform the grid to a 3d array
-        # floor is of 21x21x21
-        gridSize = 21
+        # floor is of area_side_size^3
+        gridSize = side_size
+        xzToCenter = (side_size - 1) // 2
         gridFound = [[[None for k in range(gridSize)] for j in range(gridSize)] for i in range(gridSize)]
         cords= []
         for i, block_type in enumerate(floor):
@@ -97,11 +99,11 @@ def updateGrid(observation, grid):
             z = (i // gridSize) % gridSize
             y = (i // gridSize // gridSize) % gridSize
             # add world position to block
-            xa = x - 10
+            xa = x - xzToCenter
             ya = y + 227
-            za = z - 10
-            # if block is the type wanted then store it
-            if block_type == "wool":
+            za = z - xzToCenter
+            # if block is the type wanted gridtype is a set of block types
+            if block_type in gridTypes:
                 gridFound[x][y][z] = block_type
                 cords.append([xa, ya, za])
             # add color to block
@@ -118,4 +120,4 @@ def updateGrid(observation, grid):
                     grid[key] = block
                     return True
         # check all blocks in grid are in the observation  
-        return verfiyGridEntegrity(grid, gridFound, cords)
+        return verfiyGridEntegrity(grid, gridFound, cords, side_size, xzToCenter)

@@ -69,56 +69,61 @@ def safeWaitForStart(agent_hosts):
     print()
     print("Mission has started.")
 
-def getXML(reset, generatorString, NUM_AGENTS):
-    x = z = 10
+def getXML(NUM_AGENTS, config):
     # Set up the Mission XML:
+    mission = config["mission"]
+    x = z = (mission["area_side_size"] -1) // 2
+    reset = "true" if mission["force_reset"] else "false"
     xml = '''<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
     <Mission xmlns="http://ProjectMalmo.microsoft.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <About>
-        <Summary/>
+        <Summary>'''+ mission["name"] +': '+ mission["summary"] + '''</Summary>
       </About>
       <ModSettings>
-        <MsPerTick>50</MsPerTick>
+        <MsPerTick>'''+str(mission['ms_per_tick'])+'''</MsPerTick>
       </ModSettings>
       <ServerSection>
         <ServerInitialConditions>
           <Time>
-            <StartTime>9000</StartTime>
-            <AllowPassageOfTime>false</AllowPassageOfTime>
+            <StartTime>''' + str(mission['time_of_day']) + '''</StartTime>
+            <AllowPassageOfTime>''' + str(bool(mission['allow_time_passage'])).lower() + '''</AllowPassageOfTime>
           </Time>
         </ServerInitialConditions>
         <ServerHandlers>
-          <FlatWorldGenerator forceReset="'''+reset+'''" generatorString="'''+generatorString+'''" seed=""/>
+          <FlatWorldGenerator forceReset="'''+reset+'''" generatorString="'''+mission['flat_world_generator_str']+'''" seed=""/>
           <DrawingDecorator>
             <DrawCuboid x1="-'''+str(x)+'''" y1="200" z1="-'''+str(z)+'''" x2="'''+str(x)+'''" y2="226" z2="'''+str(z)+'''" type="bedrock"/>
             <DrawBlock x="0" y="236" z="-20" type="fence"/>
           </DrawingDecorator>
-          <ServerQuitFromTimeUp description="" timeLimitMs="500000"/>
+          <ServerQuitFromTimeUp description="'''+ str(mission['quit_from_time_up_description']) +''''" timeLimitMs="'''+ str(mission['time_limit']) +'''"/>
         </ServerHandlers>
       </ServerSection>
     '''
 
+    # inventory 
+    inventory_text = ""
+    for item in config['inventory']:
+        inventory_text += "\n"
+        inventory_text += "\t" * 6           
+        inventory_text += "<InventoryItem slot=\"" + str(item["slot"]) + "\" type=\"" + item["type"] + "\" quantity=\"" + str(item["quantity"]) + "\""
+        if "color" in item:
+          inventory_text += " colour=\"" + item["color"].upper() + "\""
+        inventory_text += "/>"
+
     # Add an agent section for each robot. Robots run in survival mode.
     # Give each one a wooden pickaxe for protection...
 
+    agent = config["agents"]
     for i in range(NUM_AGENTS):
       xml += '''<AgentSection mode="Survival">
         <Name>''' + agentName(i) + '''</Name>
-        <AgentStart>
-          <Placement x="''' + str(random.randint(-x+3,x-3)) + '''" y="228" z="''' + str(random.randint(-z+3,z-3)) + '''"/>
-          <Inventory>
-            <InventoryItem slot="0" type="wool" quantity="20" colour="GRAY"/>
-            <InventoryItem slot="1" type="wool" quantity="20" colour="WHITE"/>
-            <InventoryItem slot="2" type="wool" quantity="20" colour="RED"/>
-            <InventoryItem slot="3" type="wool" quantity="20" colour="GREEN"/>
-            <InventoryItem slot="4" type="wool" quantity="20" colour="BLUE"/>
-            <InventoryItem slot="5" type="wool" quantity="20" colour="YELLOW"/>
-            <InventoryItem slot="6" type="wool" quantity="20" colour="ORANGE"/>
-            <InventoryItem slot="7" type="wool" quantity="20" colour="PINK"/>
-            <InventoryItem slot="8" type="wool" quantity="20" colour="MAGENTA"/>
-            <InventoryItem slot="9" type="wool" quantity="20" colour="CYAN"/>
-            <InventoryItem slot="10" type="wool" quantity="20" colour="BROWN"/>
-            <InventoryItem slot="11" type="wool" quantity="20" colour="BLACK"/>
+        <AgentStart>'''
+      if(agent['builder_'+ str(i+1)]['placement'] == 'random'):
+        xml += '''<Placement x="''' + str(random.randint(-x+3,x-3)) + '''" y="228" z="''' + str(random.randint(-z+3,z-3)) + '''"/>'''
+      else:
+        xml += '''<Placement x="''' + str(agent['builder_' + str(i+1)]['placement'][0]) + '''" y="228" z="''' + str(agent['builder_'+ str(i+1)]['placement'][1]) + '''"/>'''
+      xml += '''
+          <Inventory>''' + inventory_text + '''
           </Inventory>
         </AgentStart>
         <AgentHandlers>
@@ -129,7 +134,7 @@ def getXML(reset, generatorString, NUM_AGENTS):
           <ObservationFromGrid>
             <Grid name="floor" absoluteCoords="true">
                 <min x="'''+str(-x)+'''" y="227" z="'''+str(-z)+'''"/>
-                <max x="'''+str(x)+'''" y="248" z="'''+str(z)+'''"/>
+                <max x="'''+str(x)+'''" y="'''+str(277 + mission["area_side_size"])+'''" z="'''+str(z)+'''"/>
             </Grid>
           </ObservationFromGrid>
           <ObservationFromFullInventory flat="false"/>
