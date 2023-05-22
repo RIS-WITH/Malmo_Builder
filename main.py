@@ -55,7 +55,7 @@ else:
 # TODO - make it possible to separate the client pool and server on different machines...
 client_pool = MalmoPython.ClientPool()
 for x in range(10000, 10000 + NUM_AGENTS + 1):
-    client_pool.add( MalmoPython.ClientInfo('127.0.0.1', x) )
+    client_pool.add( MalmoPython.ClientInfo(config['server']['ip'], x) )
 
 chat_log = []
 grid_types = set()

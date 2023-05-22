@@ -92,8 +92,7 @@
         }
     ],
     "server" : {
-        "ip" : "127.0.0.1",
-        "port" : 10000
+        "ip" : "127.0.0.1"
     },
     "collect" : {
         "agents_position" : {

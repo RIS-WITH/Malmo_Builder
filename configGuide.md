@@ -47,11 +47,9 @@ the quantity of the inventory
 the color of the inventory
 
 ## server
-*not employed yet*
+*not employed yet (only localy)*
 ### ip
 the ip of the server
-### port
-the port of the server
 
 ## collect
 ### agents_position
@@ -75,7 +73,8 @@ whether collect the screenshot
 whether save the data
 #### interval
 the interval of the screenshot
-| every_5_seconds | every_10_seconds | every_30_seconds | every_1_minute | every_5_minutes | every_10_minutes | every_30_minutes | every_1_hour | every_move | every_second | every_minute | every_hour |
+| every_n_seconds | every_n_minute |  every_move | every_second | every_minute | every_hour | 
+note that the interval is a secondry condition, the primary condition is the agent's movement
 
 ### log
 whether collect the log
