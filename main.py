@@ -52,7 +52,14 @@ else:
 # The IP address used in the client pool will be broadcast to other agents who
 # are attempting to find the server - so this will fail for any agents on a
 # different machine.
+
 # TODO - make it possible to separate the client pool and server on different machines...
+# todo make a default one who runs the server the watcher
+# then use the function get users ips to get the ips of the other users
+
+## example of how to get the ips of the other users
+#ips = get_connected_agents_ips("../Minecraft/run/logs/.nfs0000000063d152e500001d66")
+
 client_pool = MalmoPython.ClientPool()
 for x in range(10000, 10000 + NUM_AGENTS + 1):
     client_pool.add( MalmoPython.ClientInfo(config['server']['ip'], x) )
@@ -77,13 +84,6 @@ for mission_no in range(1, num_missions + 1):
     # should be little danger of clients joining the wrong experiments, so a static
     # ID would probably suffice, though changing the ID on each mission also catches
     # potential problems with clients and servers getting out of step.
-
-    # Note that, in this sample, the same process is responsible for all calls to startMission,
-    # so passing the experiment ID like this is a simple matter. If the agentHosts are distributed
-    # across different threads, processes, or machines, a different approach will be required.
-    # (Eg generate the IDs procedurally, in a way that is guaranteed to produce the same results
-    # for each agentHost independently.)
-    # TODO : make this more robust.
     experimentID = str(uuid.uuid4())
 
     for i in range(len(agent_hosts)):
@@ -101,6 +101,8 @@ for mission_no in range(1, num_missions + 1):
     # /effect @p haste 1000000 255 true 
     agent_hosts[2].sendCommand("chat /effect @a haste 1000000 255 true")
     while running:
+        # TODO : if a new player joins, cick one of the two players and replace it with the new one
+        # TODO : if a player leaves, replace it with a new one
         running = False
         for i in range(len(agent_hosts)):
             world_state = agent_hosts[i].peekWorldState()

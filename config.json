@@ -2,7 +2,7 @@
     "name" : "Malmo Builder Config",
     "mission" : {
         "name" : "mission",
-        "summary" : "Build a house",
+        "summary" : "Build something",
         "num_missions" : 3,
         "ms_per_tick" : 50,
         "time_of_day" : 9000,
@@ -105,7 +105,7 @@
         "blocks_in_grid" : 1,
         "screenshot" : {
             "save" : 1,
-            "interval" : "every_5_seconds",
+            "interval" : "every_move",
             "path" : "./screenshots"
         },
         "log" :{

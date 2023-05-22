@@ -1,3 +1,4 @@
+import os
 import MalmoPython
 import time
 import random
@@ -5,6 +6,30 @@ import json
 # read config file
 with open('config.json') as config_file:
     config = json.load(config_file)
+
+connected_users_ips = {}
+
+def get_connected_agents_ips(log_file_path):
+  """
+    [16:40:25] [Server thread/INFO]: piinson left the game
+    [16:40:25] [Client thread/INFO]: [CHAT] piinson left the game
+    [16:47:13] [Server thread/INFO]: piinson[/140.93.3.95:52766] logged in with entity id 137 at (-603.6840557178139, 227.0, -1253.035443071669)
+    [16:47:13] [Server thread/INFO]: piinson joined the game 
+  """
+  with open(log_file_path) as log_file:
+    # just read the last 100 lines
+    log_file.seek(0, 2)
+    log_file.seek(log_file.tell() - 100, os.SEEK_SET)
+    for line in log_file:
+      if "logged in with entity id" in line:
+        ip = line.split("[")[1].split("]")[0]
+        username = line.split("]: ")[1].split("[")[0]
+        connected_users_ips[username] = ip
+      if "left the game" in line:
+        username = line.split("]: ")[1].split(" left")[0]
+        if username in connected_users_ips:
+          del connected_users_ips[username]
+    return connected_users_ips
 
 def agentName(i):
     agents = config["agents"]
