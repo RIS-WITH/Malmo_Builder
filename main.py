@@ -52,19 +52,13 @@ else:
 # The IP address used in the client pool will be broadcast to other agents who
 # are attempting to find the server - so this will fail for any agents on a
 # different machine.
-
-# TODO - make it possible to separate the client pool and server on different machines...
-# todo make a default one who runs the server the watcher
-# then use the function get users ips to get the ips of the other users
-
-## example of how to get the ips of the other users
-#ips = get_connected_agents_ips("../Minecraft/run/logs/.nfs0000000063d152e500001d66")
-
-client_pool = MalmoPython.ClientPool()
+# redifine the client pool each mission
+client_pool_array = []
 for x in range(10000, 10000 + NUM_AGENTS + 1):
-    client_pool.add( MalmoPython.ClientInfo(config['server']['ip'], x) )
+    client_pool_array.append([config['server']['ip'], x])
 
 chat_log = []
+num_of_connected_clients = 0
 grid_types = set()
 for item in config['inventory']:
     grid_types.add(item['type'])
@@ -72,8 +66,6 @@ num_missions = config['mission']['num_missions']
 for mission_no in range(1, num_missions + 1):
     print("Running mission #" + str(mission_no))
     # Create mission xml - use forcereset if this is the first mission.
-    # generate a simple world
-    generatorStr = config['mission']['flat_world_generator_str']
     # can add if mission_no == 1 else "false" to prevent reset after first mission
     my_mission = MalmoPython.MissionSpec(getXML(NUM_AGENTS, config), True)
 
@@ -86,10 +78,15 @@ for mission_no in range(1, num_missions + 1):
     # potential problems with clients and servers getting out of step.
     experimentID = str(uuid.uuid4())
 
+    # redifine the client pool
+    client_pool = MalmoPython.ClientPool()
+    for id, port in client_pool_array:
+        client_pool.add(MalmoPython.ClientInfo(id, port))
+
     for i in range(len(agent_hosts)):
         agent_hosts[i].setObservationsPolicy(MalmoPython.ObservationsPolicy.LATEST_OBSERVATION_ONLY)
         agent_hosts[i].setVideoPolicy(MalmoPython.VideoPolicy.LATEST_FRAME_ONLY)
-        safeStartMission(agent_hosts[i], my_mission, client_pool, MalmoPython.MissionRecordSpec(), i, experimentID)
+        safeStartMission(agent_hosts[i], my_mission, client_pool, MalmoPython.MissionRecordSpec(), i, experimentID, config, client_pool_array)
 
     safeWaitForStart(agent_hosts)
 
@@ -99,10 +96,22 @@ for mission_no in range(1, num_missions + 1):
     grid = {}
     pressed = False
     # /effect @p haste 1000000 255 true 
-    agent_hosts[2].sendCommand("chat /effect @a haste 1000000 255 true")
+    agent_hosts[0].sendCommand("chat /effect @a haste 1000000 255 true")
+    # clear any block above the ground
+    area_side_size = config['mission']['area_side_size']
+    agent_hosts[0].sendCommand("chat /fill -" + str(area_side_size) + " 1 -" + str(area_side_size) + " " + str(area_side_size) + " 100 " + str(area_side_size) + " air")
     while running:
         # TODO : if a new player joins, cick one of the two players and replace it with the new one
         # TODO : if a player leaves, replace it with a new one
+        # # waiting to get all players connected
+        # if num_of_connected_clients < NUM_AGENTS - 1:
+        #     print("Waiting for players to connect...", end="")
+        #     while num_of_connected_clients < NUM_AGENTS - 1:
+        #         num_of_connected_clients += update_client_pool(client_pool_array,config)
+        #         if num_of_connected_clients == NUM_AGENTS - 1:
+        #             hasEnded = True
+        #             print("All players connected!")
+            
         running = False
         for i in range(len(agent_hosts)):
             world_state = agent_hosts[i].peekWorldState()

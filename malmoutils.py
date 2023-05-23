@@ -9,36 +9,70 @@ with open('config.json') as config_file:
 
 connected_users_ips = {}
 
+def find_nfs_file(path):
+   # search for the hidden file starting with .nfs and return the latest one
+  files = []
+  for root, dirs, files in os.walk(path):
+      for file in files:
+          if file.startswith(".nfs"):
+              files.append(os.path.join(root, file))
+  if len(files) > 0:
+    return files[-1]
+  else:
+    return None
+
 def get_connected_agents_ips(log_file_path):
   """
-    [16:40:25] [Server thread/INFO]: piinson left the game
-    [16:40:25] [Client thread/INFO]: [CHAT] piinson left the game
-    [16:47:13] [Server thread/INFO]: piinson[/140.93.3.95:52766] logged in with entity id 137 at (-603.6840557178139, 227.0, -1253.035443071669)
-    [16:47:13] [Server thread/INFO]: piinson joined the game 
+    [11:38:00] [Client thread/INFO]: [CHAT] §l281...
+    [11:38:01] [Server thread/INFO]: Player703[/140.93.7.238:56370] logged in with entity id 313 at (-25.5, 227.0, 1075.5)
+    [11:38:01] [Server thread/INFO]: Player703 joined the game
+    [11:38:01] [Client thread/INFO]: [CHAT] Player703 joined the game
   """
   with open(log_file_path) as log_file:
-    # just read the last 100 lines
-    log_file.seek(0, 2)
-    log_file.seek(log_file.tell() - 100, os.SEEK_SET)
-    for line in log_file:
+    # just read the last two lines
+    lines = log_file.readlines()[-20:]
+    for line in lines:
       if "logged in with entity id" in line:
-        ip = line.split("[")[1].split("]")[0]
-        username = line.split("]: ")[1].split("[")[0]
-        connected_users_ips[username] = ip
+        line = line.split("]: ")[1]
+        username = line.split("[/")[0]
+        ip, port = line.split("[/")[1].split("]")[0].split(":")
+        connected_users_ips[username] = [ip, int(port)]
+        print("adding player to the client pool: ", username)
       if "left the game" in line:
         username = line.split("]: ")[1].split(" left")[0]
         if username in connected_users_ips:
           del connected_users_ips[username]
     return connected_users_ips
+  
+def update_client_pool(client_pool_array, config):
+  num_connected_users = 0
+  # find .nfs file at server['path'] and save its name
+  # log file path
+  log_file_path = find_nfs_file(config['server']['log_path'])
+
+  # get the ips of the other users
+  agents = get_connected_agents_ips(log_file_path)
+
+  for key, value in agents.items():
+      ## uncomment this if you want the port that was given by log file
+      #temp = [value[0], value[1]]
+      temp = [value[0], 10000]
+      if temp not in client_pool_array:
+          client_pool_array.pop()
+          client_pool_array.append(temp)
+          num_connected_users += 1
+          config['agents']['builder_' + str(num_connected_users)]['name'] = key
+          print ("adding player to the client pool: ", key)
+  return num_connected_users
 
 def agentName(i):
     agents = config["agents"]
     i += 1
     return agents["builder_" + str(i)]["name"]
 
-def safeStartMission(agent_host, my_mission, my_client_pool, my_mission_record, role, expId):
+def safeStartMission(agent_host, my_mission, my_client_pool, my_mission_record, role, expId, config, client_pool_array):
     used_attempts = 0
-    max_attempts = 5
+    max_attempts = 100
     print("Calling startMission for role", role)
     while True:
         try:
@@ -55,6 +89,13 @@ def safeStartMission(agent_host, my_mission, my_client_pool, my_mission_record, 
                 used_attempts += 1
                 if used_attempts < max_attempts:
                     print("Will wait in case they are starting up.", max_attempts - used_attempts, "attempts left.")
+                    # #search for new clients
+                    # if update_client_pool(client_pool_array, config):
+                    #   print("New clients found, will retry now.")
+                    #   # update my_client_pool
+                    #   my_client_pool = MalmoPython.ClientPool()
+                    #   for client in client_pool_array:
+                    #     my_client_pool.add(MalmoPython.ClientInfo(client[0], client[1]))
                     time.sleep(2)
             elif errorCode == MalmoPython.MissionErrorCode.MISSION_SERVER_NOT_FOUND:
                 print("Server not found - has the mission with role 0 been started yet?")
@@ -98,6 +139,8 @@ def getXML(NUM_AGENTS, config):
     # Set up the Mission XML:
     mission = config["mission"]
     x = z = (mission["area_side_size"] -1) // 2
+    y = 226
+    zdelta = 10
     reset = "true" if mission["force_reset"] else "false"
     xml = '''<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
     <Mission xmlns="http://ProjectMalmo.microsoft.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -118,13 +161,31 @@ def getXML(NUM_AGENTS, config):
           <FlatWorldGenerator forceReset="'''+reset+'''" generatorString="'''+mission['flat_world_generator_str']+'''" seed=""/>
           <DrawingDecorator>
             <DrawCuboid x1="-'''+str(x)+'''" y1="200" z1="-'''+str(z)+'''" x2="'''+str(x)+'''" y2="226" z2="'''+str(z)+'''" type="bedrock"/>
-            <DrawBlock x="0" y="236" z="-20" type="fence"/>
+            <DrawBlock x="0" y="'''+str(y + x)+'''" z="'''+str(-z - zdelta)+'''" type="fence"/>
           </DrawingDecorator>
           <ServerQuitFromTimeUp description="'''+ str(mission['quit_from_time_up_description']) +''''" timeLimitMs="'''+ str(mission['time_limit']) +'''"/>
         </ServerHandlers>
       </ServerSection>
     '''
 
+    # Add a section for the observer. Observer runs in creative mode.
+    # the watcher look 25 degrees down
+    xml += '''<AgentSection mode="Creative">
+        <Name>ADMIN</Name>
+        <AgentStart>
+          <Placement x="0.5" y="'''+str(y + x + 2)+'''" z="'''+str(-z - zdelta + 0.5)+'''" pitch="45"/>
+        </AgentStart>
+        <AgentHandlers>
+          <ContinuousMovementCommands turnSpeedDegs="360"/>
+          <ChatCommands/>
+          <MissionQuitCommands/>
+          <VideoProducer>
+            <Width>640</Width>
+            <Height>640</Height>
+          </VideoProducer>
+        </AgentHandlers>
+      </AgentSection>'''
+    
     # inventory 
     inventory_text = ""
     for item in config['inventory']:
@@ -167,25 +228,6 @@ def getXML(NUM_AGENTS, config):
             <Range name="entities" xrange="'''+str(x*3)+'''" yrange="2" zrange="'''+str(z*3)+'''"/>
           </ObservationFromNearbyEntities>
           <ObservationFromRay/>
-        </AgentHandlers>
-      </AgentSection>'''
-
-
-    # Add a section for the observer. Observer runs in creative mode.
-    # the watcher look 25 degrees down
-    xml += '''<AgentSection mode="Creative">
-        <Name>TheWatcher</Name>
-        <AgentStart>
-          <Placement x="0.5" y="238" z="-19.5" pitch="45"/>
-        </AgentStart>
-        <AgentHandlers>
-          <ContinuousMovementCommands turnSpeedDegs="360"/>
-          <ChatCommands/>
-          <MissionQuitCommands/>
-          <VideoProducer>
-            <Width>640</Width>
-            <Height>640</Height>
-          </VideoProducer>
         </AgentHandlers>
       </AgentSection>'''
 
