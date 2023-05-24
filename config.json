@@ -11,7 +11,8 @@
         "time_limit" : 300000,
         "quit_from_time_up_description" : "Time up",
         "force_reset" : 0,
-        "area_side_size" : 21
+        "area_side_size" : 21,
+        "weather" : "clear"
     },
     "agents" : {
         "builder_1" : {
@@ -92,7 +93,7 @@
         }
     ],
     "server" : {
-        "ip" : "127.0.0.1",
+        "ip" : "140.93.7.238",
         "port" : 10000,
         "log_path" : "../Minecraft/run/logs/"
     },

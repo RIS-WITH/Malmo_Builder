@@ -57,13 +57,15 @@ client_pool_array = []
 for x in range(10000, 10000 + NUM_AGENTS + 1):
     client_pool_array.append([config['server']['ip'], x])
 
+#client_pool_array.append(["140.93.14.187", 10000])
+
 chat_log = []
 num_of_connected_clients = 0
 grid_types = set()
 for item in config['inventory']:
     grid_types.add(item['type'])
 num_missions = config['mission']['num_missions']
-for mission_no in range(1, num_missions + 1):
+for mission_no in range(0, num_missions + 1):
     print("Running mission #" + str(mission_no))
     # Create mission xml - use forcereset if this is the first mission.
     # can add if mission_no == 1 else "false" to prevent reset after first mission
@@ -82,7 +84,7 @@ for mission_no in range(1, num_missions + 1):
     client_pool = MalmoPython.ClientPool()
     for id, port in client_pool_array:
         client_pool.add(MalmoPython.ClientInfo(id, port))
-
+    print("client_pool " + str(client_pool))
     for i in range(len(agent_hosts)):
         agent_hosts[i].setObservationsPolicy(MalmoPython.ObservationsPolicy.LATEST_OBSERVATION_ONLY)
         agent_hosts[i].setVideoPolicy(MalmoPython.VideoPolicy.LATEST_FRAME_ONLY)
@@ -104,14 +106,15 @@ for mission_no in range(1, num_missions + 1):
         # TODO : if a new player joins, cick one of the two players and replace it with the new one
         # TODO : if a player leaves, replace it with a new one
         # # waiting to get all players connected
-        # if num_of_connected_clients < NUM_AGENTS - 1:
-        #     print("Waiting for players to connect...", end="")
-        #     while num_of_connected_clients < NUM_AGENTS - 1:
-        #         num_of_connected_clients += update_client_pool(client_pool_array,config)
-        #         if num_of_connected_clients == NUM_AGENTS - 1:
-        #             hasEnded = True
-        #             print("All players connected!")
-            
+        if num_of_connected_clients < NUM_AGENTS - 1:
+            print("Waiting for players to connect...", end="")
+            while num_of_connected_clients < NUM_AGENTS - 1:
+                num_of_connected_clients += update_client_pool(client_pool_array,config)
+                if num_of_connected_clients == NUM_AGENTS - 1:
+                    print("All players connected!")
+                    # make the players quit the game
+                    for i in range(len(agent_hosts)):
+                        agent_hosts[i].sendCommand("quit")
         running = False
         for i in range(len(agent_hosts)):
             world_state = agent_hosts[i].peekWorldState()

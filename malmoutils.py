@@ -5,7 +5,7 @@ import random
 import json
 # read config file
 with open('config.json') as config_file:
-    config = json.load(config_file)
+  config = json.load(config_file)
 
 connected_users_ips = {}
 
@@ -20,6 +20,11 @@ def find_nfs_file(path):
     return files[-1]
   else:
     return None
+  
+def latest_file(path):
+  # find latest.log
+  file_name = "latest.log"
+  return os.path.join(path, file_name)
 
 def get_connected_agents_ips(log_file_path):
   """
@@ -30,14 +35,21 @@ def get_connected_agents_ips(log_file_path):
   """
   with open(log_file_path) as log_file:
     # just read the last two lines
-    lines = log_file.readlines()[-20:]
+    lines = log_file.readlines()[-10:]
     for line in lines:
-      if "logged in with entity id" in line:
+      # if "joined the game" in line:
+      #   print("line: ", line) 
+      #   username = line.split("]: ")[1].split(" joined")[0]
+      #   if username == config['agents']['builder_1']['name'] or username == config['agents']['builder_2']['name'] or username == config['agents']['builder_3']['name']:
+      #     return 1  
+      if "logged in with entity id" in line and "ADMIN" not in line:
         line = line.split("]: ")[1]
+        #print("line: ", line)
         username = line.split("[/")[0]
         ip, port = line.split("[/")[1].split("]")[0].split(":")
-        connected_users_ips[username] = [ip, int(port)]
-        print("adding player to the client pool: ", username)
+        if config["server"]["ip"] != ip:
+          connected_users_ips[username] = [ip, int(port)]
+          print("player logged: ", username)
       if "left the game" in line:
         username = line.split("]: ")[1].split(" left")[0]
         if username in connected_users_ips:
@@ -48,24 +60,29 @@ def update_client_pool(client_pool_array, config):
   num_connected_users = 0
   # find .nfs file at server['path'] and save its name
   # log file path
-  log_file_path = find_nfs_file(config['server']['log_path'])
+  log_file_path = latest_file(config['server']['log_path'])
 
   # get the ips of the other users
   agents = get_connected_agents_ips(log_file_path)
 
+  # if agents == 1:
+  #   return 1
+
   for key, value in agents.items():
-      ## uncomment this if you want the port that was given by log file
-      #temp = [value[0], value[1]]
-      temp = [value[0], 10000]
-      if temp not in client_pool_array:
-          client_pool_array.pop()
-          client_pool_array.append(temp)
-          num_connected_users += 1
-          config['agents']['builder_' + str(num_connected_users)]['name'] = key
-          print ("adding player to the client pool: ", key)
+    ## uncomment this if you want the port that was given by log file
+    #temp = [value[0], value[1]]
+    # to fix not adding the new player to the client pool
+    print("key: ", key, "value: ", value)
+    temp = [value[0], 10000]
+    if temp not in client_pool_array:
+      client_pool_array.pop(1)
+      client_pool_array.append(temp)
+      num_connected_users += 1
+      config['agents']['builder_' + str(num_connected_users)]['name'] = key
+      print ("adding player to the client pool: ", key)
   return num_connected_users
 
-def agentName(i):
+def agentName(i, config=config):
     agents = config["agents"]
     i += 1
     return agents["builder_" + str(i)]["name"]
@@ -156,6 +173,7 @@ def getXML(NUM_AGENTS, config):
             <StartTime>''' + str(mission['time_of_day']) + '''</StartTime>
             <AllowPassageOfTime>''' + str(bool(mission['allow_time_passage'])).lower() + '''</AllowPassageOfTime>
           </Time>
+          <Weather>''' + str(mission['weather']) + '''</Weather>
         </ServerInitialConditions>
         <ServerHandlers>
           <FlatWorldGenerator forceReset="'''+reset+'''" generatorString="'''+mission['flat_world_generator_str']+'''" seed=""/>
@@ -202,7 +220,7 @@ def getXML(NUM_AGENTS, config):
     agent = config["agents"]
     for i in range(NUM_AGENTS):
       xml += '''<AgentSection mode="Survival">
-        <Name>''' + agentName(i) + '''</Name>
+        <Name>''' + agentName(i, config) + '''</Name>
         <AgentStart>'''
       if(agent['builder_'+ str(i+1)]['placement'] == 'random'):
         xml += '''<Placement x="''' + str(random.randint(-x+3,x-3)) + '''" y="228" z="''' + str(random.randint(-z+3,z-3)) + '''"/>'''

@@ -51,14 +51,31 @@ python3 run_mission.py
 
 1. clone the project in the MamloPlatform repository
 
-2. launch 3 terminals and run a client in each one of them:
+2. navigate to Malmo_Builder
+
+3. run malmo_builder in the terminal 
+experimental version (takes time to load):
 ```sh 
-cd Minecraft
+./malmo_builder_run.sh
+```
+manual version:
+three steps
+- run three clients
+```sh
+cd ../Minecraft
 ./launchClient.sh
 ```
-3. navigate to Malmo_Builder
+- change the last opened client which will be at 10002 to port 10000 and the first one to 10002 using GUI
+First change the client 10000 to 10002 on minecraft GUI (malmo wont like it but will change it later)
+ESC > mods > malmo > settings > port > 10002 > done
+Then change the client 10002 to 10000 on minecraft GUI
+ESC > mods > malmo > settings > port > 10000 > done
+now to solve malmo problem with first change, 10002 to 0
+ESC > mods > malmo > settings > port > 0 > done
 
-4. run in the terminal 
-```sh 
+- run the main python file in the malmo_builder directory
+```sh
 python3 main.py
 ```
+
+
