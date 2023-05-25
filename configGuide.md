@@ -24,11 +24,16 @@ the time limit of the mission
 ### quit_from_time_up_description
 the description of the mission when time up
 ### force_reset
-whether force reset the mission
+whether force reset the mission .. if true, the mission will be reseted after the time limit which mean changing the port of the mission which will cause the agent to be disconnected breifly
 ### area_side_size
 the side size of the area since it is a square area
+### weather
+the weather of the mission
+| clear | rain | thunder | snow |
 
 ## agents
+### num_distant_agents
+the number of players who play in distant machines
 ### name
 the name of the agent
 ### placement

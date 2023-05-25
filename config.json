@@ -10,11 +10,12 @@
         "flat_world_generator_str" : "3;7,220*1,5*3,2;3;,biome_1",
         "time_limit" : 300000,
         "quit_from_time_up_description" : "Time up",
-        "force_reset" : 0,
+        "force_reset" : 1,
         "area_side_size" : 21,
         "weather" : "clear"
     },
     "agents" : {
+        "num_distant_agents" : 1,
         "builder_1" : {
             "name" : "builder_1",
             "placement" : "random"
@@ -95,7 +96,7 @@
     "server" : {
         "ip" : "140.93.7.238",
         "port" : 10000,
-        "log_path" : "../Minecraft/run/logs/"
+        "log_path" : "../Minecraft/run/logs/latest.log"
     },
     "collect" : {
         "agents_position" : {

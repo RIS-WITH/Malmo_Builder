@@ -1,8 +1,7 @@
 from __future__ import print_function
 from __future__ import division
 
-# Test of multi-agent missions - two agents human in a flat environment.
-
+# multi-agent missions - two agents human in a flat environment.
 from builtins import range
 import sys
 import uuid
@@ -17,6 +16,7 @@ agent_hosts = [MalmoPython.AgentHost()]
 agent_hosts[0].addOptionalFlag( "debug,d", "Display debug information.")
 agent_hosts[0].addOptionalIntArgument("agents,n", "Number of agents to use, including observer.", 3)
 
+
 try:
     agent_hosts[0].parse( sys.argv )
 except RuntimeError as e:
@@ -30,9 +30,11 @@ if agent_hosts[0].receivedArgument("help"):
 DEBUG = agent_hosts[0].receivedArgument("debug")
 INTEGRATION_TEST_MODE = agent_hosts[0].receivedArgument("test")
 agents_requested = agent_hosts[0].getIntArgument("agents")
-NUM_AGENTS = agents_requested - 1
+num_distant_agents = config["agents"]["num_distant_agents"]
+# remove the ADMIN(observer) from the number of agents and the number of distant agents
+NUM_AGENTS = agents_requested - 1 - num_distant_agents
 
-# Create the rest of the agent hosts - one for each human agent and one to control the observer:
+# Create the rest of the agent hosts - one for each human agent and one to control the observer for now one local and other waiting for connection:
 agent_hosts += [MalmoPython.AgentHost() for x in range(1, NUM_AGENTS + 1) ]
 
 # Set up debug output:
@@ -46,30 +48,34 @@ else:
     print = functools.partial(print, flush=True)
 
 # Set up a client pool.
-# IMPORTANT: If ANY of the clients will be on a different machine, then you MUST
-# make sure that any client which can be the server has an IP address that is
-# reachable from other machines - ie DO NOT SIMPLY USE 127.0.0.1!!!!
 # The IP address used in the client pool will be broadcast to other agents who
-# are attempting to find the server - so this will fail for any agents on a
-# different machine.
-# redifine the client pool each mission
+# are attempting to find the server
 client_pool_array = []
 for x in range(10000, 10000 + NUM_AGENTS + 1):
     client_pool_array.append([config['server']['ip'], x])
 
-#client_pool_array.append(["140.93.14.187", 10000])
-
+# A log of all chats in the game
 chat_log = []
-num_of_connected_clients = 0
+
+# get the types of blocks to track
 grid_types = set()
 for item in config['inventory']:
     grid_types.add(item['type'])
+
+#get the number of missions to run
 num_missions = config['mission']['num_missions']
+
 for mission_no in range(0, num_missions + 1):
     print("Running mission #" + str(mission_no))
+    print(agent_hosts)
+    # force reset mission 0
+    tempForcereset = config['mission']['force_reset']
+    if mission_no == 0:
+        config['mission']['force_reset'] = 1
     # Create mission xml - use forcereset if this is the first mission.
-    # can add if mission_no == 1 else "false" to prevent reset after first mission
     my_mission = MalmoPython.MissionSpec(getXML(NUM_AGENTS, config), True)
+    # set the force reset back to the original value
+    config['mission']['force_reset'] = tempForcereset
 
     # Generate an experiment ID for this mission.
     # This is used to make sure the right clients join the right servers -
@@ -84,7 +90,11 @@ for mission_no in range(0, num_missions + 1):
     client_pool = MalmoPython.ClientPool()
     for id, port in client_pool_array:
         client_pool.add(MalmoPython.ClientInfo(id, port))
-    print("client_pool " + str(client_pool))
+
+    ## visualise the clients connecting to the server    
+    #print("client_pool " + str(client_pool))
+
+    # Attempt to start the mission:
     for i in range(len(agent_hosts)):
         agent_hosts[i].setObservationsPolicy(MalmoPython.ObservationsPolicy.LATEST_OBSERVATION_ONLY)
         agent_hosts[i].setVideoPolicy(MalmoPython.VideoPolicy.LATEST_FRAME_ONLY)
@@ -93,36 +103,50 @@ for mission_no in range(0, num_missions + 1):
     safeWaitForStart(agent_hosts)
 
     time.sleep(1)
+
+    # running is true if at least one agent is still running the mission
     running = True
+    # the last entities seen by the agents
     lastEntities = None
+    # the last grid seen by the agents
     grid = {}
-    pressed = False
-    # /effect @p haste 1000000 255 true 
+
+    # Admin make every player able to destroy blocks in one hit
     agent_hosts[0].sendCommand("chat /effect @a haste 1000000 255 true")
-    # clear any block above the ground
-    area_side_size = config['mission']['area_side_size']
-    agent_hosts[0].sendCommand("chat /fill -" + str(area_side_size) + " 1 -" + str(area_side_size) + " " + str(area_side_size) + " 100 " + str(area_side_size) + " air")
+
     while running:
-        # TODO : if a new player joins, cick one of the two players and replace it with the new one
-        # TODO : if a player leaves, replace it with a new one
-        # # waiting to get all players connected
-        if num_of_connected_clients < NUM_AGENTS - 1:
+        #waiting to get all players connected if not all connected
+        if NUM_AGENTS < 2:
+            last_num_agents = NUM_AGENTS
             print("Waiting for players to connect...", end="")
-            while num_of_connected_clients < NUM_AGENTS - 1:
-                num_of_connected_clients += update_client_pool(client_pool_array,config)
-                if num_of_connected_clients == NUM_AGENTS - 1:
+            while NUM_AGENTS < 2:
+                NUM_AGENTS = update_client_pool(client_pool_array,config, NUM_AGENTS)
+                if NUM_AGENTS == 2:
                     print("All players connected!")
-                    # make the players quit the game
+                    # make the players quit the game to restart the mission
                     for i in range(len(agent_hosts)):
                         agent_hosts[i].sendCommand("quit")
+                    # add new agent_hosts
+                    agent_hosts += [MalmoPython.AgentHost() for x in range(last_num_agents + 1, NUM_AGENTS + 1)]
+                    # Set up debug output:
+                    for i in range(last_num_agents + 1, NUM_AGENTS + 1):
+                        agent_hosts[i].setDebugOutput(DEBUG)
+                #wait for 1 second
+                time.sleep(1)
+        
         running = False
         for i in range(len(agent_hosts)):
             world_state = agent_hosts[i].peekWorldState()
             if world_state.is_mission_running:
                 running = True
+                # get the number of observations since last state
                 obsv_num = world_state.number_of_observations_since_last_state
+
+                ## to print the number of observations since last state 
                 #print("Got " + str(obsv_num) + " observations since last state.")
+
                 if obsv_num > 0:
+                    # get the last observation
                     msg = world_state.observations[-1].text
                     ob = json.loads(msg)
 
@@ -171,7 +195,7 @@ for mission_no in range(0, num_missions + 1):
                     if config['collect']['screenshot']["save"]:
                         folderPath = config['collect']['screenshot']["path"]
                         interval = config['collect']['screenshot']["interval"]
-                        imagePath = saveScreenShot(agent_hosts[2], experimentID, timestamp, folderPath, interval)
+                        imagePath = saveScreenShot(agent_hosts[0], experimentID, timestamp, folderPath, interval)
 
                     # print to console
                     if config['collect']['log']['console']:

@@ -54,23 +54,46 @@ python3 run_mission.py
 2. navigate to Malmo_Builder
 
 3. run malmo_builder in the terminal 
-experimental version (takes time to load):
-```sh 
-./malmo_builder_run.sh
+### define the number of distant clients:
+In config.json file change the number of distant clients in the agents section
+```sh
+"agents": {
+    "num_distant_agents": 1
+}
 ```
-manual version:
-three steps
-- run three clients
+### experimental version (takes time to load):
+```sh 
+./malmo_builder_run.sh num_of_clients
+```
+in which num_of_clients is the number of clients you want to run 
+    1(default) for the server
+    2 for the server and one local player
+    3 for the server and two local players
+
+### manual version:
+#### to run only server :
+- run one client
 ```sh
 cd ../Minecraft
 ./launchClient.sh
 ```
-- change the last opened client which will be at 10002 to port 10000 and the first one to 10002 using GUI
-First change the client 10000 to 10002 on minecraft GUI (malmo wont like it but will change it later)
-ESC > mods > malmo > settings > port > 10002 > done
+- run the python script
+```sh
+python3 main.py
+```
+
+#### to run one local player:
+- run two clients
+```sh
+cd ../Minecraft
+./launchClient.sh
+```
+- change the last opened client which will be at 10001 to port 10000 and the first one to 10002 using GUI
+First change the client 10000 to 10001 on minecraft GUI (malmo wont like it but will change it later)
+ESC > mods > malmo > settings > port > 10001 > done
 Then change the client 10002 to 10000 on minecraft GUI
 ESC > mods > malmo > settings > port > 10000 > done
-now to solve malmo problem with first change, 10002 to 0
+now to solve malmo problem with first change, 10001 to 0
 ESC > mods > malmo > settings > port > 0 > done
 
 - run the main python file in the malmo_builder directory

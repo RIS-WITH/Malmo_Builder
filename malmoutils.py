@@ -15,70 +15,61 @@ def find_nfs_file(path):
   for root, dirs, files in os.walk(path):
       for file in files:
           if file.startswith(".nfs"):
-              files.append(os.path.join(root, file))
+            files.append(os.path.join(root, file))
   if len(files) > 0:
     return files[-1]
   else:
     return None
-  
-def latest_file(path):
-  # find latest.log
-  file_name = "latest.log"
-  return os.path.join(path, file_name)
 
 def get_connected_agents_ips(log_file_path):
-  """
-    [11:38:00] [Client thread/INFO]: [CHAT] §l281...
-    [11:38:01] [Server thread/INFO]: Player703[/140.93.7.238:56370] logged in with entity id 313 at (-25.5, 227.0, 1075.5)
-    [11:38:01] [Server thread/INFO]: Player703 joined the game
-    [11:38:01] [Client thread/INFO]: [CHAT] Player703 joined the game
-  """
   with open(log_file_path) as log_file:
     # just read the last two lines
-    lines = log_file.readlines()[-10:]
+    lines = log_file.readlines()[-5:]
     for line in lines:
-      # if "joined the game" in line:
-      #   print("line: ", line) 
-      #   username = line.split("]: ")[1].split(" joined")[0]
-      #   if username == config['agents']['builder_1']['name'] or username == config['agents']['builder_2']['name'] or username == config['agents']['builder_3']['name']:
-      #     return 1  
       if "logged in with entity id" in line and "ADMIN" not in line:
         line = line.split("]: ")[1]
         #print("line: ", line)
         username = line.split("[/")[0]
         ip, port = line.split("[/")[1].split("]")[0].split(":")
-        if config["server"]["ip"] != ip:
-          connected_users_ips[username] = [ip, int(port)]
-          print("player logged: ", username)
+        # if you dont want a user who is in the same machine as the server
+        #if config["server"]["ip"] != ip:
+        connected_users_ips[username] = [ip, int(port)]
+        print("player logged: ", username)
       if "left the game" in line:
         username = line.split("]: ")[1].split(" left")[0]
         if username in connected_users_ips:
           del connected_users_ips[username]
     return connected_users_ips
   
-def update_client_pool(client_pool_array, config):
-  num_connected_users = 0
+def update_client_pool(client_pool_array, config, NUM_AGENTS):
+  num_connected_users = NUM_AGENTS
   # find .nfs file at server['path'] and save its name
   # log file path
-  log_file_path = latest_file(config['server']['log_path'])
+  log_file_path = config['server']['log_path']
+  
+  # if file not found return (not tested)
+  if not os.path.exists(log_file_path):
+    # remove the file name from path
+    log_file_path = log_file_path.split("/")[0:-1] 
+    log_file_path = find_nfs_file(config['server']['path'])
+    if log_file_path == None:
+      print("log file not found try again or check the path in config.json")
+      exit(1)
+
 
   # get the ips of the other users
   agents = get_connected_agents_ips(log_file_path)
 
-  # if agents == 1:
-  #   return 1
 
   for key, value in agents.items():
-    ## uncomment this if you want the port that was given by log file
-    #temp = [value[0], value[1]]
-    # to fix not adding the new player to the client pool
     print("key: ", key, "value: ", value)
+    # value[1] is the port of the connected user but we need malmo port
     temp = [value[0], 10000]
     if temp not in client_pool_array:
-      client_pool_array.pop(1)
       client_pool_array.append(temp)
       num_connected_users += 1
-      config['agents']['builder_' + str(num_connected_users)]['name'] = key
+      ## TODO : change the name of the agent (not working as expected)
+      #config['agents']['builder_' + str(1)]['name'] = key
       print ("adding player to the client pool: ", key)
   return num_connected_users
 
@@ -106,13 +97,6 @@ def safeStartMission(agent_host, my_mission, my_client_pool, my_mission_record, 
                 used_attempts += 1
                 if used_attempts < max_attempts:
                     print("Will wait in case they are starting up.", max_attempts - used_attempts, "attempts left.")
-                    # #search for new clients
-                    # if update_client_pool(client_pool_array, config):
-                    #   print("New clients found, will retry now.")
-                    #   # update my_client_pool
-                    #   my_client_pool = MalmoPython.ClientPool()
-                    #   for client in client_pool_array:
-                    #     my_client_pool.add(MalmoPython.ClientInfo(client[0], client[1]))
                     time.sleep(2)
             elif errorCode == MalmoPython.MissionErrorCode.MISSION_SERVER_NOT_FOUND:
                 print("Server not found - has the mission with role 0 been started yet?")
