@@ -47,7 +47,7 @@ Running a Python agent:
 cd Python_Examples
 python3 run_mission.py
 ```
-## Using Malmo Builder
+## Using Malmo Builder (SERVER)
 
 1. clone the project in the MamloPlatform repository
 
@@ -55,7 +55,10 @@ python3 run_mission.py
 
 3. run malmo_builder in the terminal 
 ### define the number of distant clients:
-In config.json file change the number of distant clients in the agents section
+In config.json file change the number of distant clients in the agents section  
+0 : for two local players  
+1 : for one local player and one remote player (same LAN network)
+2 : for two remote players (same LAN network)
 ```sh
 "agents": {
     "num_distant_agents": 1
@@ -65,10 +68,10 @@ In config.json file change the number of distant clients in the agents section
 ```sh 
 ./malmo_builder_run.sh num_of_clients
 ```
-in which num_of_clients is the number of clients you want to run 
-    1(default) for the server
-    2 for the server and one local player
-    3 for the server and two local players
+in which num_of_clients is the number of clients you want to run  
+    1 (default) for the server  
+    2 for the server and one local player  
+    3 for the server and two local players  
 
 ### manual version:
 #### to run only server :
@@ -89,16 +92,21 @@ cd ../Minecraft
 ./launchClient.sh
 ```
 - change the last opened client which will be at 10001 to port 10000 and the first one to 10002 using GUI
-First change the client 10000 to 10001 on minecraft GUI (malmo wont like it but will change it later)
-ESC > mods > malmo > settings > port > 10001 > done
-Then change the client 10002 to 10000 on minecraft GUI
-ESC > mods > malmo > settings > port > 10000 > done
-now to solve malmo problem with first change, 10001 to 0
-ESC > mods > malmo > settings > port > 0 > done
+First change the client 10000 to 10001 on minecraft GUI (malmo wont like it but will change it later)  
+ESC > mods > malmo > settings > port > 10001 > done  
+Then change the client 10002 to 10000 on minecraft GUI  
+ESC > mods > malmo > settings > port > 10000 > done  
+now to solve malmo problem with first change, 10001 to 0  
+ESC > mods > malmo > settings > port > 0 > done  
 
 - run the main python file in the malmo_builder directory
 ```sh
 python3 main.py
 ```
+## Using Malmo Builder (remote player)
+1. install forge 1.11.2 of minecraft launcher
+2. copy the malmo jar file (can be found in the ``Mod`` folder of [Malmo Releases](https://github.com/microsoft/malmo/releases)) to the ```.minecraft/mods/``` (create the folder ```mods``` if does not exist)
+3. launch Minecraft forge 1.11.2 and you should be seeing the LAN connection of the running server in Multiplayer
+
 
 
