@@ -154,8 +154,11 @@ for mission_no in range(0, num_missions + 1):
                     timestamp = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
 
                     # get agents informations
-                    entities = getEntitiesInfo(ob)
+                    entities = getEntitiesInfo(ob, lastEntities)
 
+                    # # print los if exists
+                    # if u'LineOfSight' in ob:
+                    #     print("LineOfSight: " + str(ob[u'LineOfSight']))
                     
                     if config['collect']['chat_history']:
                         # update chat log and get true if a new message has been added
@@ -163,11 +166,11 @@ for mission_no in range(0, num_missions + 1):
                     else:
                         chaty_log = None
                         change = False
-                    
-                    if config['collect']['agents_inventory']:
-                        # get builders inventory
-                        inventory = getInventoryInfo(ob , entities)
-                    else:
+
+                    # get builders inventory
+                    inventory = getInventoryInfo(ob , entities)
+                    # if not needed, clear inventory
+                    if not config['collect']['agents_inventory']:
                         inventory = None
                     
                     # update grid and get true if a new block has been added
