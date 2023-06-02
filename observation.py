@@ -15,8 +15,9 @@ def getEntitiesInfo(observations):
 def updateChatLog(observations, chat_log):
     if "Chat" in observations:
         if len(chat_log) == 0 or chat_log[-1] != observations["Chat"]:
-            chat_log.append(observations["Chat"])
-            return True
+            if "ADMIN" not in observations["Chat"]:
+                chat_log.append(observations["Chat"])
+                return True
     return False
 
 def getInventoryInfo(observation, entities):
@@ -79,9 +80,31 @@ def verfiyGridEntegrity(grid, gridFound, cords, side_size, xzToCenter):
         key = "block" + str(cord[0]) + "_" + str(cord[1]) + "_" + str(cord[2])
         if key not in grid:
             typeGrid = gridFound[(cord[0] + xzToCenter) % side_size][(cord[1] - 227) % side_size][(cord[2] + xzToCenter) % side_size]
-            grid[key] = BlockInfo(cord[0], cord[1], cord[2], typeGrid)
+            # get the color of the last grid
+            color = getNearetColor(grid, cord)
+            grid[key] = BlockInfo(cord[0], cord[1], cord[2], typeGrid, color)
             change = True
     return change
+
+def getNearetColor(grid, cord):
+    color = ""
+    block = None
+    if grid != {}:
+        # color = grid[list(grid.keys())[-1]].colour
+        # loop through the grid in a reverse order and find the nearest color about 5 blocks max
+        cout = 0
+        for b in reversed(list(grid.keys())):
+            if block == None:
+                block = grid[b]
+            # check wich block is closer to the cord
+            elif abs(block.x - cord[0]) + abs(block.y - cord[1]) + abs(block.z - cord[2]) > abs(grid[b].x - cord[0]) + abs(grid[b].y - cord[1]) + abs(grid[b].z - cord[2]):
+                block = grid[b]
+            cout += 1
+            if cout > 5:
+                break
+    if block != None:
+        color = block.colour
+    return color
 
 def updateGrid(observation, grid, side_size, gridTypes):
     # get blocks using ObservationFromGrid absolute position
