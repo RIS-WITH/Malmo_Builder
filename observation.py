@@ -1,4 +1,5 @@
 from collections import namedtuple
+import os
 
 EntityInfo = namedtuple('EntityInfo', 'x, y, z, yaw, pitch, name, colour, variation, quantity, life')
 EntityInfo.__new__.__defaults__ = (0, 0, 0, 0, 0, "", "", "", 1, 1)
@@ -17,13 +18,42 @@ def getEntitiesInfo(observations, lastEntities=None):
     return sorted(entities, key=lambda x: x.name)
 
 def updateChatLog(observations, chat_log):
-    if "Chat" in observations:
-        if len(chat_log) == 0 or chat_log[-1] != observations["Chat"]:
-            if "ADMIN" not in observations["Chat"]:
-                chat_log.append(observations["Chat"])
-                return True
-    return False
+    return readObservationChatLog(observations, chat_log)
 
+    
+## TODO : see if it is better to read from observation or from server log
+def readObservationChatLog(observations, chat_log):
+    if "Chat" in observations:
+        print(observations["Chat"])
+        if len(chat_log) == 0 or chat_log[-1] != observations["Chat"]:
+            chats = observations["Chat"]
+            # transform to list if it is not
+            if type(chats) is not list:
+                chats = [chats]
+            for chat in chats:
+                # ignore ADMIN messages
+                if "ADMIN" not in chat:
+                    chat_log.append(chat)
+                    return True
+    return False
+# def readServerChatLog(chat_log, config):
+#     # read config file log path
+#     with open(config['server']['log_path']) as log_file:
+#         # just read the last two lines
+#         lines = log_file.readlines()[-1:]
+#         for line in lines:
+#             # if it has chat in it
+#             if "]: [CHAT]" in line and (config["agents"]["builder_1"]["name"] in line or config["agents"]["builder_2"]["name"] in line) and "ADMIN" not in line:
+#                 # get the chat message
+#                 messege = line.split("]: [CHAT] ")[1]
+#                 # remove the \n
+#                 messege = messege[:-1]
+#                 if len(chat_log) == 0 or chat_log[-1] != messege:
+#                     chat_log.append(messege)
+#                     print("message from server: " + messege)
+#                     return True
+#     return False
+    
 def getInventoryInfo(observation, entities):
     inventory = {}
     if "inventory" in observation:
@@ -58,44 +88,102 @@ def samePosition(ents1, ents2, precision=0.1, anglePrecision=30):
             return False
     return True
 
+def getBlockCoordinates(i, gridSize, xzToCenter):
+    x = i % gridSize
+    y = i // gridSize // gridSize
+    z = (i // gridSize) % gridSize
+    return x - xzToCenter, y + 227, z - xzToCenter
+
 def compareBlock(blockorg, blockhit):
-    # verify is the x y z diffrene is less than 0.6 from the center of the block
-    precision = 0.5
-    if abs(blockorg.x + 0.5 - blockhit.x) > precision:
+    precision = 1.0
+    if abs(blockorg.x - blockhit.x) > precision or abs(blockorg.y - blockhit.y) > precision or abs(blockorg.z - blockhit.z) > precision:
         return False
-    if abs(blockorg.y + 0.5 - blockhit.y) > precision:
-        return False
-    if abs(blockorg.z + 0.5 - blockhit.z) > precision:
-        return False
+    # compare the type of the block
     if blockorg.type != blockhit.type:
         return False
     return True
 
-def verfiyGridEntegrity(grid, gridFound, cords, side_size, xzToCenter):
-    # grid is a dictionry of BlockInfo with x y z and type
-    # gridFound is a 3d array with key x y z and value BlockInfo
+def updateGrid(observation, grid, side_size, gridTypes):
+    # get blocks using ObservationFromGrid absolute position
+    if "floor" in observation and u"LineOfSight" in observation:
+        floor = observation["floor"]
+        los = observation["LineOfSight"]
+        
+        # grid size is the side size of the area we are looking at
+        gridSize = side_size
+        
+        # xzToCenter is the distance from the center of the grid to the edge
+        xzToCenter = (side_size - 1) // 2
+        
+        # check if there is a change in the grid
+        return gridCheck(grid, los, floor, gridSize, xzToCenter, gridTypes)
+    return False
+
+
+def gridCheck(grid, los, floor, gridSize, xzToCenter, gridTypes):
+    # iterate through the grid and fill it with the blocks in line of sight and the ones that are not in missingBlocks then return if there was a change
+    missingBlocks = []
+    for i, block_type in enumerate(floor):
+        x, y, z = getBlockCoordinates(i, gridSize, xzToCenter)
+
+        # create a blockInfo using floor info
+        blockGrid = BlockInfo(x, y, z, block_type, "")
+        
+        # make a unique key for the block
+        key = "block" + str(blockGrid.x) + "_" + str(blockGrid.y) + "_" + str(blockGrid.z)
+            
+        check = blockCheck(grid, los, blockGrid, key, gridTypes)
+        
+        # if blockCheck is -1 then the block is not in the grid and not in line of sight
+        if check == -1:
+            # add the block to missingBlocks
+            missingBlocks.append((x, y, z, block_type))
+        elif isinstance(check, bool):
+            return check
+        
+    # check all blocks we are not loking at are in grid are in the observation  
+    return fillMissing(grid, missingBlocks)  
+
+def blockCheck(grid, los, blockGrid, key, gridTypes):
+    # if block is the one we are looking for and it is not in the grid
+    if blockGrid.type in gridTypes and key not in grid:
+        # check if the block is in line of sight
+        if los[u'hitType'] == "block" and los[u'inRange'] and los[u'type'] == blockGrid.type:
+            # create a blockInfo using los info
+            blockLos = BlockInfo(los[u'x'], los[u'y'], los[u'z'], los[u'type'], los[u'colour'])
+
+            # if they are the same add the block to the grid
+            if compareBlock(blockGrid, blockLos):
+                grid[key] = BlockInfo(blockGrid.x, blockGrid.y, blockGrid.z, blockGrid.type, blockLos.colour)
+                return True
+            else:
+                return False
+        else:
+            # if the block is not in line of sight add it to missingBlocks
+            return -1
+
+    elif key in grid and blockGrid.type not in gridTypes:
+        grid.pop(key)
+        return True 
+    return
+
+def fillMissing(grid, missingBlocks):
+    # check for missing blocks (in case player is placing blocks too fast and the server is not updating fast enough)
     change = False
-    for key, block in list(grid.items()):
-        if gridFound[(block.x + xzToCenter) % side_size][(block.y - 227) % side_size][(block.z + xzToCenter) % side_size] == None:
-            grid.pop(key)
-            change = True
-    # check for missing blocks
-    for cord in cords:
+    for cord in missingBlocks:
         key = "block" + str(cord[0]) + "_" + str(cord[1]) + "_" + str(cord[2])
-        if key not in grid:
-            typeGrid = gridFound[(cord[0] + xzToCenter) % side_size][(cord[1] - 227) % side_size][(cord[2] + xzToCenter) % side_size]
-            # get the color of the last grid
-            color = getNearestColor(grid, cord)
-            grid[key] = BlockInfo(cord[0], cord[1], cord[2], typeGrid, color)
-            change = True
+        typeGrid = cord[3]
+        # get the color of the last grid
+        color = getNearestColor(grid, cord)
+        grid[key] = BlockInfo(cord[0], cord[1], cord[2], typeGrid, color)
+        change = True
     return change
 
 def getNearestColor(grid, cord):
     color = ""
     block = None
     if grid != {}:
-        # color = grid[list(grid.keys())[-1]].colour
-        # loop through the grid in a reverse order and find the nearest color about 5 blocks max
+        # loop through the grid in a reverse order and find the nearest color about 3 blocks max
         cout = 0
         for b in reversed(list(grid.keys())):
             if block == None:
@@ -109,74 +197,3 @@ def getNearestColor(grid, cord):
     if block != None:
         color = block.colour
     return color
-
-def updateGrid(observation, grid, side_size, gridTypes):
-    # get blocks using ObservationFromGrid absolute position
-    if "floor" in observation and u"LineOfSight" in observation:
-        floor = observation["floor"]
-        los = observation["LineOfSight"]
-        # transform the grid to a 3d array
-        # floor is of area_side_size^3
-        gridSize = side_size
-        xzToCenter = (side_size - 1) // 2
-        gridFound = [[[None for k in range(gridSize)] for j in range(gridSize)] for i in range(gridSize)]
-        cords= []
-        for i, block_type in enumerate(floor):
-            x = i % gridSize
-            z = (i // gridSize) % gridSize
-            y = (i // gridSize // gridSize) % gridSize
-            # add world position to block
-            xa = x - xzToCenter
-            ya = y + 227
-            za = z - xzToCenter
-            # if block is the type wanted gridtype is a set of block types
-            if block_type in gridTypes:
-                gridFound[x][y][z] = block_type
-                cords.append([xa, ya, za])
-
-                blockGrid = BlockInfo(xa, ya, za, block_type, "")
-                
-                # make a unique key for the block
-                key = "block" + str(blockGrid.x) + "_" + str(blockGrid.y) + "_" + str(blockGrid.z)
-
-                # add color to block
-                if key not in grid:
-                    if los[u'hitType'] == "block" and los[u'inRange'] and los[u'type'] == block_type:
-                        blockLos = BlockInfo(los[u'x'], los[u'y'], los[u'z'], los[u'type'], los[u'colour'])
-                        block = BlockInfo(xa, ya, za, block_type, blockLos.colour)
-
-                        # if not already a similar blockInfo in grid then add it
-                        if compareBlock(blockGrid, blockLos):
-                            grid[key] = block
-                            return True
-                        else:
-                            return False
-
-        # check all blocks in grid are in the observation  
-        return verfiyGridEntegrity(grid, gridFound, cords, side_size, xzToCenter)
-    
-def getMissingBlocksColors(inventory, initInventory):
-    # get the missing blocks colors
-    missingBlocks = {}
-
-    for block in initInventory:
-        if block["quantity"] > 0:
-            missingBlocks[block["color"]] = abs(block["quantity"]) * 2
-
-    for agent in inventory:
-        for block2 in inventory[agent]:
-            if block2["colour"].lower() in missingBlocks:
-                missingBlocks[block2["colour"].lower()] -= abs(block2["quantity"])
-
-    return missingBlocks
-    
-def getMissingBlocksFromGrid(grid, missingBlocksColors):
-    missingBlocks = {}
-    for key, block in list(grid.items()):
-        if block.colour in missingBlocksColors:
-            if missingBlocksColors[block.colour] > 0:
-                missingBlocksColors[block.colour] -= 1
-                if missingBlocksColors[block.colour] == 0:
-                    missingBlocksColors.pop(key)
-    return missingBlocks
-

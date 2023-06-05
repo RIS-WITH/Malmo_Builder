@@ -23,8 +23,8 @@ def find_nfs_file(path):
 
 def get_connected_agents_ips(log_file_path):
   with open(log_file_path) as log_file:
-    # just read the last two lines
-    lines = log_file.readlines()[-5:]
+    # just read the last ten lines
+    lines = log_file.readlines()[-10:]
     for line in lines:
       if "logged in with entity id" in line and "ADMIN" not in line:
         line = line.split("]: ")[1]

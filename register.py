@@ -2,6 +2,32 @@ import os
 from PIL import Image
 
 
+def saveWorldState(agent, config, experimentID, timestamp, entities, chat_log, inventory, grid):
+    # get screenshot path and save screenshot
+    imagePath = None
+    if config['collect']['screenshot']["save"]:
+        folderPath = config['collect']['screenshot']["path"]
+        interval = config['collect']['screenshot']["interval"]
+        imagePath = saveScreenShot(agent, experimentID, timestamp, folderPath, interval)
+
+    # print to console
+    if config['collect']['log']['console']:
+        printWorldState(timestamp, entities, chat_log, inventory, grid, imagePath)
+
+    saveTxt = config['collect']['log']['txt']
+    saveJson = config['collect']['log']['json']
+    if saveTxt or saveJson:
+        #make a directory for the mission
+        pathLog = config['collect']['log']['path'] + "/" + str(experimentID) + "-Builder"
+        if not os.path.exists(pathLog):
+            os.makedirs(pathLog)
+        # save those info in txt and json files
+        if saveTxt:
+            writeWorldStateTxt(pathLog, timestamp, entities, chat_log, inventory, grid, imagePath)
+        if saveJson:
+            writeWorldStateJson(pathLog, timestamp, entities, chat_log, inventory, grid, imagePath)
+    
+                
 # merge the two functions into one
 def everyNSecondsAndMinutes(interval, timestamp):
     if interval.startswith("every_") and (interval.endswith("_seconds") or interval.endswith("_minutes")):

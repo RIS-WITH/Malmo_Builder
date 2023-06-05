@@ -8,6 +8,7 @@ import uuid
 from malmoutils import *
 from observation import *
 from register import *
+from multiprocessing import Pool
 
 # Create one agent host for parsing:
 agent_hosts = [MalmoPython.AgentHost()]
@@ -113,7 +114,8 @@ for mission_no in range(0, num_missions + 1):
 
     # Admin make every player able to destroy blocks in one hit
     agent_hosts[0].sendCommand("chat /effect @a haste 1000000 255 true")
-
+    
+    running = True
     while running:
         #waiting to get all players connected if not all connected
         if NUM_AGENTS < 2:
@@ -193,29 +195,14 @@ for mission_no in range(0, num_missions + 1):
                     if not config['collect']['agents_position']['save']:
                         entities = None
 
-                    # get screenshot path and save screenshot
-                    imagePath = None
-                    if config['collect']['screenshot']["save"]:
-                        folderPath = config['collect']['screenshot']["path"]
-                        interval = config['collect']['screenshot']["interval"]
-                        imagePath = saveScreenShot(agent_hosts[0], experimentID, timestamp, folderPath, interval)
-
-                    # print to console
-                    if config['collect']['log']['console']:
-                        printWorldState(timestamp, entities, chat_log, inventory, grid, imagePath)
-
-                    saveTxt = config['collect']['log']['txt']
-                    saveJson = config['collect']['log']['json']
-                    if saveTxt or saveJson:
-                        #make a directory for the mission
-                        pathLog = config['collect']['log']['path'] + "/" + str(experimentID) + "-Builder"
-                        if not os.path.exists(pathLog):
-                            os.makedirs(pathLog)
-                        # save those info in txt and json files
-                        if saveTxt:
-                            writeWorldStateTxt(pathLog, timestamp, entities, chat_log, inventory, grid, imagePath)
-                        if saveJson:
-                            writeWorldStateJson(pathLog, timestamp, entities, chat_log, inventory, grid, imagePath)
+                    # open a new process to save the data and screenshot and print to console since it is not important to wait for it
+                    if config['collect']['log']['txt'] or config['collect']['log']['json'] or config['collect']['log']['console'] or config['collect']['screenshot']["save"]:
+                        # TOOD: use another process to save the data and screenshot
+                        # p = Pool(processes=1) 
+                        # p.apply_async(saveWorldState, args=(agent_hosts[0], config, experimentID, timestamp, entities, chat_log, inventory, grid))
+                        
+                        saveWorldState(agent_hosts[0], config, experimentID, timestamp, entities, chat_log, inventory, grid)
+                        
         time.sleep(0.05)       
     print()
 
