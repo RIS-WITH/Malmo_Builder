@@ -1,0 +1,32 @@
+{
+	"Observations": [
+{
+	"WorldStates": [
+		{
+			"builder_1Position": {
+				"X": 4.0,
+				"Y": 227.0,
+				"Z": 6.0,
+				"Yaw": 0.0,
+				"Pitch": 0.0
+			},
+			"builder_2Position": {
+				"X": -1.0,
+				"Y": 227.0,
+				"Z": -6.0,
+				"Yaw": 0.0,
+				"Pitch": 0.0
+			},
+			"ChatHistory": [
+
+			],
+			"Timestamp": "2023-06-06 16:56:09",
+			"BlocksInGrid": [
+
+			],
+			"Screenshots": {
+				"Path": "./screenshots/0b306f70-0b82-43fc-83dc-fb3c27d23fac-Builder/2023-06-06_16-56-09-Builder.png",
+				"Timestamp": "2023-06-06 16:56:09"
+			}		}
+	]
+}

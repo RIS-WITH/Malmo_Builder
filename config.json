@@ -116,7 +116,7 @@
             "txt" : 1,
             "json" : 1,
             "console" : 1,
-            "path" : "./logs"
+            "path" : "./corpus"
         }
     }
 }

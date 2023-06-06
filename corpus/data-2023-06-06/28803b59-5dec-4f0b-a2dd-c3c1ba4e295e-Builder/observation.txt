@@ -1,0 +1,1197 @@
+--------------------
+[Timestamp] 2023-06-06 16:58:59
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.33333333333331, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (-1.0, 227.0, 1.0) (yaw, pitch): (0.0, 0.0)
+[Screenshot Path] 
+[Chat Log]
+[Blocks In Grid] 
+--------------------
+[Timestamp] 2023-06-06 16:58:59
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (-1.0, 227.33333333333331, 1.0) (yaw, pitch): (0.0, 0.0)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-58-59-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+--------------------
+[Timestamp] 2023-06-06 16:58:59
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (-1.0, 227.0, 1.0) (yaw, pitch): (0.0, 0.0)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-58-59-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+--------------------
+[Timestamp] 2023-06-06 16:59:31
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (-1.0, 227.0, 1.4302313432562945) (yaw, pitch): (0.0, 0.0)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-31-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+--------------------
+[Timestamp] 2023-06-06 16:59:31
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (-1.0, 227.0, 1.8322908298442213) (yaw, pitch): (0.0, 0.0)
+[Screenshot Path] 
+[Chat Log]
+[Blocks In Grid] 
+--------------------
+[Timestamp] 2023-06-06 16:59:31
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (-1.0, 227.0, 1.6269063006486042) (yaw, pitch): (0.0, 0.0)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-31-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+--------------------
+[Timestamp] 2023-06-06 16:59:31
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (-1.0, 227.0, 1.0652669270833335) (yaw, pitch): (0.0, 0.0)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-31-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+--------------------
+[Timestamp] 2023-06-06 16:59:31
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (-1.0, 227.0, 1.1869032118055556) (yaw, pitch): (0.0, 0.0)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-31-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+--------------------
+[Timestamp] 2023-06-06 16:59:31
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (-1.0, 227.0, 2.255167205060265) (yaw, pitch): (0.0, 0.0)
+[Screenshot Path] 
+[Chat Log]
+[Blocks In Grid] 
+--------------------
+[Timestamp] 2023-06-06 16:59:31
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (-1.0, 227.0, 2.0424307857967996) (yaw, pitch): (0.0, 0.0)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-31-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+--------------------
+[Timestamp] 2023-06-06 16:59:31
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (-1.0, 227.0, 1.4831181278935184) (yaw, pitch): (0.0, 0.0)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-31-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+--------------------
+[Timestamp] 2023-06-06 16:59:31
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (-1.0, 227.0, 1.657696759259259) (yaw, pitch): (0.0, 0.0)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-31-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+--------------------
+[Timestamp] 2023-06-06 16:59:31
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (-1.0, 227.0, 2.8996001950695547) (yaw, pitch): (0.0, 0.0)
+[Screenshot Path] 
+[Chat Log]
+[Blocks In Grid] 
+--------------------
+[Timestamp] 2023-06-06 16:59:31
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (-1.0, 227.0, 2.46932129345614) (yaw, pitch): (0.0, 0.0)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-31-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+--------------------
+[Timestamp] 2023-06-06 16:59:31
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (-1.0, 227.0, 1.8568401572145061) (yaw, pitch): (0.0, 0.0)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-31-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+--------------------
+[Timestamp] 2023-06-06 16:59:31
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (-1.0, 227.0, 3.1151817168299876) (yaw, pitch): (0.0, 0.0)
+[Screenshot Path] 
+[Chat Log]
+[Blocks In Grid] 
+--------------------
+[Timestamp] 2023-06-06 16:59:31
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (-1.0, 227.0, 2.055983555169753) (yaw, pitch): (0.0, 0.0)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-31-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+--------------------
+[Timestamp] 2023-06-06 16:59:31
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (-1.0, 227.0, 3.3308892313696417) (yaw, pitch): (0.0, 0.0)
+[Screenshot Path] 
+[Chat Log]
+[Blocks In Grid] 
+--------------------
+[Timestamp] 2023-06-06 16:59:31
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (-1.0, 227.0, 2.2653497138631686) (yaw, pitch): (0.0, 0.0)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-31-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+--------------------
+[Timestamp] 2023-06-06 16:59:31
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (-1.0, 227.0, 3.762479405051937) (yaw, pitch): (0.0, 0.0)
+[Screenshot Path] 
+[Chat Log]
+[Blocks In Grid] 
+--------------------
+[Timestamp] 2023-06-06 16:59:31
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (-1.0, 227.0, 2.6881406598293895) (yaw, pitch): (0.0, 0.0)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-31-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+--------------------
+[Timestamp] 2023-06-06 16:59:31
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (-1.0, 227.0, 2.901565447102195) (yaw, pitch): (0.0, 0.0)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-31-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+--------------------
+[Timestamp] 2023-06-06 16:59:31
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (-1.0, 227.0, 3.11658725119313) (yaw, pitch): (0.0, 0.0)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-31-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+--------------------
+[Timestamp] 2023-06-06 16:59:31
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (-1.0, 227.0, 3.9783137801492785) (yaw, pitch): (0.0, 0.0)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-31-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+--------------------
+[Timestamp] 2023-06-06 16:59:31
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (-1.0, 227.0, 3.546630859375) (yaw, pitch): (0.0, 0.0)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-31-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+--------------------
+[Timestamp] 2023-06-06 16:59:31
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (-0.9846731368452311, 227.0, 4.192951933887125) (yaw, pitch): (-9.0, 2.1)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-31-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+--------------------
+[Timestamp] 2023-06-06 16:59:32
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (-0.5323960873076335, 227.0, 4.87070772758589) (yaw, pitch): (-51.3, 11.1)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-32-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+--------------------
+[Timestamp] 2023-06-06 16:59:32
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (-0.6387803819444445, 227.0, 4.694016444830247) (yaw, pitch): (-42.1875, 8.125)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-32-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+--------------------
+[Timestamp] 2023-06-06 16:59:32
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (-0.2107425410874353, 227.0, 5.150137319952085) (yaw, pitch): (-51.45, 11.1)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-32-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+--------------------
+[Timestamp] 2023-06-06 16:59:32
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (-0.3526566116898149, 227.0, 4.997452096193416) (yaw, pitch): (-42.1875, 8.125)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-32-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+--------------------
+[Timestamp] 2023-06-06 16:59:32
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (0.29001733126501145, 227.0, 5.557368096373009) (yaw, pitch): (-51.45, 11.1)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-32-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+--------------------
+[Timestamp] 2023-06-06 16:59:32
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (0.1268928433641975, 227.0, 5.4187648024905695) (yaw, pitch): (-42.1875, 8.125)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-32-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+--------------------
+[Timestamp] 2023-06-06 16:59:32
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (0.8533795607461787, 227.0, 5.777412265648424) (yaw, pitch): (-51.45, 11.1)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-32-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+--------------------
+[Timestamp] 2023-06-06 16:59:32
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (0.6714818297753772, 227.0, 5.687866787706238) (yaw, pitch): (-42.1875, 8.125)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-32-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+--------------------
+[Timestamp] 2023-06-06 16:59:32
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (1.2783774375966335, 227.0, 5.767400056074109) (yaw, pitch): (-51.45, 11.1)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-32-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+--------------------
+[Timestamp] 2023-06-06 16:59:32
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (2.0845189052750523, 227.0, 5.222982934708767) (yaw, pitch): (-114.30001, 16.05)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-32-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+--------------------
+[Timestamp] 2023-06-06 16:59:32
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (1.805360148787977, 227.0, 5.489434157646527) (yaw, pitch): (-96.979164, 13.674769)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-32-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+--------------------
+[Timestamp] 2023-06-06 16:59:32
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (2.3109897242500548, 227.0, 4.88200395409067) (yaw, pitch): (-115.80001, 16.349998)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-32-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+--------------------
+[Timestamp] 2023-06-06 16:59:33
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (2.1888328112563293, 227.0, 5.039946383045255) (yaw, pitch): (-113.19444, 15.169754)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-33-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+--------------------
+[Timestamp] 2023-06-06 16:59:33
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (2.6513247289239823, 227.0, 4.648490183385316) (yaw, pitch): (-115.80001, 16.349998)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-33-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+--------------------
+[Timestamp] 2023-06-06 16:59:33
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (3.217172993534949, 227.0, 4.350454946408036) (yaw, pitch): (-115.80001, 16.349998)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-33-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+--------------------
+[Timestamp] 2023-06-06 16:59:33
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (3.036150159051395, 227.0, 4.4566265260589075) (yaw, pitch): (-113.19444, 15.169754)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-33-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+--------------------
+[Timestamp] 2023-06-06 16:59:33
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (3.603523558987823, 227.0, 4.160370739335955) (yaw, pitch): (-115.80001, 16.349998)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-33-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+--------------------
+[Timestamp] 2023-06-06 16:59:33
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (4.185735047202528, 227.0, 3.877779140308844) (yaw, pitch): (-115.80001, 16.349998)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-33-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+--------------------
+[Timestamp] 2023-06-06 16:59:33
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (3.9923376607459105, 227.0, 3.972633765336606) (yaw, pitch): (-113.19444, 15.169754)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-33-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+--------------------
+[Timestamp] 2023-06-06 16:59:33
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (4.768645216367848, 227.0, 3.5958469575376797) (yaw, pitch): (-115.80001, 16.349998)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-33-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+--------------------
+[Timestamp] 2023-06-06 16:59:33
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (5.351669110804567, 227.0, 3.314022108868877) (yaw, pitch): (-115.80001, 16.349998)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-33-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+--------------------
+[Timestamp] 2023-06-06 16:59:33
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (5.157268292990588, 227.0, 3.407912940382837) (yaw, pitch): (-113.19444, 15.169754)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-33-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+--------------------
+[Timestamp] 2023-06-06 16:59:33
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (5.9422499930307655, 227.0, 3.0496206227170357) (yaw, pitch): (-109.8, 17.849998)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-33-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+--------------------
+[Timestamp] 2023-06-06 16:59:34
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (6.49838262195968, 227.0, 2.764379711886139) (yaw, pitch): (-109.8, 17.849998)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-34-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+--------------------
+[Timestamp] 2023-06-06 16:59:34
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (6.313749375434837, 227.0, 2.8612992929308456) (yaw, pitch): (-111.95216, 16.685528)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-34-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+--------------------
+[Timestamp] 2023-06-06 16:59:34
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (6.755584387575684, 227.0, 2.433510388551052) (yaw, pitch): (-101.100006, 18.599997)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-34-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+--------------------
+[Timestamp] 2023-06-06 16:59:34
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (7.275127426135886, 227.0, 2.150845887860637) (yaw, pitch): (-26.700008, 20.999996)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-34-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+--------------------
+[Timestamp] 2023-06-06 16:59:34
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (7.107313368055555, 227.0, 2.28955078125) (yaw, pitch): (-55.625, 17.65625)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-34-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+--------------------
+[Timestamp] 2023-06-06 16:59:34
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (7.635557747149966, 227.0, 2.473199519237092) (yaw, pitch): (-1.800007, 14.549995)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-34-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+--------------------
+[Timestamp] 2023-06-06 16:59:34
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (7.5190248842592595, 227.0, 2.395426432291667) (yaw, pitch): (-13.489583, 14.895834)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-34-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+--------------------
+[Timestamp] 2023-06-06 16:59:34
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (7.695888726953425, 227.0, 2.860353332712242) (yaw, pitch): (-1.800007, 14.549995)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-34-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+--------------------
+[Timestamp] 2023-06-06 16:59:34
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (7.636875482253087, 227.0, 2.7053765190972223) (yaw, pitch): (-13.489583, 14.895834)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-34-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+--------------------
+[Timestamp] 2023-06-06 16:59:34
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (7.732829064012904, 227.0, 3.4918390481600037) (yaw, pitch): (-1.800007, 14.549995)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-34-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+--------------------
+[Timestamp] 2023-06-06 16:59:34
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (7.709914386681241, 227.0, 3.2936861014660495) (yaw, pitch): (-13.489583, 14.895834)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-34-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+--------------------
+[Timestamp] 2023-06-06 16:59:34
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (7.748632412725797, 227.0, 3.9211915715154895) (yaw, pitch): (-1.800007, 14.549995)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-34-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+--------------------
+[Timestamp] 2023-06-06 16:59:34
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (7.73549880597708, 227.0, 3.7120717994470165) (yaw, pitch): (-13.489583, 14.895834)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-34-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+--------------------
+[Timestamp] 2023-06-06 16:59:34
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (7.774091591577038, 227.0, 4.567449297576813) (yaw, pitch): (-4.350007, 15.599996)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-34-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+--------------------
+[Timestamp] 2023-06-06 16:59:35
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (7.7644695275586795, 227.0, 4.353012943137003) (yaw, pitch): (-8.246528, 15.277779)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-35-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+--------------------
+[Timestamp] 2023-06-06 16:59:35
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (7.812895183481913, 227.0, 4.9970453471990295) (yaw, pitch): (-6.750007, 16.199995)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-35-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+--------------------
+[Timestamp] 2023-06-06 16:59:35
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (7.8847263966227334, 227.0, 5.640442156956383) (yaw, pitch): (-6.750007, 16.199995)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-35-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+--------------------
+[Timestamp] 2023-06-06 16:59:35
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (7.86241802634694, 227.0, 5.42586156349626) (yaw, pitch): (-7.4363422, 15.405092)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-35-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+--------------------
+[Timestamp] 2023-06-06 16:59:35
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (7.960102427548712, 227.0, 6.283579523965402) (yaw, pitch): (-6.750007, 16.199995)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-35-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+--------------------
+[Timestamp] 2023-06-06 16:59:35
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (7.935321624182823, 227.0, 6.069064492353544) (yaw, pitch): (-7.4363422, 15.405092)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-35-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+--------------------
+[Timestamp] 2023-06-06 16:59:35
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (8.036055453402515, 227.0, 6.926674661116944) (yaw, pitch): (-6.750007, 16.199995)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-35-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+--------------------
+[Timestamp] 2023-06-06 16:59:35
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (7.98543923931094, 227.0, 6.4977936328678485) (yaw, pitch): (-7.4363422, 15.405092)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-35-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+--------------------
+[Timestamp] 2023-06-06 16:59:35
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (8.086750281478615, 227.0, 7.3554003994339405) (yaw, pitch): (-6.750007, 16.199995)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-35-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+--------------------
+[Timestamp] 2023-06-06 16:59:35
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (8.229552243050147, 227.0, 8.205473412925567) (yaw, pitch): (-15.000008, 20.999996)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-35-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+--------------------
+[Timestamp] 2023-06-06 16:59:35
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (8.193296079282407, 227.0, 7.976526331018518) (yaw, pitch): (-14.62127, 19.673353)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-35-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+--------------------
+[Timestamp] 2023-06-06 16:59:35
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (8.42604465218579, 227.0, 8.820363641697977) (yaw, pitch): (-24.150007, 31.799997)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-35-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+--------------------
+[Timestamp] 2023-06-06 16:59:36
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (8.363718291859566, 227.0, 8.611891758294753) (yaw, pitch): (-22.358753, 27.653893)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-36-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+--------------------
+[Timestamp] 2023-06-06 16:59:36
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (8.630165406644998, 227.0, 9.1963433568339) (yaw, pitch): (-38.25001, 44.699997)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-36-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+--------------------
+[Timestamp] 2023-06-06 16:59:36
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (8.607100707840363, 227.0, 9.040886354381001) (yaw, pitch): (-36.499725, 40.25937)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-36-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+--------------------
+[Timestamp] 2023-06-06 16:59:36
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (8.998954772307304, 227.0, 9.590824310687065) (yaw, pitch): (-52.50001, 55.499996)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-36-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+--------------------
+[Timestamp] 2023-06-06 16:59:36
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (9.093514794446978, 227.0, 9.684006969739585) (yaw, pitch): (-59.100014, 42.149998)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-36-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+	BlockInfo(x=10, y=227, z=10, type='wool', colour='WHITE')
+--------------------
+[Timestamp] 2023-06-06 16:59:37
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (8.495736877609446, 227.0, 9.537558472240772) (yaw, pitch): (28.049988, 37.5)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-37-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+	BlockInfo(x=10, y=227, z=10, type='wool', colour='WHITE')
+--------------------
+[Timestamp] 2023-06-06 16:59:37
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (8.632921006944445, 227.0, 9.573034215856481) (yaw, pitch): (16.197916, 38.125)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-37-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+	BlockInfo(x=10, y=227, z=10, type='wool', colour='WHITE')
+--------------------
+[Timestamp] 2023-06-06 16:59:37
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (8.133538047917645, 227.0, 9.341128895827591) (yaw, pitch): (35.24999, 37.199997)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-37-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+	BlockInfo(x=10, y=227, z=10, type='wool', colour='WHITE')
+--------------------
+[Timestamp] 2023-06-06 16:59:37
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (8.300573278356481, 227.0, 9.41529525945216) (yaw, pitch): (26.961805, 37.083332)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-37-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+	BlockInfo(x=10, y=227, z=10, type='wool', colour='WHITE')
+--------------------
+[Timestamp] 2023-06-06 16:59:37
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (7.6038838433243185, 227.0, 8.98247988911804) (yaw, pitch): (35.849987, 37.199997)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-37-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+	BlockInfo(x=10, y=227, z=10, type='wool', colour='WHITE')
+--------------------
+[Timestamp] 2023-06-06 16:59:37
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (7.778570481288581, 227.0, 9.095135472929528) (yaw, pitch): (31.059029, 36.822914)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-37-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+	BlockInfo(x=10, y=227, z=10, type='wool', colour='WHITE')
+--------------------
+[Timestamp] 2023-06-06 16:59:37
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (7.253298440882415, 227.0, 8.73245844229588) (yaw, pitch): (35.849987, 37.199997)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-37-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+	BlockInfo(x=10, y=227, z=10, type='wool', colour='WHITE')
+--------------------
+[Timestamp] 2023-06-06 16:59:38
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (6.553172698279485, 227.0, 8.227881393830152) (yaw, pitch): (35.849987, 37.199997)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-38-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+	BlockInfo(x=10, y=227, z=10, type='wool', colour='WHITE')
+--------------------
+[Timestamp] 2023-06-06 16:59:38
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (6.154102440118589, 227.0, 8.16173937809319) (yaw, pitch): (35.849987, 37.199997)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-38-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+	BlockInfo(x=10, y=227, z=10, type='wool', colour='WHITE')
+--------------------
+[Timestamp] 2023-06-06 16:59:38
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (6.420003255208333, 227.0, 8.205729166666666) (yaw, pitch): (31.059029, 36.822914)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-38-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+	BlockInfo(x=10, y=227, z=10, type='wool', colour='WHITE')
+--------------------
+[Timestamp] 2023-06-06 16:59:38
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (5.514469413004479, 227.0, 8.218401348165703) (yaw, pitch): (35.849987, 37.199997)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-38-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+	BlockInfo(x=10, y=227, z=10, type='wool', colour='WHITE')
+--------------------
+[Timestamp] 2023-06-06 16:59:38
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (5.73924877025463, 227.0, 8.213686342592593) (yaw, pitch): (31.059029, 36.822914)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-38-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+	BlockInfo(x=10, y=227, z=10, type='wool', colour='WHITE')
+--------------------
+[Timestamp] 2023-06-06 16:59:38
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (4.863615263937859, 227.0, 8.311732319493231) (yaw, pitch): (38.099987, 36.299995)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-38-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+	BlockInfo(x=10, y=227, z=10, type='wool', colour='WHITE')
+--------------------
+[Timestamp] 2023-06-06 16:59:38
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (5.081907672646604, 227.0, 8.284800588348766) (yaw, pitch): (35.665512, 35.711807)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-38-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+	BlockInfo(x=10, y=227, z=10, type='wool', colour='WHITE')
+--------------------
+[Timestamp] 2023-06-06 16:59:38
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (4.436466668333585, 227.0, 8.264159376711236) (yaw, pitch): (66.29999, 23.249994)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-38-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+	BlockInfo(x=10, y=227, z=10, type='wool', colour='WHITE')
+--------------------
+[Timestamp] 2023-06-06 16:59:38
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (3.823442678164519, 227.0, 8.254798769041479) (yaw, pitch): (66.59999, 22.949995)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-38-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+	BlockInfo(x=10, y=227, z=10, type='wool', colour='WHITE')
+--------------------
+[Timestamp] 2023-06-06 16:59:38
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (4.030137692186785, 227.0, 8.260119053998055) (yaw, pitch): (55.951004, 26.903934)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-38-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+	BlockInfo(x=10, y=227, z=10, type='wool', colour='WHITE')
+--------------------
+[Timestamp] 2023-06-06 16:59:38
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (3.4246807676500453, 227.0, 8.389887363219543) (yaw, pitch): (66.59999, 22.949995)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-38-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+	BlockInfo(x=10, y=227, z=10, type='wool', colour='WHITE')
+--------------------
+[Timestamp] 2023-06-06 16:59:38
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (2.631275401633573, 227.0, 8.71873523162617) (yaw, pitch): (66.59999, 22.949995)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-38-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+	BlockInfo(x=10, y=227, z=10, type='wool', colour='WHITE')
+--------------------
+[Timestamp] 2023-06-06 16:59:39
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (2.8434968171296298, 227.0, 8.629313151041666) (yaw, pitch): (60.73817, 24.967207)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-39-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+	BlockInfo(x=10, y=227, z=10, type='wool', colour='WHITE')
+--------------------
+[Timestamp] 2023-06-06 16:59:39
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (2.2267100724778235, 227.0, 8.86682536585457) (yaw, pitch): (74.54999, 20.399996)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-39-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+	BlockInfo(x=10, y=227, z=10, type='wool', colour='WHITE')
+--------------------
+[Timestamp] 2023-06-06 16:59:39
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (2.43163761091821, 227.0, 8.785780164930555) (yaw, pitch): (68.527306, 21.916153)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-39-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+	BlockInfo(x=10, y=227, z=10, type='wool', colour='WHITE')
+--------------------
+[Timestamp] 2023-06-06 16:59:39
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (1.6063519812041567, 227.0, 9.050047113189855) (yaw, pitch): (74.69999, 20.249996)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-39-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+	BlockInfo(x=10, y=227, z=10, type='wool', colour='WHITE')
+--------------------
+[Timestamp] 2023-06-06 16:59:39
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (1.812865708590535, 227.0, 8.985903139467592) (yaw, pitch): (71.52928, 20.801826)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-39-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+	BlockInfo(x=10, y=227, z=10, type='wool', colour='WHITE')
+--------------------
+[Timestamp] 2023-06-06 16:59:39
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (1.1873829906357525, 227.0, 9.152065512367823) (yaw, pitch): (80.54999, 17.399998)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-39-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+	BlockInfo(x=10, y=227, z=10, type='wool', colour='WHITE')
+--------------------
+[Timestamp] 2023-06-06 16:59:39
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (1.3957924757801785, 227.0, 9.096538025655864) (yaw, pitch): (77.280594, 18.18394)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-39-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+	BlockInfo(x=10, y=227, z=10, type='wool', colour='WHITE')
+--------------------
+[Timestamp] 2023-06-06 16:59:39
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (0.548040925281293, 227.0, 9.248120231383218) (yaw, pitch): (83.54999, 16.349998)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-39-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+	BlockInfo(x=10, y=227, z=10, type='wool', colour='WHITE')
+--------------------
+[Timestamp] 2023-06-06 16:59:39
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (0.7599645171872619, 227.0, 9.210689005701303) (yaw, pitch): (81.07269, 16.373814)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-39-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+	BlockInfo(x=10, y=227, z=10, type='wool', colour='WHITE')
+--------------------
+[Timestamp] 2023-06-06 16:59:39
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (-0.30919071449275964, 227.0, 9.349302128693324) (yaw, pitch): (83.54999, 16.349998)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-39-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+	BlockInfo(x=10, y=227, z=10, type='wool', colour='WHITE')
+--------------------
+[Timestamp] 2023-06-06 16:59:39
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (-0.9526326476694991, 227.0, 9.422173609604165) (yaw, pitch): (83.69999, 16.349998)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-39-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+	BlockInfo(x=10, y=227, z=10, type='wool', colour='WHITE')
+--------------------
+[Timestamp] 2023-06-06 16:59:39
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (-1.5962530585270813, 227.0, 9.4936138082162) (yaw, pitch): (83.69999, 16.349998)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-39-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+	BlockInfo(x=10, y=227, z=10, type='wool', colour='WHITE')
+--------------------
+[Timestamp] 2023-06-06 16:59:40
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (-1.3659758391203705, 227.0, 9.467818648726853) (yaw, pitch): (81.07269, 16.373814)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-40-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+	BlockInfo(x=10, y=227, z=10, type='wool', colour='WHITE')
+--------------------
+[Timestamp] 2023-06-06 16:59:40
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (-2.025357245555261, 227.0, 9.541043708517115) (yaw, pitch): (83.69999, 16.349998)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-40-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+	BlockInfo(x=10, y=227, z=10, type='wool', colour='WHITE')
+--------------------
+[Timestamp] 2023-06-06 16:59:40
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (-2.669372377978932, 227.0, 9.608655373399941) (yaw, pitch): (85.049995, 19.349998)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-40-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+	BlockInfo(x=10, y=227, z=10, type='wool', colour='WHITE')
+--------------------
+[Timestamp] 2023-06-06 16:59:40
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (-2.3831380208333335, 227.0, 9.579345703125) (yaw, pitch): (82.17346, 17.009626)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-40-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+	BlockInfo(x=10, y=227, z=10, type='wool', colour='WHITE')
+--------------------
+[Timestamp] 2023-06-06 16:59:40
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (-3.314668712936963, 227.0, 9.662420308676861) (yaw, pitch): (85.649994, 21.599997)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-40-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+	BlockInfo(x=10, y=227, z=10, type='wool', colour='WHITE')
+--------------------
+[Timestamp] 2023-06-06 16:59:40
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (-2.8607855902777777, 227.0, 9.623291015625) (yaw, pitch): (83.64116, 19.732376)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-40-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+	BlockInfo(x=10, y=227, z=10, type='wool', colour='WHITE')
+--------------------
+[Timestamp] 2023-06-06 16:59:40
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (-3.7450862027440133, 227.0, 9.6958032646256) (yaw, pitch): (85.649994, 21.599997)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-40-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+	BlockInfo(x=10, y=227, z=10, type='wool', colour='WHITE')
+--------------------
+[Timestamp] 2023-06-06 16:59:40
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (-3.524781780478395, 227.0, 9.677761501736112) (yaw, pitch): (83.64116, 19.732376)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-40-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+	BlockInfo(x=10, y=227, z=10, type='wool', colour='WHITE')
+--------------------
+[Timestamp] 2023-06-06 16:59:40
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (-4.175543421640324, 227.0, 9.728741781751413) (yaw, pitch): (85.649994, 21.599997)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-40-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+	BlockInfo(x=10, y=227, z=10, type='wool', colour='WHITE')
+--------------------
+[Timestamp] 2023-06-06 16:59:40
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (-3.9587000466177984, 227.0, 9.711678964120372) (yaw, pitch): (83.64116, 19.732376)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-40-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+	BlockInfo(x=10, y=227, z=10, type='wool', colour='WHITE')
+--------------------
+[Timestamp] 2023-06-06 16:59:40
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (-4.821248561030932, 227.0, 9.777933529870008) (yaw, pitch): (85.649994, 21.599997)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-40-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+	BlockInfo(x=10, y=227, z=10, type='wool', colour='WHITE')
+--------------------
+[Timestamp] 2023-06-06 16:59:40
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (-5.466958724274288, 227.0, 9.827069077475478) (yaw, pitch): (85.649994, 26.249996)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-40-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+	BlockInfo(x=10, y=227, z=10, type='wool', colour='WHITE')
+--------------------
+[Timestamp] 2023-06-06 16:59:40
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (-5.251834087374733, 227.0, 9.810520083161867) (yaw, pitch): (84.21192, 23.291222)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-40-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+	BlockInfo(x=10, y=227, z=10, type='wool', colour='WHITE')
+--------------------
+[Timestamp] 2023-06-06 16:59:40
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (-5.8974881091719, 227.0, 9.859051871943649) (yaw, pitch): (86.1, 29.249996)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-40-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+	BlockInfo(x=10, y=227, z=10, type='wool', colour='WHITE')
+--------------------
+[Timestamp] 2023-06-06 16:59:41
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (-5.682414747874911, 227.0, 9.841950704803956) (yaw, pitch): (85.25814, 27.45124)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-41-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+	BlockInfo(x=10, y=227, z=10, type='wool', colour='WHITE')
+--------------------
+[Timestamp] 2023-06-06 16:59:41
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (-6.328542781632246, 227.0, 9.881173783333406) (yaw, pitch): (88.94999, 36.299995)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-41-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+	BlockInfo(x=10, y=227, z=10, type='wool', colour='WHITE')
+--------------------
+[Timestamp] 2023-06-06 16:59:41
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (-6.113037109375, 227.0, 9.8720703125) (yaw, pitch): (87.1875, 32.34375)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-41-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+	BlockInfo(x=10, y=227, z=10, type='wool', colour='WHITE')
+--------------------
+[Timestamp] 2023-06-06 16:59:41
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (-6.975871739707807, 227.0, 9.885315586872359) (yaw, pitch): (90.14999, 38.549995)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-41-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+	BlockInfo(x=10, y=227, z=10, type='wool', colour='WHITE')
+--------------------
+[Timestamp] 2023-06-06 16:59:41
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (-6.113037109375, 227.0, 9.8720703125) (yaw, pitch): (87.1875, 32.34375)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-41-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+	BlockInfo(x=10, y=227, z=10, type='wool', colour='WHITE')
+--------------------
+[Timestamp] 2023-06-06 16:59:41
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (-7.623406649723274, 227.0, 9.884554541583832) (yaw, pitch): (90.14999, 38.549995)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-41-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+	BlockInfo(x=10, y=227, z=10, type='wool', colour='WHITE')
+--------------------
+[Timestamp] 2023-06-06 16:59:41
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (-6.113037109375, 227.0, 9.8720703125) (yaw, pitch): (87.1875, 32.34375)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-41-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+	BlockInfo(x=10, y=227, z=10, type='wool', colour='WHITE')
+--------------------
+[Timestamp] 2023-06-06 16:59:41
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (-8.054345060251643, 227.0, 9.896586124961225) (yaw, pitch): (82.79999, 47.999996)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-41-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+	BlockInfo(x=10, y=227, z=10, type='wool', colour='WHITE')
+--------------------
+[Timestamp] 2023-06-06 16:59:41
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (-6.113037109375, 227.0, 9.8720703125) (yaw, pitch): (87.1875, 32.34375)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-41-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+	BlockInfo(x=10, y=227, z=10, type='wool', colour='WHITE')
+--------------------
+[Timestamp] 2023-06-06 16:59:41
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (-8.439962514495605, 227.0, 9.972848188326758) (yaw, pitch): (69.29998, 58.649998)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-41-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+	BlockInfo(x=10, y=227, z=10, type='wool', colour='WHITE')
+	BlockInfo(x=-10, y=227, z=10, type='wool', colour='WHITE')
+--------------------
+[Timestamp] 2023-06-06 16:59:41
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (-7.4033203125, 227.0, 9.92751736111111) (yaw, pitch): (81.09375, 40.78125)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-41-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+	BlockInfo(x=10, y=227, z=10, type='wool', colour='WHITE')
+	BlockInfo(x=-10, y=227, z=10, type='wool', colour='WHITE')
+--------------------
+[Timestamp] 2023-06-06 16:59:41
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (-8.502730004579636, 227.0, 9.983254764588356) (yaw, pitch): (69.29998, 58.649998)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-41-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+	BlockInfo(x=10, y=227, z=10, type='wool', colour='WHITE')
+	BlockInfo(x=-10, y=227, z=10, type='wool', colour='WHITE')
+--------------------
+[Timestamp] 2023-06-06 16:59:41
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (-7.76025390625, 227.0, 9.94484230324074) (yaw, pitch): (81.09375, 40.78125)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-41-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+	BlockInfo(x=10, y=227, z=10, type='wool', colour='WHITE')
+	BlockInfo(x=-10, y=227, z=10, type='wool', colour='WHITE')
+--------------------
+[Timestamp] 2023-06-06 16:59:41
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (-8.508270193506698, 227.0, 9.983254764588356) (yaw, pitch): (69.29998, 58.649998)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-41-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+	BlockInfo(x=10, y=227, z=10, type='wool', colour='WHITE')
+	BlockInfo(x=-10, y=227, z=10, type='wool', colour='WHITE')
+--------------------
+[Timestamp] 2023-06-06 16:59:41
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (-8.3779296875, 227.0, 9.976158613040123) (yaw, pitch): (81.09375, 40.78125)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-41-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+	BlockInfo(x=10, y=227, z=10, type='wool', colour='WHITE')
+	BlockInfo(x=-10, y=227, z=10, type='wool', colour='WHITE')
+--------------------
+[Timestamp] 2023-06-06 16:59:41
+[Builder Position] 
+	builder_1 (x, y, z): (1.0, 227.0, -4.0) (yaw, pitch): (0.0, 0.0)
+	builder_2 (x, y, z): (-8.51129513701223, 227.0, 9.983254764588356) (yaw, pitch): (69.29998, 58.649998)
+[Screenshot Path] ./screenshots/28803b59-5dec-4f0b-a2dd-c3c1ba4e295e-Builder/2023-06-06_16-59-41-Builder.png
+[Chat Log]
+[Blocks In Grid] 
+	BlockInfo(x=10, y=227, z=10, type='wool', colour='WHITE')
+	BlockInfo(x=-10, y=227, z=10, type='wool', colour='WHITE')

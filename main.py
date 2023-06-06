@@ -8,7 +8,7 @@ import uuid
 from malmoutils import *
 from observation import *
 from register import *
-from multiprocessing import Pool
+import threading
 
 # Create one agent host for parsing:
 agent_hosts = [MalmoPython.AgentHost()]
@@ -111,6 +111,10 @@ for mission_no in range(0, num_missions + 1):
     lastEntities = None
     # the last grid seen by the agents
     grid = {}
+    
+    names = []
+    for j in range(NUM_AGENTS):
+        names.append(config['agents']['builder_' + str(j + 1)]['name'])
 
     # Admin make every player able to destroy blocks in one hit
     agent_hosts[0].sendCommand("chat /effect @a haste 1000000 255 true")
@@ -156,7 +160,7 @@ for mission_no in range(0, num_missions + 1):
                     timestamp = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
 
                     # get agents informations
-                    entities = getEntitiesInfo(ob, lastEntities)
+                    entities = getEntitiesInfo(ob, lastEntities, names)
 
                     # # print los if exists
                     # if u'LineOfSight' in ob:
@@ -197,11 +201,12 @@ for mission_no in range(0, num_missions + 1):
 
                     # open a new process to save the data and screenshot and print to console since it is not important to wait for it
                     if config['collect']['log']['txt'] or config['collect']['log']['json'] or config['collect']['log']['console'] or config['collect']['screenshot']["save"]:
-                        # TOOD: use another process to save the data and screenshot
-                        # p = Pool(processes=1) 
-                        # p.apply_async(saveWorldState, args=(agent_hosts[0], config, experimentID, timestamp, entities, chat_log, inventory, grid))
-                        
-                        saveWorldState(agent_hosts[0], config, experimentID, timestamp, entities, chat_log, inventory, grid)
+                        # create a new event
+                        event = threading.Event()
+                        # create a new thread to save the data
+                        p = threading.Thread(target=saveWorldState, args=(agent_hosts[0], config, experimentID, timestamp, entities, chat_log, inventory, grid))
+                        # dont wait for the process to finish
+                        p.start()
                         
         time.sleep(0.05)       
     print()

@@ -1,59 +1,40 @@
 from collections import namedtuple
-import os
 
 EntityInfo = namedtuple('EntityInfo', 'x, y, z, yaw, pitch, name, colour, variation, quantity, life')
 EntityInfo.__new__.__defaults__ = (0, 0, 0, 0, 0, "", "", "", 1, 1)
 BlockInfo = namedtuple('BlockInfo', 'x, y, z, type, colour')
 BlockInfo.__new__.__defaults__ = (0, 0, 0, "", "")
 
-def getEntitiesInfo(observations, lastEntities=None):
+def getEntitiesInfo(observations, lastEntities=None, names=[]):
     # get builder 1 and 2 position
     if "entities" in observations:
         entities = [EntityInfo(k["x"], k["y"], k["z"], k["yaw"], k["pitch"], k["name"]) for k in observations["entities"]]
+    # get rid of block types and other unwanted entities
+    entities = [e for e in entities if e.name in names]
     # order entities by name
     if lastEntities is not None and len(entities) < len(lastEntities):
         for e in lastEntities:
+            # if un entity is missing, add it
             if e.name not in [k.name for k in entities]:
                 entities.append(e)
     return sorted(entities, key=lambda x: x.name)
 
 def updateChatLog(observations, chat_log):
     return readObservationChatLog(observations, chat_log)
-
     
-## TODO : see if it is better to read from observation or from server log
 def readObservationChatLog(observations, chat_log):
     if "Chat" in observations:
-        print(observations["Chat"])
-        if len(chat_log) == 0 or chat_log[-1] != observations["Chat"]:
-            chats = observations["Chat"]
-            # transform to list if it is not
-            if type(chats) is not list:
-                chats = [chats]
-            for chat in chats:
-                # ignore ADMIN messages
-                if "ADMIN" not in chat:
-                    chat_log.append(chat)
-                    return True
+        chats = observations["Chat"]
+        # transform to list if it is not
+        if type(chats) is not list:
+            chats = [chats]
+        for chat in chats:
+            # ignore ADMIN messages
+            if "ADMIN" not in chat and (len(chat_log) == 0 or chat_log[-1] != chat):
+                chat_log.append(chat)
+                return True
     return False
-# def readServerChatLog(chat_log, config):
-#     # read config file log path
-#     with open(config['server']['log_path']) as log_file:
-#         # just read the last two lines
-#         lines = log_file.readlines()[-1:]
-#         for line in lines:
-#             # if it has chat in it
-#             if "]: [CHAT]" in line and (config["agents"]["builder_1"]["name"] in line or config["agents"]["builder_2"]["name"] in line) and "ADMIN" not in line:
-#                 # get the chat message
-#                 messege = line.split("]: [CHAT] ")[1]
-#                 # remove the \n
-#                 messege = messege[:-1]
-#                 if len(chat_log) == 0 or chat_log[-1] != messege:
-#                     chat_log.append(messege)
-#                     print("message from server: " + messege)
-#                     return True
-#     return False
-    
+
 def getInventoryInfo(observation, entities):
     inventory = {}
     if "inventory" in observation:
@@ -65,12 +46,14 @@ def getInventoryInfo(observation, entities):
     return inventory
 
 def samePosition(ents1, ents2, precision=0.1, anglePrecision=30):
+    # compare the position of the agents
     if ents1 == ents2:
         return True
     if ents1 == None or ents2 == None:
         return False
     if len(ents1) != len(ents2):
         return False
+    # compare each entity position and orientation using the precision
     for i in range(len(ents1)):
         e1 = ents1[i]
         e2 = ents2[i]
