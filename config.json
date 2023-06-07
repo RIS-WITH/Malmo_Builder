@@ -17,11 +17,11 @@
     "agents" : {
         "num_distant_agents" : 0,
         "builder_1" : {
-            "name" : "builder_1",
+            "name" : "builder",
             "placement" : "random"
         },
         "builder_2" : {
-            "name" : "builder_2",
+            "name" : "architect",
             "placement" : "random"
         }
     },

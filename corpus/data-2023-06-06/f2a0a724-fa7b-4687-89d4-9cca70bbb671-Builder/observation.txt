@@ -1,8 +1,0 @@
---------------------
-[Timestamp] 2023-06-06 17:14:05
-[Builder Position] 
-	builder_1 (x, y, z): (7.0, 227.0, 3.0) (yaw, pitch): (0.0, 0.0)
-	builder_2 (x, y, z): (4.0, 227.0, 2.0) (yaw, pitch): (0.0, 0.0)
-[Screenshot Path] ./screenshots/f2a0a724-fa7b-4687-89d4-9cca70bbb671-Builder/2023-06-06_17-14-05-Builder.png
-[Chat Log]
-[Blocks In Grid] 
