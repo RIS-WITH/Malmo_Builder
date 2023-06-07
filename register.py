@@ -2,7 +2,7 @@ import os
 from PIL import Image
 
 
-def saveWorldState(agent, config, experimentID, timestamp, entities, chat_log, inventory, grid):
+def saveWorldState(lock, agent, config, experimentID, timestamp, entities, chat_log, inventory, grid):
     # get screenshot path and save screenshot
     imagePath = None
     if config['collect']['screenshot']["save"]:
@@ -26,7 +26,7 @@ def saveWorldState(agent, config, experimentID, timestamp, entities, chat_log, i
         if saveTxt:
             writeWorldStateTxt(pathLog, timestamp, entities, chat_log, inventory, grid, imagePath)
         if saveJson:
-            writeWorldStateJson(pathLog, timestamp, entities, chat_log, inventory, grid, imagePath)
+            writeWorldStateJson(lock, pathLog, timestamp, entities, chat_log, inventory, grid, imagePath)
     
                 
 # merge the two functions into one
@@ -138,109 +138,105 @@ def removeLastBrakets(file):
     file.seek(file.tell() - 6, os.SEEK_SET)
     file.truncate()
 
-def writeWorldStateJson(pathLog, timestamp, entities, chat_log, inventory, grid, imagePath):
-    # if there is not a data file with todays date create one
-    if not os.path.exists(pathLog):
-        os.makedirs(pathLog)
-    json_path = pathLog + "/observation.json"
-    if not os.path.exists(json_path):
-        os.mknod(json_path)
-        
-    text_to_write = ""
-    # add the content of the file
-    with open(json_path, 'r') as file:
-        text_to_write += file.read()
-        
-    # if empty, write the first line
-    if text_to_write == "":
-        text_to_write += "{\n"
-        text_to_write += "\t\"WorldStates\": [\n"
-    else:
-        # remove the ending bracket
-        text_to_write = text_to_write[:-6]
-        text_to_write += ",\n"
-    # write the world state
-    text_to_write += "\t\t{\n"
-    # use entites position
-    if entities is not None:
-        for ent in entities:
-            text_to_write += "\t\t\t\""+ ent.name + "_Position\": {\n"
-            text_to_write += "\t\t\t\t\"X\": " + str(ent.x) + ",\n"
-            text_to_write += "\t\t\t\t\"Y\": " + str(ent.y) + ",\n"
-            text_to_write += "\t\t\t\t\"Z\": " + str(ent.z) + ",\n"
-            text_to_write += "\t\t\t\t\"Yaw\": " + str(ent.yaw) + ",\n"
-            text_to_write += "\t\t\t\t\"Pitch\": " + str(ent.pitch) + "\n"
-            text_to_write += "\t\t\t},\n"
-    # write the chat history
-    if chat_log is not None:
-        text_to_write += "\t\t\t\"ChatHistory\": [\n"
-        for chat in chat_log:
-            text_to_write += "\t\t\t\t\"" + str(chat) + "\",\n"
-        # remove the last comma if there is at - 2
-        if len(chat_log) > 0:
-            text_to_write = removeLastTComma(text_to_write)
-        text_to_write += "\n"
-        text_to_write += "\t\t\t],\n"
-    # write the timestamp
-    text_to_write += "\t\t\t\"Timestamp\": \"" + str(timestamp) + "\",\n"
-    # write the blocks in grid
-    if grid is not None:
-        text_to_write += "\t\t\t\"BlocksInGrid\": [\n"
-        for key, block in list(grid.items()):
-            text_to_write += "\t\t\t\t{\n"
-            text_to_write += "\t\t\t\t\t\"X\": " + str(block.x) + ",\n"
-            text_to_write += "\t\t\t\t\t\"Y\": " + str(block.y) + ",\n"
-            text_to_write += "\t\t\t\t\t\"Z\": " + str(block.z) + ",\n"
-            text_to_write += "\t\t\t\t\t\"Type\": \"" + block.type + "\",\n"
-            text_to_write += "\t\t\t\t\t\"Colour\": \"" + block.colour + "\"\n"
-            text_to_write += "\t\t\t\t},\n"
-        # remove the last comma
-        if len(grid) > 0:
-            text_to_write = removeLastTComma(text_to_write)
-        text_to_write += "\n"
-        text_to_write += "\t\t\t],\n"
-    # write the builder inventory
-    if inventory is not None:
-        text_to_write += "\t\t\t\"BuilderInventory\": [\n"
-        for key, items in list(inventory.items()):
-            text_to_write += "\t\t\t\t{\n"
-            text_to_write += "\t\t\t\t\t\"Name\": \"" + key + "\",\n"
-            text_to_write += "\t\t\t\t\t\"Items\": [\n"
-            for item in items:
-                # write the item index type colour and quantity
-                text_to_write += "\t\t\t\t\t\t{\n"
-                text_to_write += "\t\t\t\t\t\t\t\"Index\": " + str(item['index']) + ",\n"
-                text_to_write += "\t\t\t\t\t\t\t\"Type\": \"" + item['type'] + "\",\n"
-                if 'colour' in item:
-                    text_to_write += "\t\t\t\t\t\t\t\"Colour\": \"" + str(item['colour']) + "\",\n"
-                text_to_write += "\t\t\t\t\t\t\t\"Quantity\": " + str(item['quantity']) + "\n"
-                text_to_write += "\t\t\t\t\t\t},\n"
-            # remove the last comma
-            if (len(items) > 0):
+def writeWorldStateJson(lock, pathLog, timestamp, entities, chat_log, inventory, grid, imagePath):
+    with lock:
+        # if there is not a data file with todays date create one
+        if not os.path.exists(pathLog):
+            os.makedirs(pathLog)
+        json_path = pathLog + "/observation.json"
+        if not os.path.exists(json_path):
+            os.mknod(json_path)
+            
+        text_to_write = ""
+        first = False    
+        # if empty, write the first line
+        if os.stat(json_path).st_size == 0:
+            text_to_write += "{\n"
+            text_to_write += "\t\"WorldStates\": [\n"
+        else:
+            text_to_write += ",\n"
+        # write the world state
+        text_to_write += "\t\t{\n"
+        # use entites position
+        if entities is not None:
+            for ent in entities:
+                text_to_write += "\t\t\t\""+ ent.name + "_Position\": {\n"
+                text_to_write += "\t\t\t\t\"X\": " + str(ent.x) + ",\n"
+                text_to_write += "\t\t\t\t\"Y\": " + str(ent.y - 227) + ",\n"
+                text_to_write += "\t\t\t\t\"Z\": " + str(ent.z) + ",\n"
+                text_to_write += "\t\t\t\t\"Yaw\": " + str(ent.yaw) + ",\n"
+                text_to_write += "\t\t\t\t\"Pitch\": " + str(ent.pitch) + "\n"
+                text_to_write += "\t\t\t},\n"
+        # write the chat history
+        if chat_log is not None:
+            text_to_write += "\t\t\t\"ChatHistory\": [\n"
+            for chat in chat_log:
+                text_to_write += "\t\t\t\t\"" + str(chat) + "\",\n"
+            # remove the last comma if there is at - 2
+            if len(chat_log) > 0:
                 text_to_write = removeLastTComma(text_to_write)
-            text_to_write += "\t\t\t\t\t]\n"
-            text_to_write += "\t\t\t\t},\n"
+            text_to_write += "\n"
+            text_to_write += "\t\t\t],\n"
+        # write the timestamp
+        text_to_write += "\t\t\t\"Timestamp\": \"" + str(timestamp) + "\",\n"
+        # write the blocks in grid
+        if grid is not None:
+            text_to_write += "\t\t\t\"BlocksInGrid\": [\n"
+            for key, block in list(grid.items()):
+                text_to_write += "\t\t\t\t{\n"
+                text_to_write += "\t\t\t\t\t\"X\": " + str(block.x) + ",\n"
+                text_to_write += "\t\t\t\t\t\"Y\": " + str(block.y - 227) + ",\n"
+                text_to_write += "\t\t\t\t\t\"Z\": " + str(block.z) + ",\n"
+                text_to_write += "\t\t\t\t\t\"Type\": \"" + block.type + "\",\n"
+                text_to_write += "\t\t\t\t\t\"Colour\": \"" + block.colour + "\"\n"
+                text_to_write += "\t\t\t\t},\n"
+            # remove the last comma
+            if len(grid) > 0:
+                text_to_write = removeLastTComma(text_to_write)
+            text_to_write += "\n"
+            text_to_write += "\t\t\t],\n"
+        # write the builder inventory
+        if inventory is not None:
+            text_to_write += "\t\t\t\"BuilderInventory\": [\n"
+            for key, items in list(inventory.items()):
+                text_to_write += "\t\t\t\t{\n"
+                text_to_write += "\t\t\t\t\t\"Name\": \"" + key + "\",\n"
+                text_to_write += "\t\t\t\t\t\"Items\": [\n"
+                for item in items:
+                    # write the item index type colour and quantity
+                    text_to_write += "\t\t\t\t\t\t{\n"
+                    text_to_write += "\t\t\t\t\t\t\t\"Index\": " + str(item['index']) + ",\n"
+                    text_to_write += "\t\t\t\t\t\t\t\"Type\": \"" + item['type'] + "\",\n"
+                    if 'colour' in item:
+                        text_to_write += "\t\t\t\t\t\t\t\"Colour\": \"" + str(item['colour']) + "\",\n"
+                    text_to_write += "\t\t\t\t\t\t\t\"Quantity\": " + str(item['quantity']) + "\n"
+                    text_to_write += "\t\t\t\t\t\t},\n"
+                # remove the last comma
+                if (len(items) > 0):
+                    text_to_write = removeLastTComma(text_to_write)
+                text_to_write += "\t\t\t\t\t]\n"
+                text_to_write += "\t\t\t\t},\n"
+            # remove the last comma
+            if len(inventory) > 0:
+                text_to_write = removeLastTComma(text_to_write)
+            text_to_write += "\n"
+            text_to_write += "\t\t\t],\n"
+        # write the screenshots
+        if imagePath is not None:
+            text_to_write += "\t\t\t\"Screenshots\": {\n"
+            text_to_write += "\t\t\t\t\"Path\": \"" + str(imagePath) + "\",\n"
+            text_to_write += "\t\t\t\t\"Timestamp\": \"" + str(timestamp) + "\"\n"
+            text_to_write += "\t\t\t},\n"
         # remove the last comma
-        if len(inventory) > 0:
-            text_to_write = removeLastTComma(text_to_write)
-        text_to_write += "\n"
-        text_to_write += "\t\t\t],\n"
-    # write the screenshots
-    if imagePath is not None:
-        text_to_write += "\t\t\t\"Screenshots\": {\n"
-        text_to_write += "\t\t\t\t\"Path\": \"" + str(imagePath) + "\",\n"
-        text_to_write += "\t\t\t\t\"Timestamp\": \"" + str(timestamp) + "\"\n"
-        text_to_write += "\t\t\t},\n"
-    # remove the last comma
-    text_to_write = removeLastTComma(text_to_write)
-    text_to_write += "\t\t}\n"
-    text_to_write += "\t]\n"
-    text_to_write += "}\n"
-    
-    # if the length of the file is less than text_to_write then write to file
-    if len(text_to_write) > os.path.getsize(json_path):
+        text_to_write = removeLastTComma(text_to_write)
+        text_to_write += "\t\t}\n"
+        text_to_write += "\t]\n"
+        text_to_write += "}\n"
+        
         # rewrite the file
-        with open(json_path, 'w') as f:
+        with open(json_path, 'a') as f:
+            if os.stat(json_path).st_size != 0:
+                removeLastBrakets(f)
             f.write(text_to_write)
         
 def removeLastTComma(text_to_write):
