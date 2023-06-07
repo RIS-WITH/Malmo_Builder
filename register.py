@@ -162,7 +162,7 @@ def writeWorldStateJson(lock, pathLog, timestamp, entities, chat_log, inventory,
             for ent in entities:
                 text_to_write += "\t\t\t\""+ ent.name + "_Position\": {\n"
                 text_to_write += "\t\t\t\t\"X\": " + str(ent.x) + ",\n"
-                text_to_write += "\t\t\t\t\"Y\": " + str(ent.y - 227) + ",\n"
+                text_to_write += "\t\t\t\t\"Y\": " + str(ent.y - 226) + ",\n"
                 text_to_write += "\t\t\t\t\"Z\": " + str(ent.z) + ",\n"
                 text_to_write += "\t\t\t\t\"Yaw\": " + str(ent.yaw) + ",\n"
                 text_to_write += "\t\t\t\t\"Pitch\": " + str(ent.pitch) + "\n"
@@ -185,7 +185,7 @@ def writeWorldStateJson(lock, pathLog, timestamp, entities, chat_log, inventory,
             for key, block in list(grid.items()):
                 text_to_write += "\t\t\t\t{\n"
                 text_to_write += "\t\t\t\t\t\"X\": " + str(block.x) + ",\n"
-                text_to_write += "\t\t\t\t\t\"Y\": " + str(block.y - 227) + ",\n"
+                text_to_write += "\t\t\t\t\t\"Y\": " + str(block.y - 226) + ",\n"
                 text_to_write += "\t\t\t\t\t\"Z\": " + str(block.z) + ",\n"
                 text_to_write += "\t\t\t\t\t\"Type\": \"" + block.type + "\",\n"
                 text_to_write += "\t\t\t\t\t\"Colour\": \"" + block.colour + "\"\n"

@@ -119,6 +119,10 @@ for mission_no in range(0, num_missions + 1):
     # Admin make every player able to destroy blocks in one hit
     agent_hosts[0].sendCommand("chat /effect @a haste 1000000 255 true")
     
+    lock = threading.Lock()
+    
+    # add indecation that a mission has started in the chat log
+    chat_log.append("Mission " + str(mission_no) + " started")
     running = True
     while running:
         #waiting to get all players connected if not all connected
@@ -168,7 +172,7 @@ for mission_no in range(0, num_missions + 1):
                     
                     if config['collect']['chat_history']:
                         # update chat log and get true if a new message has been added
-                        change = updateChatLog(ob, chat_log)
+                        change = updateChatLog(ob, chat_log, config)
                     else:
                         chaty_log = None
                         change = False
@@ -201,10 +205,9 @@ for mission_no in range(0, num_missions + 1):
 
                     # open a new process to save the data and screenshot and print to console since it is not important to wait for it
                     if config['collect']['log']['txt'] or config['collect']['log']['json'] or config['collect']['log']['console'] or config['collect']['screenshot']["save"]:
-                        # create a new event
-                        event = threading.Event()
                         # create a new thread to save the data
-                        p = threading.Thread(target=saveWorldState, args=(agent_hosts[0], config, experimentID, timestamp, entities, chat_log, inventory, grid))
+                        # thread-safe write to file
+                        p = threading.Thread(target=saveWorldState, args=(lock, agent_hosts[0], config, experimentID, timestamp, entities, chat_log, inventory, grid))
                         # dont wait for the process to finish
                         p.start()
                         
@@ -223,7 +226,8 @@ for mission_no in range(0, num_missions + 1):
             world_state = ah.getWorldState()
             if world_state.is_mission_running:
                 hasEnded = False # all not good
-
+    # add indecation that a mission has ended in the chat log
+    chat_log.append("Mission " + str(mission_no) + " ended")
     print()
     print("Mission ended")
     # Mission has ended.

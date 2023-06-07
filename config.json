@@ -102,7 +102,7 @@
         "agents_position" : {
             "save" : 1,
             "precision" : 0.1,
-            "angle_precision" : 360
+            "angle_precision" : 400
         },
         "agents_inventory" : 0,
         "chat_history" : 1,

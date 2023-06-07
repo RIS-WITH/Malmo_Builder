@@ -19,8 +19,30 @@ def getEntitiesInfo(observations, lastEntities=None, names=[]):
                 entities.append(e)
     return sorted(entities, key=lambda x: x.name)
 
-def updateChatLog(observations, chat_log):
-    return readObservationChatLog(observations, chat_log)
+def updateChatLog(observations, chat_log, config):
+    if "Chat" in observations:
+        return readObservationChatLog(observations, chat_log)
+    else:
+        return readServerChatLog(chat_log, config)
+    
+def readServerChatLog(chat_log, config):
+    # read config file log path
+    with open(config['server']['log_path']) as log_file:
+        # just read the last two lines
+        lines = log_file.readlines()[-2:]
+        for line in lines:
+            # if it has chat in it
+            if "]: [CHAT]" in line and (config["agents"]["builder_1"]["name"] in line or config["agents"]["builder_2"]["name"] in line) and "ADMIN" not in line:
+                # get the chat message
+                message = line.split("]: [CHAT] ")[1]
+                # remove the \n
+                message = message[:-1]
+                if (len(chat_log) < 3 and message not in chat_log) or message not in chat_log[-3:]:
+                    chat_log.append(message)
+                    print("message from server: " + message)
+                    return True
+    return False
+    
     
 def readObservationChatLog(observations, chat_log):
     if "Chat" in observations:
@@ -45,7 +67,7 @@ def getInventoryInfo(observation, entities):
             inventory[observation["Name"]] = observation["inventory"]
     return inventory
 
-def samePosition(ents1, ents2, precision=0.1, anglePrecision=30):
+def samePosition(ents1, ents2, precision=0.1, anglePrecision=400):
     # compare the position of the agents
     if ents1 == ents2:
         return True
@@ -61,7 +83,7 @@ def samePosition(ents1, ents2, precision=0.1, anglePrecision=30):
             return False
         if abs(e1.yaw - e2.yaw) > anglePrecision:
             return False
-        if abs(e1.pitch - e2.pitch) > anglePrecision/5:
+        if abs(e1.pitch - e2.pitch) > anglePrecision/10:
             return False
         if abs(e1.x - e2.x) > precision:
             return False
@@ -122,6 +144,10 @@ def gridCheck(grid, los, floor, gridSize, xzToCenter, gridTypes):
             # add the block to missingBlocks
             missingBlocks.append((x, y, z, block_type))
         elif isinstance(check, bool):
+            if check:
+                print("Block in grid and in line of sight")
+            else:
+                print("Block in grid but not in line of sight retrying to detect colour")
             return check
         
     # check all blocks we are not loking at are in grid are in the observation  
