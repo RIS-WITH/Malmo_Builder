@@ -104,8 +104,8 @@ ESC > mods > malmo > settings > port  >change 0 to 10001 > done
 2. Then change the client 10002 to 10000 on minecraft GUI  
 In the Minecraft window of port 10001:  
 ESC > mods > malmo > settings > port > change 0 to 10000 > done  
-In the Minecraft window of step 1:  
 3. now to solve malmo problem with first change, 10001 to 0  
+In the Minecraft window of step 1:  
 ESC > mods > malmo > settings > port > 0 > done  
 
 - run the main python file in the malmo_builder directory
