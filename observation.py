@@ -81,9 +81,9 @@ def samePosition(ents1, ents2, precision=0.1, anglePrecision=400):
         e2 = ents2[i]
         if e1.name != e2.name:
             return False
-        if abs(e1.yaw - e2.yaw) > anglePrecision:
+        if abs(e1.yaw - e2.yaw) > anglePrecision * 2:
             return False
-        if abs(e1.pitch - e2.pitch) > anglePrecision/10:
+        if abs(e1.pitch - e2.pitch) > anglePrecision/12:
             return False
         if abs(e1.x - e2.x) > precision:
             return False
@@ -99,8 +99,12 @@ def getBlockCoordinates(i, gridSize, xzToCenter):
     z = (i // gridSize) % gridSize
     return x - xzToCenter, y + 227, z - xzToCenter
 
+def getBlock1dCoordinates(x, y, z, gridSize, xzToCenter):
+    # do the inverse of getBlockCoordinates
+    return abs(x + xzToCenter) + (y - 227) * gridSize * gridSize + abs(z + xzToCenter) * gridSize
+
 def compareBlock(blockorg, blockhit):
-    precision = 1.0
+    precision = 1.49
     if abs(blockorg.x - blockhit.x) > precision or abs(blockorg.y - blockhit.y) > precision or abs(blockorg.z - blockhit.z) > precision:
         return False
     # compare the type of the block
@@ -149,9 +153,61 @@ def gridCheck(grid, los, floor, gridSize, xzToCenter, gridTypes):
             else:
                 print("Block in grid but not in line of sight retrying to detect colour")
             return check
+    ## a more efficient way to do it is to check all blocks in line of sight are in grid and then check all blocks we are not loking at are in grid are in the observation
+    # cords = getlosblocks(los, gridSize, xzToCenter, gridTypes)
+    # if cords == []:
+    #     return False
+    # # transform thes 3d coordinates to 1d
+    # index = [int(getBlock1dCoordinates(x, y, z, gridSize, xzToCenter)) for x, y, z in cords]
+    # for i in index:
+    #     # see if the index i in the 1d array floor
+    #     if i < len(floor):
+    #         # get the block type
+    #         block_type = floor[i]
+    #         # get the 3d coordinates of the block
+    #         x, y, z = getBlockCoordinates(i, gridSize, xzToCenter)
+    #         # create a blockInfo using floor info
+    #         blockGrid = BlockInfo(x, y, z, block_type, "")
+            
+    #         # make a unique key for the block
+    #         key = "block" + str(blockGrid.x) + "_" + str(blockGrid.y) + "_" + str(blockGrid.z)
+                
+    #         check = blockCheck(grid, los, blockGrid, key, gridTypes)
+            
+    #         # if blockCheck is -1 then the block is not in the grid and not in line of sight
+    #         if check == -1:
+    #             # add the block to missingBlocks
+    #             missingBlocks.append((x, y, z, block_type))
+    #         elif isinstance(check, bool):
+    #             if check:
+    #                 print("Block in grid and in line of sight")
+    #             else:
+    #                 print("Block in grid but not in line of sight retrying to detect colour")
+    # # a more efficient way to do it is to check all blocks in line of sight are in grid and then check all blocks we are not loking at are in grid are in the observation
+    # return fillMissing(grid, missingBlocks, gridTypes)
+    
+    
         
     # check all blocks we are not loking at are in grid are in the observation  
     return fillMissing(grid, missingBlocks)  
+
+def getlosblocks(los, gridSize, xzToCenter, gridTypes):
+    cords = []
+    if los[u'hitType'] == "block" and los[u'inRange'] and los[u'type'] in gridTypes:
+        # get the possible absolute coordinates of the blocks in line of sight
+        losx = los[u'x']
+        losy = los[u'y']
+        losz = los[u'z']
+        for i in range(3):
+            for j in range(3):
+                for k in range(3):
+                    x = abs(losx + i - 1)
+                    y = abs(losy + j - 1)
+                    z = abs(losz + k - 1)
+                    cords.append((x, y, z))
+                    
+    return cords
+    
 
 def blockCheck(grid, los, blockGrid, key, gridTypes):
     # if block is the one we are looking for and it is not in the grid

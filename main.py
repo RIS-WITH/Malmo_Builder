@@ -185,7 +185,10 @@ for mission_no in range(0, num_missions + 1):
                     
                     # update grid and get true if a new block has been added
                     if config['collect']['blocks_in_grid']:
-                        change = updateGrid(ob, grid, config['mission']['area_side_size'], grid_types) or change
+                        #change = updateGrid(ob, grid, config['mission']['area_side_size'], grid_types) or change
+                        # a new process to update the grid
+                        p = threading.Thread(target=updateGrid, args=(ob, grid, config['mission']['area_side_size'], grid_types))
+                        p.start()
                     else:
                         grid = None
                     

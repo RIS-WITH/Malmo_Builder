@@ -1,8 +1,13 @@
 # Malmo Builder
-a data collecting enviroment for HRI research
+a data collecting enviroment for project DISCUTER
 
+# Table of Contents
+1. [Malmo Installation (SERVER)](#malmo-installation-server)
+2. [Using Malmo Builder (SERVER)](#using-malmo-builder-server)
+3. [Using Malmo Builder (remote player)](#using-malmo-builder-remote-player)
 
-## Malmo Installation
+  
+## Malmo Installation (SERVER)
 
 How to install on ubuntu 18.04.6 LTS for other ways to install look at https://github.com/Microsoft/malmo/ 
 
@@ -57,7 +62,7 @@ python3 run_mission.py
 ### define the number of distant clients:
 In config.json file change the number of distant clients in the agents section  
 0 : for two local players  
-1 : for one local player and one remote player (same LAN network)
+1 : for one local player and one remote player (same LAN network)  
 2 : for two remote players (same LAN network)
 ```sh
 "agents": {
@@ -73,8 +78,8 @@ in which num_of_clients is the number of clients you want to run
     2 for the server and one local player  
     3 for the server and two local players  
 
-### manual version:
-#### to run only server :
+### manual version (less time but more work)):
+#### to run only server:
 - run one client
 ```sh
 cd ../Minecraft
@@ -91,12 +96,16 @@ python3 main.py
 cd ../Minecraft
 ./launchClient.sh
 ```
-- change the last opened client which will be at 10001 to port 10000 and the first one to 10002 using GUI
-First change the client 10000 to 10001 on minecraft GUI (malmo wont like it but will change it later)  
-ESC > mods > malmo > settings > port > 10001 > done  
-Then change the client 10002 to 10000 on minecraft GUI  
-ESC > mods > malmo > settings > port > 10000 > done  
-now to solve malmo problem with first change, 10001 to 0  
+- We need to make the port 10000 our last opened window so we can easily find our log file  
+To do so change the last opened client which will be at 10001 to port 10000 and the first one to 10002 using GUI
+1. First change the client 10000 to 10001 on minecraft GUI (malmo wont like it but will change it later)  
+In the Minecraft window of port 10000:  
+ESC > mods > malmo > settings > port  >change 0 to 10001 > done  
+2. Then change the client 10002 to 10000 on minecraft GUI  
+In the Minecraft window of port 10001:  
+ESC > mods > malmo > settings > port > change 0 to 10000 > done  
+In the Minecraft window of step 1:  
+3. now to solve malmo problem with first change, 10001 to 0  
 ESC > mods > malmo > settings > port > 0 > done  
 
 - run the main python file in the malmo_builder directory
