@@ -62,8 +62,10 @@ chat_log = []
 
 # get the types of blocks to track
 grid_types = set()
-for item in config['inventory']:
-    grid_types.add(item['type'])
+for agent in list(config['inventory'].keys()):
+    for item in config['inventory'][agent]:
+        grid_types.add(item['type'])
+    
 
 #get the number of missions to run
 num_missions = config['mission']['num_missions']
@@ -118,6 +120,7 @@ for mission_no in range(0, num_missions + 1):
 
     # Admin make every player able to destroy blocks in one hit
     agent_hosts[0].sendCommand("chat /effect @a haste 1000000 255 true")
+    
     
     lock = threading.Lock()
     

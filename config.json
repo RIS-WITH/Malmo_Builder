@@ -7,7 +7,7 @@
         "ms_per_tick" : 50,
         "time_of_day" : 9000,
         "allow_time_passage" : 0,
-        "flat_world_generator_str" : "3;7,220*1,3*3,2,3,166; ,biome_1",
+        "flat_world_generator_str" : "3;7,220*1,4*3,2,166;1;village",
         "time_limit" : 300000,
         "quit_from_time_up_description" : "Time up",
         "force_reset" : 1,
@@ -25,74 +25,79 @@
             "placement" : "random"
         }
     },
-    "inventory" : [
-        {
-            "slot" : 0,
-            "type" : "wool",
-            "quantity" : 20,
-            "color" : "white"
-        },
-        {
-            "slot" : 1,
-            "type" : "wool",
-            "quantity" : 20,
-            "color" : "red"
-        },
-        {
-            "slot" : 2,
-            "type" : "wool",
-            "quantity" : 20,
-            "color" : "blue"
-        },
-        {
-            "slot" : 3,
-            "type" : "wool",
-            "quantity" : 20,
-            "color" : "green"
-        },
-        {
-            "slot" : 4,
-            "type" : "wool",
-            "quantity" : 20,
-            "color" : "yellow"
-        },
-        {
-            "slot" : 5,
-            "type" : "wool",
-            "quantity" : 20,
-            "color" : "orange"
-        },
-        {
-            "slot" : 6,
-            "type" : "wool",
-            "quantity" : 20,
-            "color" : "purple"
-        },
-        {
-            "slot" : 7,
-            "type" : "wool",
-            "quantity" : 20,
-            "color" : "black"
-        },
-        {
-            "slot" : 8,
-            "type" : "wool",
-            "quantity" : 20,
-            "color" : "brown"
-        },
-        {
-            "slot" : 9,
-            "type" : "wool",
-            "quantity" : 20,
-            "color" : "cyan"
-        },
-        {
-            "slot" : 10,
-            "type" : "wool",
-            "quantity" : 20,
-            "color" : "gray"
-        }
-    ],
+    "inventory" : {
+        "builder_1" : [
+            {
+                "slot" : 0,
+                "type" : "wool",
+                "quantity" : 20,
+                "color" : "white"
+            },
+            {
+                "slot" : 1,
+                "type" : "wool",
+                "quantity" : 20,
+                "color" : "red"
+            },
+            {
+                "slot" : 2,
+                "type" : "wool",
+                "quantity" : 20,
+                "color" : "blue"
+            },
+            {
+                "slot" : 3,
+                "type" : "wool",
+                "quantity" : 20,
+                "color" : "green"
+            },
+            {
+                "slot" : 4,
+                "type" : "wool",
+                "quantity" : 20,
+                "color" : "yellow"
+            },
+            {
+                "slot" : 5,
+                "type" : "wool",
+                "quantity" : 20,
+                "color" : "orange"
+            },
+            {
+                "slot" : 6,
+                "type" : "wool",
+                "quantity" : 20,
+                "color" : "purple"
+            },
+            {
+                "slot" : 7,
+                "type" : "wool",
+                "quantity" : 20,
+                "color" : "black"
+            },
+            {
+                "slot" : 8,
+                "type" : "wool",
+                "quantity" : 20,
+                "color" : "brown"
+            },
+            {
+                "slot" : 9,
+                "type" : "wool",
+                "quantity" : 20,
+                "color" : "cyan"
+            },
+            {
+                "slot" : 10,
+                "type" : "wool",
+                "quantity" : 20,
+                "color" : "gray"
+            }
+        ],
+        "builder_2" : [
+
+        ]
+    },
     "server" : {
         "ip" : "140.93.7.238",
         "port" : 10000,

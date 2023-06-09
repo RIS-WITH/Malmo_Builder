@@ -192,17 +192,6 @@ def get_xml(num_agents, config):
           </VideoProducer>
         </AgentHandlers>
       </AgentSection>'''
-    
-    # inventory 
-    inventory_text = ""
-    for item in config['inventory']:
-        inventory_text += "\n"
-        inventory_text += "\t" * 6           
-        inventory_text += "<InventoryItem slot=\"" + str(item["slot"]) + "\" type=\"" + item["type"] + "\" quantity=\"" + str(item["quantity"]) + "\""
-        if "color" in item:
-          inventory_text += " colour=\"" + item["color"].upper() + "\""
-        inventory_text += "/>"
-
     # Add an agent section for each robot. Robots run in survival mode.
     # Give each one a wooden pickaxe for protection...
 
@@ -216,7 +205,7 @@ def get_xml(num_agents, config):
       else:
         xml += '''<Placement x="''' + str(agent['builder_' + str(i+1)]['placement'][0]) + '''" y="228" z="''' + str(agent['builder_'+ str(i+1)]['placement'][1]) + '''"/>'''
       xml += '''
-          <Inventory>''' + inventory_text + '''
+          <Inventory>''' + get_inventory_xml_txt('builder_' + str(i+1) ) + '''
           </Inventory>
         </AgentStart>
         <AgentHandlers>
@@ -240,3 +229,15 @@ def get_xml(num_agents, config):
 
     xml += '</Mission>'
     return xml
+  
+def get_inventory_xml_txt(agent_id):
+      # inventory 
+    inventory_text = ""
+    for item in config['inventory'][agent_id]:
+        inventory_text += "\n"
+        inventory_text += "\t" * 6           
+        inventory_text += "<InventoryItem slot=\"" + str(item["slot"]) + "\" type=\"" + item["type"] + "\" quantity=\"" + str(item["quantity"]) + "\""
+        if "color" in item:
+          inventory_text += " colour=\"" + item["color"].upper() + "\""
+        inventory_text += "/>"
+    return inventory_text
