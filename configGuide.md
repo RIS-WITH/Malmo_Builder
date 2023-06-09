@@ -24,7 +24,7 @@ the time limit of the mission
 ### quit_from_time_up_description
 the description of the mission when time up
 ### force_reset
-whether force reset the mission .. if true, the mission will be reseted after the time limit which mean changing the port of the mission which will cause the agent to be disconnected breifly
+whether force reset the mission .. if true, the mission will be reset after the time limit which mean changing the port of the mission which will cause the agent to be disconnected briefly
 ### area_side_size
 the side size of the area since it is a square area
 ### weather
@@ -41,7 +41,7 @@ the placement of the agent
 | random | [x, z] |
 
 ## inventory
-*cururently, we only support wool*
+*currently, we only support wool*
 ### slot
 the slot of the inventory
 ### type
@@ -52,7 +52,7 @@ the quantity of the inventory
 the color of the inventory
 
 ## server
-*not employed yet (only localy)*
+*not employed yet (only locally)*
 ### ip
 the ip of the server
 
@@ -79,7 +79,7 @@ whether save the data
 #### interval
 the interval of the screenshot
 | every_n_seconds | every_n_minute |  every_move | every_second | every_minute | every_hour | 
-note that the interval is a secondry condition, the primary condition is the agent's movement
+note that the interval is a secondary condition, the primary condition is the agent's movement
 
 ### log
 whether collect the log

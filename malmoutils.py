@@ -41,8 +41,8 @@ def get_connected_agents_ips(log_file_path):
           del connected_users_ips[username]
     return connected_users_ips
   
-def update_client_pool(client_pool_array, config, NUM_AGENTS):
-  num_connected_users = NUM_AGENTS
+def update_client_pool(client_pool_array, config, num_agents):
+  num_connected_users = num_agents
   # find .nfs file at server['path'] and save its name
   # log file path
   log_file_path = config['server']['log_path']
@@ -73,49 +73,54 @@ def update_client_pool(client_pool_array, config, NUM_AGENTS):
       print ("adding player to the client pool: ", key)
   return num_connected_users
 
-def agentName(i, config=config):
+def agent_name(i, config=config):
     agents = config["agents"]
     i += 1
     return agents["builder_" + str(i)]["name"]
 
-def safeStartMission(agent_host, my_mission, my_client_pool, my_mission_record, role, expId, config, client_pool_array):
+def safe_start_mission(agent_host, my_mission, my_client_pool, my_mission_record, role, exp_id):
     used_attempts = 0
     max_attempts = 100
     print("Calling startMission for role", role)
     while True:
         try:
             # Attempt start:
-            agent_host.startMission(my_mission, my_client_pool, my_mission_record, role, expId)
+            agent_host.startMission(my_mission, my_client_pool, my_mission_record, role, exp_id)
             break
         except MalmoPython.MissionException as e:
-            errorCode = e.details.errorCode
-            if errorCode == MalmoPython.MissionErrorCode.MISSION_SERVER_WARMING_UP:
-                print("Server not quite ready yet - waiting...")
-                time.sleep(2)
-            elif errorCode == MalmoPython.MissionErrorCode.MISSION_INSUFFICIENT_CLIENTS_AVAILABLE:
-                print("Not enough available Minecraft instances running.")
-                used_attempts += 1
-                if used_attempts < max_attempts:
-                    print("Will wait in case they are starting up.", max_attempts - used_attempts, "attempts left.")
-                    time.sleep(2)
-            elif errorCode == MalmoPython.MissionErrorCode.MISSION_SERVER_NOT_FOUND:
-                print("Server not found - has the mission with role 0 been started yet?")
-                used_attempts += 1
-                if used_attempts < max_attempts:
-                    print("Will wait and retry.", max_attempts - used_attempts, "attempts left.")
-                    time.sleep(2)
-            else:
-                print("Other error:", e.message)
-                print("Waiting will not help here - bailing immediately.")
-                exit(1)
+            error_code = e.details.errorCode
+            used_attempts = treat_error_code(e, error_code, max_attempts, used_attempts)
         if used_attempts == max_attempts:
             print("All chances used up - bailing now.")
             exit(1)
     print("startMission called okay.")
+    
+def treat_error_code(e, error_code, max_attempts, used_attempts):
+  if error_code == MalmoPython.MissionErrorCode.MISSION_SERVER_WARMING_UP:
+    print("Server not quite ready yet - waiting...")
+    time.sleep(2)
+  elif error_code == MalmoPython.MissionErrorCode.MISSION_INSUFFICIENT_CLIENTS_AVAILABLE:
+      print("Not enough available Minecraft instances running.")
+      used_attempts += 1
+      if used_attempts < max_attempts:
+          print("Will wait in case they are starting up.", max_attempts - used_attempts, "attempts left.")
+          time.sleep(2)
+      return used_attempts
+  elif error_code == MalmoPython.MissionErrorCode.MISSION_SERVER_NOT_FOUND:
+      print("Server not found - has the mission with role 0 been started yet?")
+      used_attempts += 1
+      if used_attempts < max_attempts:
+          print("Will wait and retry.", max_attempts - used_attempts, "attempts left.")
+          time.sleep(2)
+      return used_attempts
+  else:
+      print("Other error:", e.message)
+      print("Waiting will not help here - bailing immediately.")
+      exit(1)
 
-def safeWaitForStart(agent_hosts):
+def safe_wait_for_start(agent_hosts):
     print("Waiting for the mission to start", end=' ')
-    start_flags = [False for a in agent_hosts]
+    start_flags = [False for _ in agent_hosts]
     start_time = time.time()
     time_out = 120  # Allow a two minute timeout.
     while not all(start_flags) and time.time() - start_time < time_out:
@@ -136,12 +141,12 @@ def safeWaitForStart(agent_hosts):
     print()
     print("Mission has started.")
 
-def getXML(NUM_AGENTS, config):
+def get_xml(num_agents, config):
     # Set up the Mission XML:
     mission = config["mission"]
     x = z = (mission["area_side_size"] -1) // 2
     y = 226
-    zdelta = 10
+    delta = 10
     reset = "true" if mission["force_reset"] else "false"
     xml = '''<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
     <Mission xmlns="http://ProjectMalmo.microsoft.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -162,8 +167,8 @@ def getXML(NUM_AGENTS, config):
         <ServerHandlers>
           <FlatWorldGenerator forceReset="'''+reset+'''" generatorString="'''+mission['flat_world_generator_str']+'''" seed=""/>
           <DrawingDecorator>
-            <DrawCuboid x1="-'''+str(x)+'''" y1="200" z1="-'''+str(z)+'''" x2="'''+str(x)+'''" y2="226" z2="'''+str(z)+'''" type="bedrock"/>
-            <DrawBlock x="0" y="'''+str(y + x)+'''" z="'''+str(-z - zdelta)+'''" type="fence"/>
+            <DrawCuboid x1="-'''+str(x)+'''" y1="220" z1="-'''+str(z)+'''" x2="'''+str(x)+'''" y2="225" z2="'''+str(z)+'''" type="bedrock"/>
+            <DrawBlock x="0" y="'''+str(y + x)+'" z="'+str(-z - delta)+'''" type="fence"/>
           </DrawingDecorator>
           <ServerQuitFromTimeUp description="'''+ str(mission['quit_from_time_up_description']) +''''" timeLimitMs="'''+ str(mission['time_limit']) +'''"/>
         </ServerHandlers>
@@ -175,7 +180,7 @@ def getXML(NUM_AGENTS, config):
     xml += '''<AgentSection mode="Creative">
         <Name>ADMIN</Name>
         <AgentStart>
-          <Placement x="0.5" y="'''+str(y + x + 2)+'''" z="'''+str(-z - zdelta + 0.5)+'''" pitch="45"/>
+          <Placement x="0.5" y="'''+str(y + x + 2)+'''" z="'''+str(-z - delta + 0.5)+'''" pitch="45"/>
         </AgentStart>
         <AgentHandlers>
           <ContinuousMovementCommands turnSpeedDegs="360"/>
@@ -202,9 +207,9 @@ def getXML(NUM_AGENTS, config):
     # Give each one a wooden pickaxe for protection...
 
     agent = config["agents"]
-    for i in range(NUM_AGENTS):
+    for i in range(num_agents):
       xml += '''<AgentSection mode="Survival">
-        <Name>''' + agentName(i, config) + '''</Name>
+        <Name>''' + agent_name(i, config) + '''</Name>
         <AgentStart>'''
       if(agent['builder_'+ str(i+1)]['placement'] == 'random'):
         xml += '''<Placement x="''' + str(random.randint(-x+3,x-3)) + '''" y="228" z="''' + str(random.randint(-z+3,z-3)) + '''"/>'''

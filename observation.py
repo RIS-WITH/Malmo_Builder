@@ -28,20 +28,21 @@ def updateChatLog(observations, chat_log, config):
 def readServerChatLog(chat_log, config):
     # read config file log path
     with open(config['server']['log_path']) as log_file:
-        # just read the last two lines
-        lines = log_file.readlines()[-2:]
-        for line in lines:
-            # if it has chat in it
-            if "]: [CHAT]" in line and (config["agents"]["builder_1"]["name"] in line or config["agents"]["builder_2"]["name"] in line) and "ADMIN" not in line:
-                # get the chat message
-                message = line.split("]: [CHAT] ")[1]
-                # remove the \n
-                message = message[:-1]
-                if (len(chat_log) < 3 and message not in chat_log) or message not in chat_log[-3:]:
-                    chat_log.append(message)
-                    print("message from server: " + message)
-                    return True
-    return False
+        # if the log file contains two lines
+        if len(log_file.readlines()) > 1:
+            # just read the last two lines
+            lines = log_file.readlines()[-2:]
+            for line in lines:
+                # if it has chat in it
+                if "]: [CHAT]" in line and (config["agents"]["builder_1"]["name"] in line or config["agents"]["builder_2"]["name"] in line) and "ADMIN" not in line:
+                    # get the chat message
+                    message = line.split("]: [CHAT] ")[1]
+                    # remove the \n
+                    message = message[:-1]
+                    if (len(chat_log) < 3 and message not in chat_log) or message not in chat_log[-3:]:
+                        chat_log.append(message)
+                        return True
+        return False
     
     
 def readObservationChatLog(observations, chat_log):
@@ -97,11 +98,11 @@ def getBlockCoordinates(i, gridSize, xzToCenter):
     x = i % gridSize
     y = i // gridSize // gridSize
     z = (i // gridSize) % gridSize
-    return x - xzToCenter, y + 227, z - xzToCenter
+    return (x - xzToCenter), (y + 227), (z - xzToCenter)
 
 def getBlock1dCoordinates(x, y, z, gridSize, xzToCenter):
     # do the inverse of getBlockCoordinates
-    return abs(x + xzToCenter) + (y - 227) * gridSize * gridSize + abs(z + xzToCenter) * gridSize
+    return (x + xzToCenter) + (y - 227) * gridSize * gridSize + (z + xzToCenter) * gridSize
 
 def compareBlock(blockorg, blockhit):
     precision = 1.49
@@ -114,84 +115,58 @@ def compareBlock(blockorg, blockhit):
 
 def updateGrid(observation, grid, side_size, gridTypes):
     # get blocks using ObservationFromGrid absolute position
-    if "floor" in observation and u"LineOfSight" in observation:
+    change = False
+    if "floor" in observation:
         floor = observation["floor"]
-        los = observation["LineOfSight"]
-        
-        # grid size is the side size of the area we are looking at
-        gridSize = side_size
-        
         # xzToCenter is the distance from the center of the grid to the edge
         xzToCenter = (side_size - 1) // 2
         
-        # check if there is a change in the grid
-        return gridCheck(grid, los, floor, gridSize, xzToCenter, gridTypes)
-    return False
+        # grid size is the side size of the area we are looking at
+        gridSize = side_size
+        if u"LineOfSight" in observation:
+            los = observation["LineOfSight"]
 
+            
+            # check if there is a change in the grid
+            change = gridCheck(grid, los, floor, gridSize, xzToCenter, gridTypes)
+        # check all blocks we are not loking at are in grid are in the observation  
+        change = checkGridIntegrity(grid, floor, gridSize, xzToCenter, gridTypes) or change
+    return change
 
 def gridCheck(grid, los, floor, gridSize, xzToCenter, gridTypes):
-    # iterate through the grid and fill it with the blocks in line of sight and the ones that are not in missingBlocks then return if there was a change
+    # check all blocks in line of sight are in grid and then check all blocks we are not loking at are in grid are in the observation
+    cords = getlosblocks(los, gridTypes)
+    if cords == []:
+        return False
+    
+    # array for missing blocks
     missingBlocks = []
-    for i, block_type in enumerate(floor):
-        x, y, z = getBlockCoordinates(i, gridSize, xzToCenter)
-
-        # create a blockInfo using floor info
-        blockGrid = BlockInfo(x, y, z, block_type, "")
-        
-        # make a unique key for the block
-        key = "block" + str(blockGrid.x) + "_" + str(blockGrid.y) + "_" + str(blockGrid.z)
+    
+    # transform thes 3d coordinates to 1d
+    index = [int(getBlock1dCoordinates(x, y, z, gridSize, xzToCenter)) for x, y, z in cords]
+    for i in index:
+        # see if the index i in the 1d array floor
+        if i < len(floor):
+            # get the block type
+            block_type = floor[i]
+            # get the 3d coordinates of the block
+            x, y, z = getBlockCoordinates(i, gridSize, xzToCenter)
+            # create a blockInfo using floor info
+            blockGrid = BlockInfo(x, y, z, block_type, "")
             
-        check = blockCheck(grid, los, blockGrid, key, gridTypes)
-        
-        # if blockCheck is -1 then the block is not in the grid and not in line of sight
-        if check == -1:
-            # add the block to missingBlocks
-            missingBlocks.append((x, y, z, block_type))
-        elif isinstance(check, bool):
-            if check:
-                print("Block in grid and in line of sight")
-            else:
-                print("Block in grid but not in line of sight retrying to detect colour")
-            return check
-    ## a more efficient way to do it is to check all blocks in line of sight are in grid and then check all blocks we are not loking at are in grid are in the observation
-    # cords = getlosblocks(los, gridSize, xzToCenter, gridTypes)
-    # if cords == []:
-    #     return False
-    # # transform thes 3d coordinates to 1d
-    # index = [int(getBlock1dCoordinates(x, y, z, gridSize, xzToCenter)) for x, y, z in cords]
-    # for i in index:
-    #     # see if the index i in the 1d array floor
-    #     if i < len(floor):
-    #         # get the block type
-    #         block_type = floor[i]
-    #         # get the 3d coordinates of the block
-    #         x, y, z = getBlockCoordinates(i, gridSize, xzToCenter)
-    #         # create a blockInfo using floor info
-    #         blockGrid = BlockInfo(x, y, z, block_type, "")
-            
-    #         # make a unique key for the block
-    #         key = "block" + str(blockGrid.x) + "_" + str(blockGrid.y) + "_" + str(blockGrid.z)
+            # make a unique key for the block
+            key = "block" + str(blockGrid.x) + "_" + str(blockGrid.y) + "_" + str(blockGrid.z)
                 
-    #         check = blockCheck(grid, los, blockGrid, key, gridTypes)
+            check = blockCheck(grid, los, blockGrid, key, gridTypes)
             
-    #         # if blockCheck is -1 then the block is not in the grid and not in line of sight
-    #         if check == -1:
-    #             # add the block to missingBlocks
-    #             missingBlocks.append((x, y, z, block_type))
-    #         elif isinstance(check, bool):
-    #             if check:
-    #                 print("Block in grid and in line of sight")
-    #             else:
-    #                 print("Block in grid but not in line of sight retrying to detect colour")
-    # # a more efficient way to do it is to check all blocks in line of sight are in grid and then check all blocks we are not loking at are in grid are in the observation
-    # return fillMissing(grid, missingBlocks, gridTypes)
-    
-    
-        
-    # check all blocks we are not loking at are in grid are in the observation  
-    return fillMissing(grid, missingBlocks)  
+            # if blockCheck is -1 then the block is not in the grid and not in line of sight
+            if check == -1:
+                # add the block to missingBlocks
+                missingBlocks.append((x, y, z, block_type))
+            elif isinstance(check, bool):
+                return check
 
-def getlosblocks(los, gridSize, xzToCenter, gridTypes):
+def getlosblocks(los, gridTypes):
     cords = []
     if los[u'hitType'] == "block" and los[u'inRange'] and los[u'type'] in gridTypes:
         # get the possible absolute coordinates of the blocks in line of sight
@@ -201,11 +176,12 @@ def getlosblocks(los, gridSize, xzToCenter, gridTypes):
         for i in range(3):
             for j in range(3):
                 for k in range(3):
-                    x = abs(losx + i - 1)
-                    y = abs(losy + j - 1)
-                    z = abs(losz + k - 1)
+                    x = int(losx + i - 1)
+                    y = int(losy + j - 1)
+                    z = int(losz + k - 1)
                     cords.append((x, y, z))
-                    
+        # remove duplicates
+        cords = list(set(cords))          
     return cords
     
 
@@ -231,6 +207,18 @@ def blockCheck(grid, los, blockGrid, key, gridTypes):
         grid.pop(key)
         return True 
     return
+
+def checkGridIntegrity(grid, floor, gridSize, xzToCenter, gridTypes):
+    # check if all grids are in the floor
+    for key in grid:
+        block = grid[key]
+        # get the index of the block in the floor
+        index = getBlock1dCoordinates(block.x, block.y, block.z, gridSize, xzToCenter)
+        # if the block is not in the floor remove it from the grid
+        if index >= len(floor) or floor[index] != block.type or block.type not in gridTypes:
+            grid.pop(key)
+            # maybe check the rest before returning ?
+            return True
 
 def fillMissing(grid, missingBlocks):
     # check for missing blocks (in case player is placing blocks too fast and the server is not updating fast enough)

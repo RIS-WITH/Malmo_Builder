@@ -2,35 +2,35 @@ import os
 from PIL import Image
 
 
-def saveWorldState(lock, agent, config, experimentID, timestamp, entities, chat_log, inventory, grid):
+def save_world_state(lock, agent, config, experiment_id, timestamp, entities, chat_log, inventory, grid):
     # get screenshot path and save screenshot
-    imagePath = None
+    image_path = None
     if config['collect']['screenshot']["save"]:
-        folderPath = config['collect']['screenshot']["path"]
+        folder_path = config['collect']['screenshot']["path"]
         interval = config['collect']['screenshot']["interval"]
-        imagePath = saveScreenShot(agent, experimentID, timestamp, folderPath, interval)
+        image_path = save_screen(agent, experiment_id, timestamp, folder_path, interval)
 
     # print to console
     if config['collect']['log']['console']:
-        printWorldState(timestamp, entities, chat_log, inventory, grid, imagePath)
+        print_world_state(timestamp, entities, chat_log, inventory, grid, image_path)
 
-    saveTxt = config['collect']['log']['txt']
-    saveJson = config['collect']['log']['json']
-    if saveTxt or saveJson:
+    save_txt = config['collect']['log']['txt']
+    save_json = config['collect']['log']['json']
+    if save_txt or save_json:
         #make a directory for the mission
         date = timestamp.split(" ")[0]
-        pathLog = config['collect']['log']['path'] + "/data-" + date + "/" + str(experimentID)
-        if not os.path.exists(pathLog):
-            os.makedirs(pathLog)
+        path_to_log = config['collect']['log']['path'] + "/data-" + date + "/" + str(experiment_id)
+        if not os.path.exists(path_to_log):
+            os.makedirs(path_to_log)
         # save those info in txt and json files
-        if saveTxt:
-            writeWorldStateTxt(pathLog, timestamp, entities, chat_log, inventory, grid, imagePath)
-        if saveJson:
-            writeWorldStateJson(lock, pathLog, timestamp, entities, chat_log, inventory, grid, imagePath)
+        if save_txt:
+            write_world_state_txt(lock, path_to_log, timestamp, entities, chat_log, inventory, grid, image_path)
+        if save_json:
+            write_world_state_json(lock, path_to_log, timestamp, entities, chat_log, inventory, grid, image_path)
     
                 
 # merge the two functions into one
-def everyNSecondsAndMinutes(interval, timestamp):
+def every_n_seconds_minutes(interval, timestamp):
     if interval.startswith("every_") and (interval.endswith("_seconds") or interval.endswith("_minutes")):
         n = interval.split("_")[1]
         # if n is not a number in a string, return false
@@ -43,7 +43,7 @@ def everyNSecondsAndMinutes(interval, timestamp):
             return timestamp % (n * 60) == 0
     return False
 
-def saveScreenShot(agent, experimentID, timestamp, folderPath, interval):
+def save_screen(agent, experiment_id, timestamp, folder_path, interval):
     observer = agent.getWorldState()
     # timestamp is a string 2023-05-17 11:24:07, convert it
     # first get the time
@@ -53,32 +53,32 @@ def saveScreenShot(agent, experimentID, timestamp, folderPath, interval):
     minute = time.split(":")[1]
     second = time.split(":")[2]
     # time in second
-    timesecond = int(hour) * 3600 + int(minute) * 60 + int(second)
+    time_in_seconds = int(hour) * 3600 + int(minute) * 60 + int(second)
 
-    intervalCheck = (interval == "every_move")
-    intervalCheck = (interval == "every_second" and timesecond % 1 == 0) or intervalCheck
-    intervalCheck = (interval == "every_minute" and timesecond % 60 == 0) or intervalCheck
-    intervalCheck = (interval == "every_hour" and timesecond % 3600 == 0) or intervalCheck
-    intervalCheck = everyNSecondsAndMinutes(interval, timesecond) or intervalCheck
+    interval_check = (interval == "every_move")
+    interval_check = (interval == "every_second" and time_in_seconds % 1 == 0) or interval_check
+    interval_check = (interval == "every_minute" and time_in_seconds % 60 == 0) or interval_check
+    interval_check = (interval == "every_hour" and time_in_seconds % 3600 == 0) or interval_check
+    interval_check = every_n_seconds_minutes(interval, time_in_seconds) or interval_check
         
-    if observer.number_of_video_frames_since_last_state > 0 and intervalCheck:
+    if observer.number_of_video_frames_since_last_state > 0 and interval_check:
         frame = observer.video_frames[-1]
         image = Image.frombytes('RGB', (frame.width, frame.height), bytes(frame.pixels) )
-        # remove unwanted charecters from timestamp
-        timestring = str(timestamp).replace(":", "-")
-        timestring = timestring.replace(" ", "_")
+        # remove unwanted characters from timestamp
+        time_string = str(timestamp).replace(":", "-")
+        time_string = time_string.replace(" ", "_")
         #make a directory for the mission if it doesn't exist
-        if not os.path.exists(folderPath):
-            os.makedirs(folderPath)
-        imagePrePath = folderPath + "/" + str(experimentID) + "-Builder"
-        if not os.path.exists(imagePrePath):
-            os.makedirs(imagePrePath)
-        imagePath = imagePrePath + "/" + str(timestring) + "-Builder.png"
-        image.save(str(imagePath))
-        return imagePath
+        if not os.path.exists(folder_path):
+            os.makedirs(folder_path)
+        image_pre_path = folder_path + "/" + str(experiment_id) + "-Builder"
+        if not os.path.exists(image_pre_path):
+            os.makedirs(image_pre_path)
+        image_path = image_pre_path + "/" + str(time_string) + "-Builder.png"
+        image.save(str(image_path))
+        return image_path
     return ""
 
-def printWorldState(timestamp, entities, chat_log, inventory, grid, imagePath):
+def print_world_state(timestamp, entities, chat_log, inventory, grid, image_path):
      # print to console
     print("--------------------")
     print("[Timestamp] " + str(timestamp))
@@ -86,8 +86,8 @@ def printWorldState(timestamp, entities, chat_log, inventory, grid, imagePath):
         print("[Builder Position] ")
         for entity in entities:
             print("\t" + str(entity.name) + " (x, y, z): (" + str(entity.x) + ", " + str(entity.y) + ", " + str(entity.z) + ") (yaw, pitch): (" + str(entity.yaw) + ", " + str(entity.pitch) + ")"  )
-    if imagePath is not None:
-        print("[Screenshot Path] " + imagePath)
+    if image_path is not None:
+        print("[Screenshot Path] " + image_path)
     if chat_log is not None:
         print("[Chat Log]")
         for chat in chat_log:
@@ -97,58 +97,57 @@ def printWorldState(timestamp, entities, chat_log, inventory, grid, imagePath):
     if grid is not None:
         print("[Blocks In Grid] " + str(grid))
 
-def writeWorldStateTxt(pathLog, timestamp, entities, chat_log, inventory, grid, imagePath):
-    if not os.path.exists(pathLog):
-        os.makedirs(pathLog)
-    txt_path = pathLog + "/observation.txt"
-    
-    # rewite so that only one process can write to the file at a time
-    with open(txt_path, 'a+') as file:
-        # write the data to file
-        file.write("--------------------\n")
-        file.write("[Timestamp] " + str(timestamp) + "\n")
-        if entities is not None:
-            file.write("[Builder Position] \n")
-            for entity in entities:
-                file.write("\t" + str(entity.name) + " (x, y, z): (" + str(entity.x) + ", " + str(entity.y) + ", " + str(entity.z) + ") (yaw, pitch): (" + str(entity.yaw) + ", " + str(entity.pitch) + ")\n"  )
-        if imagePath is not None:
-            file.write("[Screenshot Path] " + imagePath + "\n")
-        if chat_log is not None:
-            file.write("[Chat Log]\n")
-            for chat in chat_log:
-                file.write("\t" + str(chat) + "\n")
-        if inventory is not None:
-            file.write("[Builders Inventory] \n")
-            for agent_name, items in list(inventory.items()):
-                file.write("\t" + str(agent_name) + "\n")
-                for item in items:
-                    file.write("\t\t" + str(item) + "\n")
-        if grid is not None:
-            file.write("[Blocks In Grid] \n")
-            for key, block in list(grid.items()):
-                file.write("\t" + str(block) + "\n")
-        # close the file
-        file.close()
+def write_world_state_txt(lock, path_log, timestamp, entities, chat_log, inventory, grid, image_path):
+    with lock:
+        if not os.path.exists(path_log):
+            os.makedirs(path_log)
+        txt_path = path_log + "/observation.txt" 
+        
+        with open(txt_path, 'a+') as file:
+            # write the data to file
+            file.write("--------------------\n")
+            file.write("[Timestamp] " + str(timestamp) + "\n")
+            if entities is not None:
+                file.write("[Builder Position] \n")
+                for entity in entities:
+                    file.write("\t" + str(entity.name) + " (x, y, z): (" + str(entity.x) + ", " + str(entity.y) + ", " + str(entity.z) + ") (yaw, pitch): (" + str(entity.yaw) + ", " + str(entity.pitch) + ")\n"  )
+            if image_path is not None:
+                file.write("[Screenshot Path] " + image_path + "\n")
+            if chat_log is not None:
+                file.write("[Chat Log]\n")
+                for chat in chat_log:
+                    file.write("\t" + str(chat) + "\n")
+            if inventory is not None:
+                file.write("[Builders Inventory] \n")
+                for agent_name, items in list(inventory.items()):
+                    file.write("\t" + str(agent_name) + "\n")
+                    for item in items:
+                        file.write("\t\t" + str(item) + "\n")
+            if grid is not None:
+                file.write("[Blocks In Grid] \n")
+                for key, block in list(grid.items()):
+                    file.write("\t" + str(block) + "\n")
+            # close the file
+            file.close()
 
-def removeLastComma(file):
+def remove_last_comma(file):
     file.seek(file.tell() - 2, os.SEEK_SET)
     file.truncate()
 
-def removeLastBrakets(file):
+def remove_last_brackets(file):
     file.seek(file.tell() - 6, os.SEEK_SET)
     file.truncate()
 
-def writeWorldStateJson(lock, pathLog, timestamp, entities, chat_log, inventory, grid, imagePath):
+def write_world_state_json(lock, path_log, timestamp, entities, chat_log, inventory, grid, image_path):
     with lock:
         # if there is not a data file with todays date create one
-        if not os.path.exists(pathLog):
-            os.makedirs(pathLog)
-        json_path = pathLog + "/observation.json"
+        if not os.path.exists(path_log):
+            os.makedirs(path_log)
+        json_path = path_log + "/observation.json"
         if not os.path.exists(json_path):
             os.mknod(json_path)
             
-        text_to_write = ""
-        first = False    
+        text_to_write = ""   
         # if empty, write the first line
         if os.stat(json_path).st_size == 0:
             text_to_write += "{\n"
@@ -157,7 +156,7 @@ def writeWorldStateJson(lock, pathLog, timestamp, entities, chat_log, inventory,
             text_to_write += ",\n"
         # write the world state
         text_to_write += "\t\t{\n"
-        # use entites position
+        # use entities position
         if entities is not None:
             for ent in entities:
                 text_to_write += "\t\t\t\""+ ent.name + "_Position\": {\n"
@@ -174,7 +173,7 @@ def writeWorldStateJson(lock, pathLog, timestamp, entities, chat_log, inventory,
                 text_to_write += "\t\t\t\t\"" + str(chat) + "\",\n"
             # remove the last comma if there is at - 2
             if len(chat_log) > 0:
-                text_to_write = removeLastTComma(text_to_write)
+                text_to_write = remove_last_comma_string(text_to_write)
             text_to_write += "\n"
             text_to_write += "\t\t\t],\n"
         # write the timestamp
@@ -192,7 +191,7 @@ def writeWorldStateJson(lock, pathLog, timestamp, entities, chat_log, inventory,
                 text_to_write += "\t\t\t\t},\n"
             # remove the last comma
             if len(grid) > 0:
-                text_to_write = removeLastTComma(text_to_write)
+                text_to_write = remove_last_comma_string(text_to_write)
             text_to_write += "\n"
             text_to_write += "\t\t\t],\n"
         # write the builder inventory
@@ -203,7 +202,7 @@ def writeWorldStateJson(lock, pathLog, timestamp, entities, chat_log, inventory,
                 text_to_write += "\t\t\t\t\t\"Name\": \"" + key + "\",\n"
                 text_to_write += "\t\t\t\t\t\"Items\": [\n"
                 for item in items:
-                    # write the item index type colour and quantity
+                    # write the item index type color and quantity
                     text_to_write += "\t\t\t\t\t\t{\n"
                     text_to_write += "\t\t\t\t\t\t\t\"Index\": " + str(item['index']) + ",\n"
                     text_to_write += "\t\t\t\t\t\t\t\"Type\": \"" + item['type'] + "\",\n"
@@ -213,22 +212,22 @@ def writeWorldStateJson(lock, pathLog, timestamp, entities, chat_log, inventory,
                     text_to_write += "\t\t\t\t\t\t},\n"
                 # remove the last comma
                 if (len(items) > 0):
-                    text_to_write = removeLastTComma(text_to_write)
+                    text_to_write = remove_last_comma_string(text_to_write)
                 text_to_write += "\t\t\t\t\t]\n"
                 text_to_write += "\t\t\t\t},\n"
             # remove the last comma
             if len(inventory) > 0:
-                text_to_write = removeLastTComma(text_to_write)
+                text_to_write = remove_last_comma_string(text_to_write)
             text_to_write += "\n"
             text_to_write += "\t\t\t],\n"
         # write the screenshots
-        if imagePath is not None:
+        if image_path is not None:
             text_to_write += "\t\t\t\"Screenshots\": {\n"
-            text_to_write += "\t\t\t\t\"Path\": \"" + str(imagePath) + "\",\n"
+            text_to_write += "\t\t\t\t\"Path\": \"" + str(image_path) + "\",\n"
             text_to_write += "\t\t\t\t\"Timestamp\": \"" + str(timestamp) + "\"\n"
             text_to_write += "\t\t\t},\n"
         # remove the last comma
-        text_to_write = removeLastTComma(text_to_write)
+        text_to_write = remove_last_comma_string(text_to_write)
         text_to_write += "\t\t}\n"
         text_to_write += "\t]\n"
         text_to_write += "}\n"
@@ -236,10 +235,10 @@ def writeWorldStateJson(lock, pathLog, timestamp, entities, chat_log, inventory,
         # rewrite the file
         with open(json_path, 'a') as f:
             if os.stat(json_path).st_size != 0:
-                removeLastBrakets(f)
+                remove_last_brackets(f)
             f.write(text_to_write)
         
-def removeLastTComma(text_to_write):
+def remove_last_comma_string(text_to_write):
     if text_to_write[-2] == ',':
         text_to_write = text_to_write[:-2] + "\n"
     return text_to_write

@@ -1,5 +1,5 @@
 # Malmo Builder
-a data collecting enviroment for project DISCUTER
+a data collecting environment for project DISCUTER
 
 # Table of Contents
 1. [Malmo Installation (SERVER)](#malmo-installation-server)
@@ -54,7 +54,7 @@ python3 run_mission.py
 ```
 ## Using Malmo Builder (SERVER)
 
-1. clone the project in the MamloPlatform repository
+1. clone the project in the MalmoPlatform repository
 
 2. navigate to Malmo_Builder
 
@@ -78,7 +78,7 @@ in which num_of_clients is the number of clients you want to run
     2 for the server and one local player  
     3 for the server and two local players  
 
-### manual version (less time but more work)):
+### manual version (less time but more work):
 #### to run only server:
 - run one client
 ```sh

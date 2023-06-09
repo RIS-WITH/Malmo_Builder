@@ -5,9 +5,11 @@ from __future__ import division
 from builtins import range
 import sys
 import uuid
-from malmoutils import *
-from observation import *
-from register import *
+import time
+import json
+from malmoutils import MalmoPython, get_xml, safe_start_mission, safe_wait_for_start, update_client_pool, config
+from observation import getEntitiesInfo as get_entities_info, updateChatLog as update_chat_log, getInventoryInfo as get_inventory_info, updateGrid as update_grid, samePosition as same_position
+from register import save_world_state
 import threading
 
 # Create one agent host for parsing:
@@ -36,7 +38,7 @@ num_distant_agents = config["agents"]["num_distant_agents"]
 NUM_AGENTS = agents_requested - 1 - num_distant_agents
 
 # Create the rest of the agent hosts - one for each human agent and one to control the observer for now one local and other waiting for connection:
-agent_hosts += [MalmoPython.AgentHost() for x in range(1, NUM_AGENTS + 1) ]
+agent_hosts += [MalmoPython.AgentHost() for _ in range(1, NUM_AGENTS + 1) ]
 
 # Set up debug output:
 for ah in agent_hosts:
@@ -70,45 +72,43 @@ for mission_no in range(0, num_missions + 1):
     print("Running mission #" + str(mission_no))
     print(agent_hosts)
     # force reset mission 0
-    tempForcereset = config['mission']['force_reset']
+    tempForceReset = config['mission']['force_reset']
     if mission_no == 0:
         config['mission']['force_reset'] = 1
-    # Create mission xml - use forcereset if this is the first mission.
-    my_mission = MalmoPython.MissionSpec(getXML(NUM_AGENTS, config), True)
+    # Create mission xml - use force reset if this is the first mission.
+    my_mission = MalmoPython.MissionSpec(get_xml(NUM_AGENTS, config), True)
     # set the force reset back to the original value
-    config['mission']['force_reset'] = tempForcereset
+    config['mission']['force_reset'] = tempForceReset
 
     # Generate an experiment ID for this mission.
     # This is used to make sure the right clients join the right servers -
     # if the experiment IDs don't match, the startMission request will be rejected.
-    # In practice, if the client pool is only being used by one researcher, there
-    # should be little danger of clients joining the wrong experiments, so a static
     # ID would probably suffice, though changing the ID on each mission also catches
     # potential problems with clients and servers getting out of step.
     experimentID = str(uuid.uuid4())
 
-    # redifine the client pool
+    # redefine the client pool
     client_pool = MalmoPython.ClientPool()
     for id, port in client_pool_array:
         client_pool.add(MalmoPython.ClientInfo(id, port))
 
-    ## visualise the clients connecting to the server    
+    ## visualize the clients connecting to the server    
     #print("client_pool " + str(client_pool))
 
     # Attempt to start the mission:
     for i in range(len(agent_hosts)):
         agent_hosts[i].setObservationsPolicy(MalmoPython.ObservationsPolicy.LATEST_OBSERVATION_ONLY)
         agent_hosts[i].setVideoPolicy(MalmoPython.VideoPolicy.LATEST_FRAME_ONLY)
-        safeStartMission(agent_hosts[i], my_mission, client_pool, MalmoPython.MissionRecordSpec(), i, experimentID, config, client_pool_array)
+        safe_start_mission(agent_hosts[i], my_mission, client_pool, MalmoPython.MissionRecordSpec(), i, experimentID)
 
-    safeWaitForStart(agent_hosts)
+    safe_wait_for_start(agent_hosts)
 
     time.sleep(1)
 
     # running is true if at least one agent is still running the mission
     running = True
     # the last entities seen by the agents
-    lastEntities = None
+    last_entity = None
     # the last grid seen by the agents
     grid = {}
     
@@ -121,7 +121,7 @@ for mission_no in range(0, num_missions + 1):
     
     lock = threading.Lock()
     
-    # add indecation that a mission has started in the chat log
+    # add indication that a mission has started in the chat log
     chat_log.append("Mission " + str(mission_no) + " started")
     running = True
     while running:
@@ -137,7 +137,7 @@ for mission_no in range(0, num_missions + 1):
                     for i in range(len(agent_hosts)):
                         agent_hosts[i].sendCommand("quit")
                     # add new agent_hosts
-                    agent_hosts += [MalmoPython.AgentHost() for x in range(last_num_agents + 1, NUM_AGENTS + 1)]
+                    agent_hosts += [MalmoPython.AgentHost() for _ in range(last_num_agents + 1, NUM_AGENTS + 1)]
                     # Set up debug output:
                     for i in range(last_num_agents + 1, NUM_AGENTS + 1):
                         agent_hosts[i].setDebugOutput(DEBUG)
@@ -150,12 +150,12 @@ for mission_no in range(0, num_missions + 1):
             if world_state.is_mission_running:
                 running = True
                 # get the number of observations since last state
-                obsv_num = world_state.number_of_observations_since_last_state
+                obs_num = world_state.number_of_observations_since_last_state
 
                 ## to print the number of observations since last state 
-                #print("Got " + str(obsv_num) + " observations since last state.")
+                #print("Got " + str(obs_num) + " observations since last state.")
 
-                if obsv_num > 0:
+                if obs_num > 0:
                     # get the last observation
                     msg = world_state.observations[-1].text
                     ob = json.loads(msg)
@@ -163,8 +163,8 @@ for mission_no in range(0, num_missions + 1):
                     # get timestamp
                     timestamp = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
 
-                    # get agents informations
-                    entities = getEntitiesInfo(ob, lastEntities, names)
+                    # get agents information's
+                    entities = get_entities_info(ob, last_entity, names)
 
                     # # print los if exists
                     # if u'LineOfSight' in ob:
@@ -172,35 +172,32 @@ for mission_no in range(0, num_missions + 1):
                     
                     if config['collect']['chat_history']:
                         # update chat log and get true if a new message has been added
-                        change = updateChatLog(ob, chat_log, config)
+                        change = update_chat_log(ob, chat_log, config)
                     else:
-                        chaty_log = None
+                        chat_log = None
                         change = False
 
                     # get builders inventory
-                    inventory = getInventoryInfo(ob , entities)
+                    inventory = get_inventory_info(ob , entities)
                     # if not needed, clear inventory
                     if not config['collect']['agents_inventory']:
                         inventory = None
                     
                     # update grid and get true if a new block has been added
                     if config['collect']['blocks_in_grid']:
-                        #change = updateGrid(ob, grid, config['mission']['area_side_size'], grid_types) or change
-                        # a new process to update the grid
-                        p = threading.Thread(target=updateGrid, args=(ob, grid, config['mission']['area_side_size'], grid_types))
-                        p.start()
+                        change = update_grid(ob, grid, config['mission']['area_side_size'], grid_types) or change
                     else:
                         grid = None
                     
                     precision = config['collect']['agents_position']['precision']
                     angle_precision = config['collect']['agents_position']['angle_precision']
                     # print to console - if no change since last observation at the precision level, don't bother printing again.
-                    if samePosition(entities, lastEntities, precision, angle_precision) and not change:
+                    if same_position(entities, last_entity, precision, angle_precision) and not change:
                         # no change since last observation - don't bother printing again.
                         continue
                     
                     # update lastEntities for next observation
-                    lastEntities = entities
+                    last_entity = entities
 
                     # clear entities position if not needed
                     if not config['collect']['agents_position']['save']:
@@ -210,7 +207,7 @@ for mission_no in range(0, num_missions + 1):
                     if config['collect']['log']['txt'] or config['collect']['log']['json'] or config['collect']['log']['console'] or config['collect']['screenshot']["save"]:
                         # create a new thread to save the data
                         # thread-safe write to file
-                        p = threading.Thread(target=saveWorldState, args=(lock, agent_hosts[0], config, experimentID, timestamp, entities, chat_log, inventory, grid))
+                        p = threading.Thread(target=save_world_state, args=(lock, agent_hosts[0], config, experimentID, timestamp, entities, chat_log, inventory, grid))
                         # dont wait for the process to finish
                         p.start()
                         
@@ -229,7 +226,7 @@ for mission_no in range(0, num_missions + 1):
             world_state = ah.getWorldState()
             if world_state.is_mission_running:
                 hasEnded = False # all not good
-    # add indecation that a mission has ended in the chat log
+    # add indication that a mission has ended in the chat log
     chat_log.append("Mission " + str(mission_no) + " ended")
     print()
     print("Mission ended")
