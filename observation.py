@@ -1,31 +1,31 @@
 from collections import namedtuple
 
-EntityInfo = namedtuple('EntityInfo', 'x, y, z, yaw, pitch, name, colour, variation, quantity, life')
+EntityInfo = namedtuple('EntityInfo', 'x, y, z, yaw, pitch, name, color, variation, quantity, life')
 EntityInfo.__new__.__defaults__ = (0, 0, 0, 0, 0, "", "", "", 1, 1)
-BlockInfo = namedtuple('BlockInfo', 'x, y, z, type, colour')
+BlockInfo = namedtuple('BlockInfo', 'x, y, z, type, color')
 BlockInfo.__new__.__defaults__ = (0, 0, 0, "", "")
 
-def getEntitiesInfo(observations, lastEntities=None, names=[]):
+def get_entities_info(observations, last_entities=None, names=[]):
     # get builder 1 and 2 position
     if "entities" in observations:
         entities = [EntityInfo(k["x"], k["y"], k["z"], k["yaw"], k["pitch"], k["name"]) for k in observations["entities"]]
     # get rid of block types and other unwanted entities
     entities = [e for e in entities if e.name in names]
     # order entities by name
-    if lastEntities is not None and len(entities) < len(lastEntities):
-        for e in lastEntities:
+    if last_entities is not None and len(entities) < len(last_entities):
+        for e in last_entities:
             # if un entity is missing, add it
             if e.name not in [k.name for k in entities]:
                 entities.append(e)
     return sorted(entities, key=lambda x: x.name)
 
-def updateChatLog(observations, chat_log, config):
+def update_chat_log(observations, chat_log, config):
     if "Chat" in observations:
-        return readObservationChatLog(observations, chat_log)
+        return read_observation_chat_log(observations, chat_log)
     else:
-        return readServerChatLog(chat_log, config)
+        return read_server_chat_log(chat_log, config)
     
-def readServerChatLog(chat_log, config):
+def read_server_chat_log(chat_log, config):
     # read config file log path
     with open(config['server']['log_path']) as log_file:
         # if the log file contains two lines
@@ -45,7 +45,7 @@ def readServerChatLog(chat_log, config):
         return False
     
     
-def readObservationChatLog(observations, chat_log):
+def read_observation_chat_log(observations, chat_log):
     if "Chat" in observations:
         chats = observations["Chat"]
         # transform to list if it is not
@@ -58,7 +58,7 @@ def readObservationChatLog(observations, chat_log):
                 return True
     return False
 
-def getInventoryInfo(observation, entities):
+def get_inventory_info(observation, entities):
     inventory = {}
     if "inventory" in observation:
         if len(inventory) == 0:
@@ -68,134 +68,138 @@ def getInventoryInfo(observation, entities):
             inventory[observation["Name"]] = observation["inventory"]
     return inventory
 
-def samePosition(ents1, ents2, precision=0.1, anglePrecision=400):
-    # compare the position of the agents
-    if ents1 == ents2:
+def same_position(entities1, entities2, precision=0.1, angle_precision=400):
+    # compare the position of the agents from two observations
+    if entities1 == entities2:
         return True
-    if ents1 == None or ents2 == None:
+    if entities1 == None or entities2 == None:
         return False
-    if len(ents1) != len(ents2):
+    if len(entities1) != len(entities2):
         return False
     # compare each entity position and orientation using the precision
-    for i in range(len(ents1)):
-        e1 = ents1[i]
-        e2 = ents2[i]
-        if e1.name != e2.name:
-            return False
-        if abs(e1.yaw - e2.yaw) > anglePrecision * 2:
-            return False
-        if abs(e1.pitch - e2.pitch) > anglePrecision/12:
-            return False
-        if abs(e1.x - e2.x) > precision:
-            return False
-        if abs(e1.y - e2.y) > precision:
-            return False
-        if abs(e1.z - e2.z) > precision:
+    for i in range(len(entities1)):
+        if not same_position_entity(entities1[i], entities2[i], precision, angle_precision):
             return False
     return True
 
-def getBlockCoordinates(i, gridSize, xzToCenter):
-    x = i % gridSize
-    y = i // gridSize // gridSize
-    z = (i // gridSize) % gridSize
-    return (x - xzToCenter), (y + 227), (z - xzToCenter)
+def same_position_entity(entity1, entity2, precision, angle_precision):
+    if entity1.name != entity2.name:
+        return False
+    if abs(entity1.yaw - entity2.yaw) > angle_precision * 2:
+        return False
+    if abs(entity1.pitch - entity2.pitch) > angle_precision/11:
+        return False
+    if abs(entity1.x - entity2.x) > precision:
+        return False
+    if abs(entity1.y - entity2.y) > precision:
+        return False
+    if abs(entity1.z - entity2.z) > precision:
+        return False
+    return True
 
-def getBlock1dCoordinates(x, y, z, gridSize, xzToCenter):
+def get_block_coordinates(i, grid_size, radius):
+    x = i % grid_size
+    y = i // grid_size // grid_size
+    z = (i // grid_size) % grid_size
+    return (x - radius), (y + 227), (z - radius)
+
+def get_block_1d_coordinates(x, y, z, grid_size, radius):
     # do the inverse of getBlockCoordinates
-    return (x + xzToCenter) + (y - 227) * gridSize * gridSize + (z + xzToCenter) * gridSize
+    return (x + radius) + (y - 227) * grid_size * grid_size + (z + radius) * grid_size
 
-def compareBlock(blockorg, blockhit):
+def compare_block(block_original, block_hit):
     precision = 1.49
-    if abs(blockorg.x - blockhit.x) > precision or abs(blockorg.y - blockhit.y) > precision or abs(blockorg.z - blockhit.z) > precision:
+    if abs(block_original.x - block_hit.x) > precision or abs(block_original.y - block_hit.y) > precision or abs(block_original.z - block_hit.z) > precision:
         return False
     # compare the type of the block
-    if blockorg.type != blockhit.type:
+    if block_original.type != block_hit.type:
         return False
     return True
 
-def updateGrid(observation, grid, side_size, gridTypes):
-    # get blocks using ObservationFromGrid absolute position
+def update_grid(observation, grid, side_size, grid_types, change_event):
     change = False
+    # get blocks using ObservationFromGrid absolute position
     if "floor" in observation:
         floor = observation["floor"]
         # xzToCenter is the distance from the center of the grid to the edge
-        xzToCenter = (side_size - 1) // 2
+        radius = (side_size - 1) // 2
         
         # grid size is the side size of the area we are looking at
-        gridSize = side_size
+        grid_size = side_size
         if u"LineOfSight" in observation:
             los = observation["LineOfSight"]
 
             
             # check if there is a change in the grid
-            change = gridCheck(grid, los, floor, gridSize, xzToCenter, gridTypes)
-        # check all blocks we are not loking at are in grid are in the observation  
-        change = checkGridIntegrity(grid, floor, gridSize, xzToCenter, gridTypes) or change
-    return change
+            change = grid_check(grid, los, floor, grid_size, radius, grid_types)
+        # check all blocks we are not looking at are in grid are in the observation  
+        change = check_grid_integrity(grid, floor, grid_size, radius, grid_types) or change
+    if change:
+        change_event.set()
 
-def gridCheck(grid, los, floor, gridSize, xzToCenter, gridTypes):
-    # check all blocks in line of sight are in grid and then check all blocks we are not loking at are in grid are in the observation
-    cords = getlosblocks(los, gridTypes)
+def grid_check(grid, los, floor, grid_size, radius, grid_types):
+    # check all blocks in line of sight are in grid and then check all blocks we are not looking at are in grid are in the observation
+    cords = get_los_blocks(los, grid_types)
     if cords == []:
         return False
     
     # array for missing blocks
-    missingBlocks = []
+    missing_blocks = []
     
-    # transform thes 3d coordinates to 1d
-    index = [int(getBlock1dCoordinates(x, y, z, gridSize, xzToCenter)) for x, y, z in cords]
+    # transform these 3d coordinates to 1d
+    index = [int(get_block_1d_coordinates(x, y, z, grid_size, radius)) for x, y, z in cords]
     for i in index:
         # see if the index i in the 1d array floor
         if i < len(floor):
             # get the block type
             block_type = floor[i]
             # get the 3d coordinates of the block
-            x, y, z = getBlockCoordinates(i, gridSize, xzToCenter)
+            x, y, z = get_block_coordinates(i, grid_size, radius)
             # create a blockInfo using floor info
-            blockGrid = BlockInfo(x, y, z, block_type, "")
+            block_grid = BlockInfo(x, y, z, block_type, "")
             
             # make a unique key for the block
-            key = "block" + str(blockGrid.x) + "_" + str(blockGrid.y) + "_" + str(blockGrid.z)
+            key = "block" + str(block_grid.x) + "_" + str(block_grid.y) + "_" + str(block_grid.z)
                 
-            check = blockCheck(grid, los, blockGrid, key, gridTypes)
+            check = block_check(grid, los, block_grid, key, grid_types)
             
             # if blockCheck is -1 then the block is not in the grid and not in line of sight
             if check == -1:
                 # add the block to missingBlocks
-                missingBlocks.append((x, y, z, block_type))
+                missing_blocks.append((x, y, z, block_type))
             elif isinstance(check, bool):
                 return check
 
-def getlosblocks(los, gridTypes):
+def get_los_blocks(los, grid_types):
     cords = []
-    if los[u'hitType'] == "block" and los[u'inRange'] and los[u'type'] in gridTypes:
+    if los[u'hitType'] == "block" and los[u'inRange'] and los[u'type'] in grid_types:
         # get the possible absolute coordinates of the blocks in line of sight
-        losx = los[u'x']
-        losy = los[u'y']
-        losz = los[u'z']
+        los_x = los[u'x']
+        los_y = los[u'y']
+        los_z = los[u'z']
         for i in range(3):
             for j in range(3):
                 for k in range(3):
-                    x = int(losx + i - 1)
-                    y = int(losy + j - 1)
-                    z = int(losz + k - 1)
+                    x = int(los_x + i - 1)
+                    y = int(los_y + j - 1)
+                    z = int(los_z + k - 1)
                     cords.append((x, y, z))
         # remove duplicates
         cords = list(set(cords))          
     return cords
     
 
-def blockCheck(grid, los, blockGrid, key, gridTypes):
+def block_check(grid, los, block_grid, key, grid_types):
     # if block is the one we are looking for and it is not in the grid
-    if blockGrid.type in gridTypes and key not in grid:
+    if block_grid.type in grid_types and key not in grid:
         # check if the block is in line of sight
-        if los[u'hitType'] == "block" and los[u'inRange'] and los[u'type'] == blockGrid.type:
+        if los[u'hitType'] == "block" and los[u'inRange'] and los[u'type'] == block_grid.type:
             # create a blockInfo using los info
-            blockLos = BlockInfo(los[u'x'], los[u'y'], los[u'z'], los[u'type'], los[u'colour'])
+            block_los = BlockInfo(los[u'x'], los[u'y'], los[u'z'], los[u'type'], los[u'colour'])
 
             # if they are the same add the block to the grid
-            if compareBlock(blockGrid, blockLos):
-                grid[key] = BlockInfo(blockGrid.x, blockGrid.y, blockGrid.z, blockGrid.type, blockLos.colour)
+            if compare_block(block_grid, block_los):
+                grid[key] = BlockInfo(block_grid.x, block_grid.y, block_grid.z, block_grid.type, block_los.color)
                 return True
             else:
                 return False
@@ -203,50 +207,18 @@ def blockCheck(grid, los, blockGrid, key, gridTypes):
             # if the block is not in line of sight add it to missingBlocks
             return -1
 
-    elif key in grid and blockGrid.type not in gridTypes:
+    elif key in grid and block_grid.type not in grid_types:
         grid.pop(key)
         return True 
-    return
 
-def checkGridIntegrity(grid, floor, gridSize, xzToCenter, gridTypes):
+def check_grid_integrity(grid, floor, grid_size, radius, grid_types):
     # check if all grids are in the floor
     for key in grid:
         block = grid[key]
         # get the index of the block in the floor
-        index = getBlock1dCoordinates(block.x, block.y, block.z, gridSize, xzToCenter)
+        index = get_block_1d_coordinates(block.x, block.y, block.z, grid_size, radius)
         # if the block is not in the floor remove it from the grid
-        if index >= len(floor) or floor[index] != block.type or block.type not in gridTypes:
+        if index >= len(floor) or floor[index] != block.type or block.type not in grid_types:
             grid.pop(key)
             # maybe check the rest before returning ?
             return True
-
-def fillMissing(grid, missingBlocks):
-    # check for missing blocks (in case player is placing blocks too fast and the server is not updating fast enough)
-    change = False
-    for cord in missingBlocks:
-        key = "block" + str(cord[0]) + "_" + str(cord[1]) + "_" + str(cord[2])
-        typeGrid = cord[3]
-        # get the color of the last grid
-        color = getNearestColor(grid, cord)
-        grid[key] = BlockInfo(cord[0], cord[1], cord[2], typeGrid, color)
-        change = True
-    return change
-
-def getNearestColor(grid, cord):
-    color = ""
-    block = None
-    if grid != {}:
-        # loop through the grid in a reverse order and find the nearest color about 3 blocks max
-        cout = 0
-        for b in reversed(list(grid.keys())):
-            if block == None:
-                block = grid[b]
-            # check wich block is closer to the cord
-            elif abs(block.x - cord[0]) + abs(block.y - cord[1]) + abs(block.z - cord[2]) > abs(grid[b].x - cord[0]) + abs(grid[b].y - cord[1]) + abs(grid[b].z - cord[2]):
-                block = grid[b]
-            cout += 1
-            if cout > 3:
-                break
-    if block != None:
-        color = block.colour
-    return color

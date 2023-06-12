@@ -8,7 +8,7 @@ import uuid
 import time
 import json
 from malmoutils import MalmoPython, get_xml, safe_start_mission, safe_wait_for_start, update_client_pool, config
-from observation import getEntitiesInfo as get_entities_info, updateChatLog as update_chat_log, getInventoryInfo as get_inventory_info, updateGrid as update_grid, samePosition as same_position
+from observation import get_entities_info, update_chat_log, get_inventory_info, update_grid, same_position
 from register import save_world_state
 import threading
 
@@ -121,9 +121,10 @@ for mission_no in range(0, num_missions + 1):
     # Admin make every player able to destroy blocks in one hit
     agent_hosts[0].sendCommand("chat /effect @a haste 1000000 255 true")
     
-    
     lock = threading.Lock()
     
+    # check grid change variable
+    grid_change = threading.Event()
     # add indication that a mission has started in the chat log
     chat_log.append("Mission " + str(mission_no) + " started")
     running = True
@@ -188,7 +189,10 @@ for mission_no in range(0, num_missions + 1):
                     
                     # update grid and get true if a new block has been added
                     if config['collect']['blocks_in_grid']:
-                        change = update_grid(ob, grid, config['mission']['area_side_size'], grid_types) or change
+                        threading.Thread(target=update_grid, args=(ob, grid, config['mission']['area_side_size'], grid_types, grid_change)).start()
+                        change = grid_change.is_set() or change
+                        if grid_change.is_set():
+                            grid_change.clear()
                     else:
                         grid = None
                     

@@ -187,7 +187,7 @@ def write_world_state_json(lock, path_log, timestamp, entities, chat_log, invent
                 text_to_write += "\t\t\t\t\t\"Y\": " + str(block.y - 226) + ",\n"
                 text_to_write += "\t\t\t\t\t\"Z\": " + str(block.z) + ",\n"
                 text_to_write += "\t\t\t\t\t\"Type\": \"" + block.type + "\",\n"
-                text_to_write += "\t\t\t\t\t\"Colour\": \"" + block.colour + "\"\n"
+                text_to_write += "\t\t\t\t\t\"Colour\": \"" + block.color + "\"\n"
                 text_to_write += "\t\t\t\t},\n"
             # remove the last comma
             if len(grid) > 0:
@@ -207,7 +207,7 @@ def write_world_state_json(lock, path_log, timestamp, entities, chat_log, invent
                     text_to_write += "\t\t\t\t\t\t\t\"Index\": " + str(item['index']) + ",\n"
                     text_to_write += "\t\t\t\t\t\t\t\"Type\": \"" + item['type'] + "\",\n"
                     if 'colour' in item:
-                        text_to_write += "\t\t\t\t\t\t\t\"Colour\": \"" + str(item['colour']) + "\",\n"
+                        text_to_write += "\t\t\t\t\t\t\t\"Colour\": \"" + str(item['color']) + "\",\n"
                     text_to_write += "\t\t\t\t\t\t\t\"Quantity\": " + str(item['quantity']) + "\n"
                     text_to_write += "\t\t\t\t\t\t},\n"
                 # remove the last comma
