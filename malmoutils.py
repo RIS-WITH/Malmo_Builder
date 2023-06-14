@@ -167,7 +167,7 @@ def get_xml(num_agents, config):
         <ServerHandlers>
           <FlatWorldGenerator forceReset="'''+reset+'''" generatorString="'''+mission['flat_world_generator_str']+'''" seed=""/>
           <DrawingDecorator>
-            <DrawCuboid x1="-'''+str(x)+'''" y1="220" z1="-'''+str(z)+'''" x2="'''+str(x)+'''" y2="225" z2="'''+str(z)+'''" type="bedrock"/>
+            <DrawCuboid x1="-'''+str(x)+'''" y1="220" z1="-'''+str(z)+'" x2="'+str(x)+'''" y2="226" z2="'''+str(z)+'''" type="bedrock"/>
             <DrawBlock x="0" y="'''+str(y + x)+'" z="'+str(-z - delta)+'''" type="fence"/>
           </DrawingDecorator>
           <ServerQuitFromTimeUp description="'''+ str(mission['quit_from_time_up_description']) +''''" timeLimitMs="'''+ str(mission['time_limit']) +'''"/>
@@ -241,3 +241,11 @@ def get_inventory_xml_txt(agent_id):
           inventory_text += " colour=\"" + item["color"].upper() + "\""
         inventory_text += "/>"
     return inventory_text
+
+def get_borders_xml():
+  return """<DrawCuboid x1="-'''+str(x+1)+'''" y1="226" z1="-'''+str(z+1)+'''" x2="-'''+str(x+1)+'''" y2="255" z2="'''+str(z+1)+'''" type="barrier"/>
+            <DrawCuboid x1="'''+str(x+1)+'''" y1="226" z1="'''+str(z+1)+'" x2="'+str(x+1)+'''" y2="255" z2="-'''+str(z+1)+'''" type="barrier"/>
+            <DrawCuboid x1="-'''+str(x+1)+'''" y1="226" z1="'''+str(z+1)+'''" x2="'''+str(x+1)+'''" y2="255" z2="'''+str(z+1)+'''" type="barrier"/>
+            <DrawCuboid x1="-'''+str(x+1)+'''" y1="226" z1="-'''+str(z+1)+'''" x2="'''+str(x+1)+'''" y2="255" z2="-'''+str(z+1)+'''" type="barrier"/>
+            <DrawCuboid x1="-'''+str(x+1)+'''" y1="255" z1="-'''+str(z+1)+'''" x2="'''+str(x+1)+'''" y2="255" z2="'''+str(z+1)+'''" type="barrier"/>"""
+  

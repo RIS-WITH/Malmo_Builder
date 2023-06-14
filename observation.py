@@ -5,7 +5,7 @@ EntityInfo.__new__.__defaults__ = (0, 0, 0, 0, 0, "", "", "", 1, 1)
 BlockInfo = namedtuple('BlockInfo', 'x, y, z, type, color')
 BlockInfo.__new__.__defaults__ = (0, 0, 0, "", "")
 
-def get_entities_info(observations, last_entities=None, names=[]):
+def update_entities_info(observations, queue_entities, last_entities=None, names=[]):
     # get builder 1 and 2 position
     if "entities" in observations:
         entities = [EntityInfo(k["x"], k["y"], k["z"], k["yaw"], k["pitch"], k["name"]) for k in observations["entities"]]
@@ -17,7 +17,7 @@ def get_entities_info(observations, last_entities=None, names=[]):
             # if un entity is missing, add it
             if e.name not in [k.name for k in entities]:
                 entities.append(e)
-    return sorted(entities, key=lambda x: x.name)
+    queue_entities.put(sorted(entities, key=lambda x: x.name))
 
 def update_chat_log(observations, chat_log, config):
     if "Chat" in observations:
@@ -34,7 +34,7 @@ def read_server_chat_log(chat_log, config):
             lines = log_file.readlines()[-2:]
             for line in lines:
                 # if it has chat in it
-                if "]: [CHAT]" in line and (config["agents"]["builder_1"]["name"] in line or config["agents"]["builder_2"]["name"] in line) and "ADMIN" not in line:
+                if "]: [CHAT]" in line and (config["agents"]["builder_1"]["name"] in line or config["agents"]["builder_2"]["name"] in line) and "ADMIN" not in line :
                     # get the chat message
                     message = line.split("]: [CHAT] ")[1]
                     # remove the \n
@@ -128,8 +128,6 @@ def update_grid(observation, grid, side_size, grid_types, change_event):
         grid_size = side_size
         if u"LineOfSight" in observation:
             los = observation["LineOfSight"]
-
-            
             # check if there is a change in the grid
             change = grid_check(grid, los, floor, grid_size, radius, grid_types)
         # check all blocks we are not looking at are in grid are in the observation  
@@ -142,9 +140,6 @@ def grid_check(grid, los, floor, grid_size, radius, grid_types):
     cords = get_los_blocks(los, grid_types)
     if cords == []:
         return False
-    
-    # array for missing blocks
-    missing_blocks = []
     
     # transform these 3d coordinates to 1d
     index = [int(get_block_1d_coordinates(x, y, z, grid_size, radius)) for x, y, z in cords]
@@ -165,10 +160,10 @@ def grid_check(grid, los, floor, grid_size, radius, grid_types):
             
             # if blockCheck is -1 then the block is not in the grid and not in line of sight
             if check == -1:
-                # add the block to missingBlocks
-                missing_blocks.append((x, y, z, block_type))
-            elif isinstance(check, bool):
+                return False
+            elif isinstance(check, bool) and check == True:
                 return check
+    return False
 
 def get_los_blocks(los, grid_types):
     cords = []
@@ -222,3 +217,16 @@ def check_grid_integrity(grid, floor, grid_size, radius, grid_types):
             grid.pop(key)
             # maybe check the rest before returning ?
             return True
+        
+    
+def check_builder_rights(agent, los, builder_mode, name, size):
+    print(size)
+    # if the agent is looking outside the grid make him unable to destroy or place blocks
+    if builder_mode and (abs(los['x']) > size or abs(los['z']) > size):
+        # make builder in adventure mode
+        agent.sendCommand("chat /gamemode adventure @a[name=" + name + "]")
+        return 0
+    if not builder_mode and (abs(los['x']) <= size and abs(los['z']) <= size):
+        # make architect in survival mode
+        agent.sendCommand("chat /gamemode survival @a[name=" + name + "]")
+        return 1

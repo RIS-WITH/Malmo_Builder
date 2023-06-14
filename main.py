@@ -8,9 +8,10 @@ import uuid
 import time
 import json
 from malmoutils import MalmoPython, get_xml, safe_start_mission, safe_wait_for_start, update_client_pool, config
-from observation import get_entities_info, update_chat_log, get_inventory_info, update_grid, same_position
+from observation import update_entities_info, update_chat_log, get_inventory_info, update_grid, same_position
 from register import save_world_state
 import threading
+import queue
 
 # Create one agent host for parsing:
 agent_hosts = [MalmoPython.AgentHost()]
@@ -117,17 +118,28 @@ for mission_no in range(0, num_missions + 1):
     names = []
     for j in range(NUM_AGENTS):
         names.append(config['agents']['builder_' + str(j + 1)]['name'])
-
-    # Admin make every player able to destroy blocks in one hit
-    agent_hosts[0].sendCommand("chat /effect @a haste 1000000 255 true")
+    # Disable feedback from the agents for all agents
+    agent_hosts[0].sendCommand("chat /gamerule sendCommandFeedback false")
+    # Admin make builder able to destroy blocks in one hit
+    agent_hosts[0].sendCommand("chat /effect @a[name=" + names[0] + "] haste 1000000 255 true")
+    # make architect in adventure mode
+    agent_hosts[0].sendCommand("chat /gamemode adventure @a[name=" + names[1] + "]")
     
     lock = threading.Lock()
     
     # check grid change variable
     grid_change = threading.Event()
+    
+    # builder mode 
+    builder_mode = 1
+    
     # add indication that a mission has started in the chat log
     chat_log.append("Mission " + str(mission_no) + " started")
     running = True
+    
+    precision = config['collect']['agents_position']['precision']
+    angle_precision = config['collect']['agents_position']['angle_precision']
+    
     while running:
         #waiting to get all players connected if not all connected
         if NUM_AGENTS < 2:
@@ -149,10 +161,11 @@ for mission_no in range(0, num_missions + 1):
                 time.sleep(1)
         
         running = False
-        for i in range(len(agent_hosts)):
+        queue_entities = queue.Queue()
+        for i in range(1, len(agent_hosts)):
             world_state = agent_hosts[i].peekWorldState()
             if world_state.is_mission_running:
-                running = True
+                running = True             
                 # get the number of observations since last state
                 obs_num = world_state.number_of_observations_since_last_state
 
@@ -168,11 +181,26 @@ for mission_no in range(0, num_missions + 1):
                     timestamp = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
 
                     # get agents information's
-                    entities = get_entities_info(ob, last_entity, names)
-
-                    # # print los if exists
-                    # if u'LineOfSight' in ob:
-                    #     print("LineOfSight: " + str(ob[u'LineOfSight']))
+                    threading.Thread(target=update_entities_info, args=(ob, queue_entities, last_entity, names)).start()
+                    entities = queue_entities.get()
+                    #update_entities_info(ob, entities, last_entity, names)
+                    
+                    # if los and its the obs of builder
+                    if i == 1 and u"LineOfSight" in ob:
+                        # {'hitType': 'block', 'x': -4.0, 'y': 227.78526911479454, 'z': 5.219532740011357, 'type': 'wool', 'colour': 'WHITE', 'inRange': True, 'distance': 1.4201767444610596}
+                        # if the agent is looking outside the grid make him unable to destroy or place blocks
+                        size = (config['mission']['area_side_size']) / 2
+                        los = ob[u"LineOfSight"]
+                        if builder_mode and (abs(los['x']) > size or abs(los['z']) > size):
+                            # make builder in adventure mode
+                            agent_hosts[0].sendCommand("chat /gamemode adventure @a[name=" + names[0] + "]")
+                            builder_mode = 0
+                        if not builder_mode and (abs(los['x']) <= size and abs(los['z']) <= size):
+                            # make architect in survival mode
+                            agent_hosts[0].sendCommand("chat /gamemode survival @a[name=" + names[0] + "]")
+                            builder_mode = 1
+                    
+                        
                     
                     if config['collect']['chat_history']:
                         # update chat log and get true if a new message has been added
@@ -181,11 +209,12 @@ for mission_no in range(0, num_missions + 1):
                         chat_log = None
                         change = False
 
-                    # get builders inventory
-                    inventory = get_inventory_info(ob , entities)
-                    # if not needed, clear inventory
+                    # if not needed don't collect inventory
                     if not config['collect']['agents_inventory']:
                         inventory = None
+                    else:
+                        # get builders inventory
+                        inventory = get_inventory_info(ob , entities)
                     
                     # update grid and get true if a new block has been added
                     if config['collect']['blocks_in_grid']:
@@ -196,8 +225,6 @@ for mission_no in range(0, num_missions + 1):
                     else:
                         grid = None
                     
-                    precision = config['collect']['agents_position']['precision']
-                    angle_precision = config['collect']['agents_position']['angle_precision']
                     # print to console - if no change since last observation at the precision level, don't bother printing again.
                     if same_position(entities, last_entity, precision, angle_precision) and not change:
                         # no change since last observation - don't bother printing again.
