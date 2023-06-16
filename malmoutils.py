@@ -167,7 +167,9 @@ def get_xml(num_agents, config):
         <ServerHandlers>
           <FlatWorldGenerator forceReset="'''+reset+'''" generatorString="'''+mission['flat_world_generator_str']+'''" seed=""/>
           <DrawingDecorator>
-            <DrawCuboid x1="-'''+str(x)+'''" y1="220" z1="-'''+str(z)+'" x2="'+str(x)+'''" y2="226" z2="'''+str(z)+'''" type="bedrock"/>
+            <DrawCuboid x1="-'''+str(x)+'''" y1="220" z1="-'''+str(z)+'" x2="'+str(x)+'''" y2="225" z2="'''+str(z)+'''" type="'''+mission['floor_block_type']+'''"/>
+            <DrawCuboid x1="-'''+str(x+2)+'''" y1="226" z1="-'''+str(z+2)+'" x2="'+str(x+2)+'''" y2="226" z2="'''+str(z+2)+'''" type="'''+mission['border_block_type']+'''"/>
+            <DrawCuboid x1="-'''+str(x)+'''" y1="226" z1="-'''+str(z)+'" x2="'+str(x)+'''" y2="226" z2="'''+str(z)+'''" type="barrier"/>
             <DrawBlock x="0" y="'''+str(y + x)+'" z="'+str(-z - delta)+'''" type="fence"/>
           </DrawingDecorator>
           <ServerQuitFromTimeUp description="'''+ str(mission['quit_from_time_up_description']) +''''" timeLimitMs="'''+ str(mission['time_limit']) +'''"/>

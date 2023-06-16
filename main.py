@@ -71,6 +71,8 @@ for agent in list(config['inventory'].keys()):
 #get the number of missions to run
 num_missions = config['mission']['num_missions']
 
+size = (config['mission']['area_side_size']) / 2
+
 for mission_no in range(0, num_missions + 1):
     print("Running mission #" + str(mission_no))
     print(agent_hosts)
@@ -189,18 +191,33 @@ for mission_no in range(0, num_missions + 1):
                     if i == 1 and u"LineOfSight" in ob:
                         # {'hitType': 'block', 'x': -4.0, 'y': 227.78526911479454, 'z': 5.219532740011357, 'type': 'wool', 'colour': 'WHITE', 'inRange': True, 'distance': 1.4201767444610596}
                         # if the agent is looking outside the grid make him unable to destroy or place blocks
-                        size = (config['mission']['area_side_size']) / 2
-                        los = ob[u"LineOfSight"]
-                        if builder_mode and (abs(los['x']) > size or abs(los['z']) > size):
-                            # make builder in adventure mode
-                            agent_hosts[0].sendCommand("chat /gamemode adventure @a[name=" + names[0] + "]")
-                            builder_mode = 0
-                        if not builder_mode and (abs(los['x']) <= size and abs(los['z']) <= size):
-                            # make architect in survival mode
-                            agent_hosts[0].sendCommand("chat /gamemode survival @a[name=" + names[0] + "]")
-                            builder_mode = 1
-                    
-                        
+                        los = ob.get(u"LineOfSight")
+                        if los:
+                            if builder_mode:
+                                # check if the agent is looking at a block in the grid or outside the grid
+                                if los.get(u"hitType") == "block":
+                                    # get the block position
+                                    x = int(los[u"x"])
+                                    z = int(los[u"z"])
+                                    typeBlock = los[u"type"]
+                                    # if the agent is looking outside the grid make him unable to destroy or place blocks
+                                    if abs(x) > size or abs(z) > size or  typeBlock not in (list(grid_types) + ["barrier"]):
+                                        # make builder in adventure mode
+                                        agent_hosts[0].sendCommand("chat /gamemode 2 @a[name=" + names[0] + "]")
+                                        builder_mode = 0
+                                # destroy blocks that are not in the grid
+                                # one side 
+                                agent_hosts[0].sendCommand("chat /fill " + str(size+1) + " 227 " + str(-size - 2) + " " + str(size + 3) + " 254 " + str(size + 2) + " minecraft:air")
+                                # other side 
+                                agent_hosts[0].sendCommand("chat /fill " + str(-size) + " 227 " + str(-size - 2) + " " + str(-size - 3) + " 254 " + str(size + 2) + " minecraft:air") 
+                                # other side
+                                agent_hosts[0].sendCommand("chat /fill " + str(-size) + " 227 " + str(-size) + " " + str(size + 3) + " 254 " + str(-size - 3) + " minecraft:air")
+                                # last side
+                                agent_hosts[0].sendCommand("chat /fill " + str(-size) + " 227 " + str(size + 1) + " " + str(size + 3) + " 254 " + str(size + 2) + " minecraft:air")
+                            elif abs(los['x']) <= size and abs(los['z']) <= size:
+                                # make architect in survival mode
+                                agent_hosts[0].sendCommand("chat /gamemode 0 @a[name=" + names[0] + "]")
+                                builder_mode = 1
                     
                     if config['collect']['chat_history']:
                         # update chat log and get true if a new message has been added

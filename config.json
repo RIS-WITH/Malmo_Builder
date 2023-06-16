@@ -7,11 +7,13 @@
         "ms_per_tick" : 50,
         "time_of_day" : 9000,
         "allow_time_passage" : 0,
-        "flat_world_generator_str" : "3;7,220*1,4*3,2,166;1;village",
+        "flat_world_generator_str" : "3;7,220*1,5*3,2;village",
         "time_limit" : 300000,
         "quit_from_time_up_description" : "Time up",
         "force_reset" : 1,
         "area_side_size" : 11,
+        "floor_block_type" : "quartz_block",
+        "border_block_type" : "iron_block",
         "weather" : "clear"
     },
     "agents" : {
