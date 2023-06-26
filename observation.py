@@ -5,14 +5,11 @@ EntityInfo.__new__.__defaults__ = (0, 0, 0, 0, 0, "", "", "", 1, 1)
 BlockInfo = namedtuple('BlockInfo', 'x, y, z, type, color')
 BlockInfo.__new__.__defaults__ = (0, 0, 0, "", "")
 
-def update_entities_info(observations, queue_entities, last_entities=None, names=[]):
-    # get builder 1 and 2 position
-    if "entities" in observations:
-        entities = [EntityInfo(k["x"], k["y"], k["z"], k["yaw"], k["pitch"], k["name"]) for k in observations["entities"]]
-    # get rid of block types and other unwanted entities
-    entities = [e for e in entities if e.name in names]
-    # order entities by name
-    if last_entities is not None and len(entities) < len(last_entities):
+def update_entities_info(observations, queue_entities, last_entities=None):
+    # get either builder or architect position one at a time and use the last one for the missing one
+    if "Name" in observations:
+        entities = [EntityInfo(observations["XPos"], observations["YPos"], observations["ZPos"], observations["Yaw"], observations["Pitch"], observations["Name"])]
+    if last_entities is not None:
         for e in last_entities:
             # if un entity is missing, add it
             if e.name not in [k.name for k in entities]:
@@ -69,6 +66,9 @@ def get_inventory_info(observation, entities):
     return inventory
 
 def same_position(entities1, entities2, precision=0.1, angle_precision=400):
+    # if the length equals 1 then return true since we need two agents
+    if len(entities1) == 1:
+        return True
     # compare the position of the agents from two observations
     if entities1 == entities2:
         return True
@@ -219,14 +219,24 @@ def check_grid_integrity(grid, floor, grid_size, radius, grid_types):
             return True
         
     
-def check_builder_rights(agent, los, builder_mode, name, size):
-    print(size)
-    # if the agent is looking outside the grid make him unable to destroy or place blocks
-    if builder_mode and (abs(los['x']) > size or abs(los['z']) > size):
-        # make builder in adventure mode
-        agent.sendCommand("chat /gamemode adventure @a[name=" + name + "]")
-        return 0
-    if not builder_mode and (abs(los['x']) <= size and abs(los['z']) <= size):
+def update_builder_mode(agent_host, los, names, builder_mode, size, grid_types):
+    if builder_mode:
+        # check if the agent is looking at a block in the grid or outside the grid
+        if los.get(u"hitType") == "block":
+            # get the block position
+            x = int(los[u"x"])
+            z = int(los[u"z"])
+            typeBlock = los[u"type"]
+            # if the agent is looking outside the grid make him unable to destroy or place blocks
+            if abs(x) > size or abs(z) > size or  typeBlock not in (list(grid_types) + ["barrier"]):
+                # make builder in adventure mode
+                agent_host.sendCommand("chat /gamemode 2 @a[name=" + names[0] + "]")
+                builder_mode = 0
+        # destroy blocks that are not in the grid
+        for x, z in [(size+1, -size-2), (-size, -size-2), (-size, -size), (-size, size+1)]:
+            agent_host.sendCommand(f"chat /fill {x} 227 {z} {x+2} 254 {z+4} minecraft:air")
+    elif abs(los['x']) <= size and abs(los['z']) <= size:
         # make architect in survival mode
-        agent.sendCommand("chat /gamemode survival @a[name=" + name + "]")
-        return 1
+        agent_host.sendCommand("chat /gamemode 0 @a[name=" + names[0] + "]")
+        builder_mode = 1
+    return builder_mode

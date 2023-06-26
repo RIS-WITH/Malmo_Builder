@@ -8,7 +8,7 @@ import uuid
 import time
 import json
 from malmoutils import MalmoPython, get_xml, safe_start_mission, safe_wait_for_start, update_client_pool, config
-from observation import update_entities_info, update_chat_log, get_inventory_info, update_grid, same_position
+from observation import update_entities_info, update_chat_log, get_inventory_info, update_grid, same_position, update_builder_mode
 from register import save_world_state
 import threading
 import queue
@@ -183,41 +183,14 @@ for mission_no in range(0, num_missions + 1):
                     timestamp = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
 
                     # get agents information's
-                    threading.Thread(target=update_entities_info, args=(ob, queue_entities, last_entity, names)).start()
+                    threading.Thread(target=update_entities_info, args=(ob, queue_entities, last_entity)).start()
                     entities = queue_entities.get()
-                    #update_entities_info(ob, entities, last_entity, names)
                     
                     # if los and its the obs of builder
                     if i == 1 and u"LineOfSight" in ob:
-                        # {'hitType': 'block', 'x': -4.0, 'y': 227.78526911479454, 'z': 5.219532740011357, 'type': 'wool', 'colour': 'WHITE', 'inRange': True, 'distance': 1.4201767444610596}
                         # if the agent is looking outside the grid make him unable to destroy or place blocks
                         los = ob.get(u"LineOfSight")
-                        if los:
-                            if builder_mode:
-                                # check if the agent is looking at a block in the grid or outside the grid
-                                if los.get(u"hitType") == "block":
-                                    # get the block position
-                                    x = int(los[u"x"])
-                                    z = int(los[u"z"])
-                                    typeBlock = los[u"type"]
-                                    # if the agent is looking outside the grid make him unable to destroy or place blocks
-                                    if abs(x) > size or abs(z) > size or  typeBlock not in (list(grid_types) + ["barrier"]):
-                                        # make builder in adventure mode
-                                        agent_hosts[0].sendCommand("chat /gamemode 2 @a[name=" + names[0] + "]")
-                                        builder_mode = 0
-                                # destroy blocks that are not in the grid
-                                # one side 
-                                agent_hosts[0].sendCommand("chat /fill " + str(size+1) + " 227 " + str(-size - 2) + " " + str(size + 3) + " 254 " + str(size + 2) + " minecraft:air")
-                                # other side 
-                                agent_hosts[0].sendCommand("chat /fill " + str(-size) + " 227 " + str(-size - 2) + " " + str(-size - 3) + " 254 " + str(size + 2) + " minecraft:air") 
-                                # other side
-                                agent_hosts[0].sendCommand("chat /fill " + str(-size) + " 227 " + str(-size) + " " + str(size + 3) + " 254 " + str(-size - 3) + " minecraft:air")
-                                # last side
-                                agent_hosts[0].sendCommand("chat /fill " + str(-size) + " 227 " + str(size + 1) + " " + str(size + 3) + " 254 " + str(size + 2) + " minecraft:air")
-                            elif abs(los['x']) <= size and abs(los['z']) <= size:
-                                # make architect in survival mode
-                                agent_hosts[0].sendCommand("chat /gamemode 0 @a[name=" + names[0] + "]")
-                                builder_mode = 1
+                        builder_mode = update_builder_mode(agent_hosts[0], los, names, builder_mode, size, grid_types)
                     
                     if config['collect']['chat_history']:
                         # update chat log and get true if a new message has been added
@@ -243,8 +216,9 @@ for mission_no in range(0, num_missions + 1):
                         grid = None
                     
                     # print to console - if no change since last observation at the precision level, don't bother printing again.
-                    if same_position(entities, last_entity, precision, angle_precision) and not change:
+                    if (same_position(entities, last_entity, precision, angle_precision) and not change):
                         # no change since last observation - don't bother printing again.
+                        last_entity = entities
                         continue
                     
                     # update lastEntities for next observation
