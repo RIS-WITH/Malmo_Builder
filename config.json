@@ -18,6 +18,7 @@
     },
     "agents" : {
         "num_distant_agents" : 0,
+        "allow_architect_building" : 0,
         "builder_1" : {
             "name" : "builder",
             "placement" : "random"

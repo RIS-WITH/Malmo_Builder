@@ -5,6 +5,7 @@ a data collecting environment for project DISCUTER
 1. [Malmo Installation (SERVER)](#malmo-installation-server)
 2. [Using Malmo Builder (SERVER)](#using-malmo-builder-server)
 3. [Using Malmo Builder (remote player)](#using-malmo-builder-remote-player)
+4. [Adding ability to fly in the mission](#adding-ability-to-fly-in-the-mission)
 
   
 ## Malmo Installation (SERVER)
@@ -116,6 +117,12 @@ python3 main.py
 1. install forge 1.11.2 of minecraft launcher
 2. copy the malmo jar file (can be found in the ``Mod`` folder of [Malmo Releases](https://github.com/microsoft/malmo/releases)) to the ```.minecraft/mods/``` (create the folder ```mods``` if does not exist)
 3. launch Minecraft forge 1.11.2 and you should be seeing the LAN connection of the running server in Multiplayer
+
+## Adding ability to fly in the mission
+1. install minecraft mod simply hax (https://www.curseforge.com/minecraft/mc-mods/simply-hax/files?version=1.11.2)
+2. add the mod to the ```MalmoPlatform/Minecraft/run/mods ``` folder in the server
+3. add the mod to the ```.minecraft/mods/``` (create the folder ```mods``` if does not exist) in the remote player device 
+4. When you run the mission you should be able to fly by pressing the ```space``` key twice and then pressing ```space``` and ```shift``` to go up and down
 
 
 

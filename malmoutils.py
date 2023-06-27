@@ -250,4 +250,24 @@ def get_borders_xml():
             <DrawCuboid x1="-'''+str(x+1)+'''" y1="226" z1="'''+str(z+1)+'''" x2="'''+str(x+1)+'''" y2="255" z2="'''+str(z+1)+'''" type="barrier"/>
             <DrawCuboid x1="-'''+str(x+1)+'''" y1="226" z1="-'''+str(z+1)+'''" x2="'''+str(x+1)+'''" y2="255" z2="-'''+str(z+1)+'''" type="barrier"/>
             <DrawCuboid x1="-'''+str(x+1)+'''" y1="255" z1="-'''+str(z+1)+'''" x2="'''+str(x+1)+'''" y2="255" z2="'''+str(z+1)+'''" type="barrier"/>"""
+            
+def check_connected_players(NUM_AGENTS, client_pool_array, config, agent_hosts, DEBUG):
+  if NUM_AGENTS < 2:
+      last_num_agents = NUM_AGENTS
+      print("Waiting for players to connect...", end="")
+      while NUM_AGENTS < 2:
+          NUM_AGENTS = update_client_pool(client_pool_array,config, NUM_AGENTS)
+          if NUM_AGENTS == 2:
+              print("All players connected!")
+              # make the players quit the game to restart the mission
+              for i in range(len(agent_hosts)):
+                  agent_hosts[i].sendCommand("quit")
+              # add new agent_hosts
+              agent_hosts += [MalmoPython.AgentHost() for _ in range(last_num_agents + 1, NUM_AGENTS + 1)]
+              # Set up debug output:
+              for i in range(last_num_agents + 1, NUM_AGENTS + 1):
+                  agent_hosts[i].setDebugOutput(DEBUG)
+          #wait for 1 second
+          time.sleep(1)
+  return NUM_AGENTS, agent_hosts
   

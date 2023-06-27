@@ -7,7 +7,7 @@ import sys
 import uuid
 import time
 import json
-from malmoutils import MalmoPython, get_xml, safe_start_mission, safe_wait_for_start, update_client_pool, config
+from malmoutils import MalmoPython, get_xml, safe_start_mission, safe_wait_for_start, check_connected_players, config
 from observation import update_entities_info, update_chat_log, get_inventory_info, update_grid, same_position, update_builder_mode
 from register import save_world_state
 import threading
@@ -117,16 +117,16 @@ for mission_no in range(0, num_missions + 1):
     # the last grid seen by the agents
     grid = {}
     
+    #names of the agents
     names = []
-    for j in range(NUM_AGENTS):
+    for j in range(2):
         names.append(config['agents']['builder_' + str(j + 1)]['name'])
     # Disable feedback from the agents for all agents
     agent_hosts[0].sendCommand("chat /gamerule sendCommandFeedback false")
     # Admin make builder able to destroy blocks in one hit
-    agent_hosts[0].sendCommand("chat /effect @a[name=" + names[0] + "] haste 1000000 255 true")
-    # make architect in adventure mode
-    agent_hosts[0].sendCommand("chat /gamemode adventure @a[name=" + names[1] + "]")
+    agent_hosts[0].sendCommand("chat /effect @a haste 1000000 255 true")
     
+    # lock for the the log files
     lock = threading.Lock()
     
     # check grid change variable
@@ -134,6 +134,15 @@ for mission_no in range(0, num_missions + 1):
     
     # builder mode 
     builder_mode = 1
+    
+    # architect mode
+    architect_mode = 0
+    allow_architect_builder = config['agents']['allow_architect_building']
+    if config['agents']['allow_architect_building']:
+        architect_mode = 1
+    else:
+        # make architect in adventure mode
+        agent_hosts[0].sendCommand("chat /gamemode adventure @a[name=" + names[1] + "]")
     
     # add indication that a mission has started in the chat log
     chat_log.append("Mission " + str(mission_no) + " started")
@@ -143,24 +152,8 @@ for mission_no in range(0, num_missions + 1):
     angle_precision = config['collect']['agents_position']['angle_precision']
     
     while running:
-        #waiting to get all players connected if not all connected
-        if NUM_AGENTS < 2:
-            last_num_agents = NUM_AGENTS
-            print("Waiting for players to connect...", end="")
-            while NUM_AGENTS < 2:
-                NUM_AGENTS = update_client_pool(client_pool_array,config, NUM_AGENTS)
-                if NUM_AGENTS == 2:
-                    print("All players connected!")
-                    # make the players quit the game to restart the mission
-                    for i in range(len(agent_hosts)):
-                        agent_hosts[i].sendCommand("quit")
-                    # add new agent_hosts
-                    agent_hosts += [MalmoPython.AgentHost() for _ in range(last_num_agents + 1, NUM_AGENTS + 1)]
-                    # Set up debug output:
-                    for i in range(last_num_agents + 1, NUM_AGENTS + 1):
-                        agent_hosts[i].setDebugOutput(DEBUG)
-                #wait for 1 second
-                time.sleep(1)
+        #waiting to get all players connected if not all connected ## TODO: check if works
+        NUM_AGENTS, agent_hosts = check_connected_players(NUM_AGENTS, client_pool_array, config, agent_hosts, DEBUG)
         
         running = False
         queue_entities = queue.Queue()
@@ -173,7 +166,6 @@ for mission_no in range(0, num_missions + 1):
 
                 ## to print the number of observations since last state 
                 #print("Got " + str(obs_num) + " observations since last state.")
-
                 if obs_num > 0:
                     # get the last observation
                     msg = world_state.observations[-1].text
@@ -187,10 +179,13 @@ for mission_no in range(0, num_missions + 1):
                     entities = queue_entities.get()
                     
                     # if los and its the obs of builder
-                    if i == 1 and u"LineOfSight" in ob:
+                    if u"LineOfSight" in ob:
                         # if the agent is looking outside the grid make him unable to destroy or place blocks
                         los = ob.get(u"LineOfSight")
-                        builder_mode = update_builder_mode(agent_hosts[0], los, names, builder_mode, size, grid_types)
+                        if i == 1:
+                            builder_mode = update_builder_mode(agent_hosts[0], los, names[0], builder_mode, size, grid_types)
+                        if i == 2 and allow_architect_builder:
+                            architect_mode  = update_builder_mode(agent_hosts[0], los, names[1], architect_mode, size, grid_types)      
                     
                     if config['collect']['chat_history']:
                         # update chat log and get true if a new message has been added
