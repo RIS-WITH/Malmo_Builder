@@ -220,7 +220,7 @@ def check_grid_integrity(grid, floor, grid_size, radius, grid_types):
         
     
 def update_builder_mode(agent_host, los, name, builder_mode, size, grid_types):
-    if builder_mode:
+    if builder_mode and u"inRange" in los and los[u"inRange"]:
         # check if the agent is looking at a block in the grid or outside the grid
         if los.get(u"hitType") == "block":
             # get the block position
@@ -233,8 +233,9 @@ def update_builder_mode(agent_host, los, name, builder_mode, size, grid_types):
                 agent_host.sendCommand("chat /gamemode 2 @a[name=" + name + "]")
                 builder_mode = 0
         # destroy blocks that are not in the grid
-        for x, z in [(size+1, -size-2), (-size, -size-2), (-size, -size), (-size, size+1)]:
-            agent_host.sendCommand(f"chat /fill {x} 227 {z} {x+2} 254 {z+4} minecraft:air")
+        TWO = 2
+        for x1, z1, x2, z2 in [(-size - TWO, size + 1, size+ TWO, size + TWO), (-size, -size - TWO, -size - TWO, size + TWO), (size + 1, -size - TWO, size + TWO, size + TWO), (-size - TWO, -size, size + TWO, -size - TWO)]:
+            agent_host.sendCommand(f"chat /fill {x1} 227 {z1} {x2} 254 {z2} minecraft:air")
     elif abs(los['x']) <= size and abs(los['z']) <= size:
         # make architect in survival mode
         agent_host.sendCommand("chat /gamemode 0 @a[name=" + name + "]")
