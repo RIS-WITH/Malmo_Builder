@@ -152,7 +152,7 @@ for mission_no in range(0, num_missions + 1):
     angle_precision = config['collect']['agents_position']['angle_precision']
     
     while running:
-        #waiting to get all players connected if not all connected ## TODO: check if works
+        #waiting to get all players connected if not all connected
         NUM_AGENTS, agent_hosts = check_connected_players(NUM_AGENTS, client_pool_array, config, agent_hosts, DEBUG)
         
         running = False

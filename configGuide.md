@@ -34,6 +34,8 @@ the weather of the mission
 ## agents
 ### num_distant_agents
 the number of players who play in distant machines
+### allow_architect_building
+whether allow the architect to build in the mission
 ### name
 the name of the agent
 ### placement

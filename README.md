@@ -123,6 +123,6 @@ python3 main.py
 2. add the mod to the ```MalmoPlatform/Minecraft/run/mods ``` folder in the server
 3. add the mod to the ```.minecraft/mods/``` (create the folder ```mods``` if does not exist) in the remote player device 
 4. When you run the mission you should be able to fly by pressing the ```space``` key twice and then pressing ```space``` and ```shift``` to go up and down
-
+**notice:** if you have a problem with launching minecraft forge 1.11.2 you should consider restarting your device
 
 
