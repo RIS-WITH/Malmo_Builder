@@ -220,15 +220,15 @@ def check_grid_integrity(grid, floor, grid_size, radius, grid_types):
         
     
 def update_builder_mode(agent_host, los, name, builder_mode, size, grid_types):
-    if builder_mode and u"inRange" in los and los[u"inRange"]:
+    if builder_mode and u"inRange" in los and los[u"inRange"] and u"hitType" in los:
         # check if the agent is looking at a block in the grid or outside the grid
         if los.get(u"hitType") == "block":
             # get the block position
             x = int(los[u"x"])
             z = int(los[u"z"])
-            typeBlock = los[u"type"]
+            type_block = los[u"type"]
             # if the agent is looking outside the grid make him unable to destroy or place blocks
-            if abs(x) > size or abs(z) > size or  typeBlock not in (list(grid_types) + ["barrier"]):
+            if abs(x) > size or abs(z) > size or  type_block not in (list(grid_types) + ["barrier"] + ["air"]):
                 # make builder in adventure mode
                 agent_host.sendCommand("chat /gamemode 2 @a[name=" + name + "]")
                 builder_mode = 0

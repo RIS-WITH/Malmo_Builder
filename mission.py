@@ -8,19 +8,15 @@ from observation import update_entities_info, update_chat_log, get_inventory_inf
 from register import save_world_state
 
 class Mission:
-    def __init__(self, config, agent_hosts, mission_no, debug, client_pool_array, num_agents, chat_log):
+    def __init__(self, config, agent_hosts, mission_no, client_pool_array, num_agents, chat_log):
         self.config = config
         self.agent_hosts = agent_hosts
-        self.debug = debug
         self.client_pool_array = client_pool_array
         self.mission_no = mission_no
-        self.experiment_id = None
         self.grid_types = set()
         self.chat_log = chat_log
         self.num_agents = num_agents
         self.running = True
-        self.precision = config['collect']['agents_position']['precision']
-        self.angle_precision = config['collect']['agents_position']['angle_precision']
         self.grid_change = threading.Event()
         self.names = []
         self.grid = {}
@@ -30,9 +26,13 @@ class Mission:
         self.builder_mode = 1
         self.architect_mode = 0
         self.queue_entities = queue.Queue()
-        self.allow_architect_builder = False
         self.lock = threading.Lock()
         self.size = None
+        
+        # Generate an experiment ID for this mission.
+        # This is used to make sure the right clients join the right servers -
+        # if the experiment IDs don't match, the startMission request will be rejected.
+        self.experiment_id = str(uuid.uuid4())
         
         # get the types of blocks to track
         for agent in list(config['inventory'].keys()):
@@ -43,6 +43,7 @@ class Mission:
         for j in range(2):
             self.names.append(self.config['agents']['builder_' + str(j + 1)]['name'])
         
+        # size of the building area
         self.size = (config['mission']['area_side_size']) / 2
     
     def start(self):
@@ -56,11 +57,6 @@ class Mission:
         my_mission = MalmoPython.MissionSpec(get_xml(self.num_agents, self.config), True)
         # set the force reset back to the original value
         self.config['mission']['force_reset'] = temp_force_reset
-
-        # Generate an experiment ID for this mission.
-        # This is used to make sure the right clients join the right servers -
-        # if the experiment IDs don't match, the startMission request will be rejected.
-        self.experiment_id = str(uuid.uuid4())
 
         # redefine the client pool
         client_pool = MalmoPython.ClientPool()
@@ -77,17 +73,15 @@ class Mission:
 
         time.sleep(1)
             
-        # Disable feedback from the agents for all agents
+        # Disable command feedback for all agents
         self.agent_hosts[0].sendCommand("chat /gamerule sendCommandFeedback false")
         # Admin make builder able to destroy blocks in one hit
         self.agent_hosts[0].sendCommand("chat /effect @a haste 1000000 255 true")
-
-        self.allow_architect_builder = self.config['agents']['allow_architect_building']
         
-    def run(self):
+    def run(self, debug):
         while self.running:
             # check if all agents are connected
-            self.num_agents, self.agent_hosts = check_connected_players(self.num_agents, self.client_pool_array, self.config, self.agent_hosts, self.debug)
+            self.num_agents, self.agent_hosts = check_connected_players(self.num_agents, self.client_pool_array, self.config, self.agent_hosts, debug)
             self.running = False
             # observe the world state for each agent
             for i in range(1, len(self.agent_hosts)):
@@ -114,7 +108,8 @@ class Mission:
             change = self.handle_grid(ob) or change
             self.handle_entity_position()
             # print to console - if no change since last observation at the precision level, don't bother printing again.
-            if (not same_position(self.entities, self.last_entity, self.precision, self.angle_precision) or change):
+            if (not same_position(self.entities, self.last_entity, self.config['collect']['agents_position']['precision'],
+                                  self.config['collect']['agents_position']['angle_precision']) or change):
                 self.handle_data_logging(timestamp)
             self.last_entity = self.entities
 
@@ -124,7 +119,7 @@ class Mission:
             los = ob.get(u"LineOfSight")
             if i == 1:
                 self.builder_mode = update_builder_mode(self.agent_hosts[0], los, self.names[0], self.builder_mode, self.size, self.grid_types)
-            if i == 2 and self.allow_architect_builder:
+            if i == 2 and self.config['agents']['allow_architect_building']:
                 self.architect_mode  = update_builder_mode(self.agent_hosts[0], los, self.names[1], self.architect_mode, self.size, self.grid_types)
 
     def handle_chat_log(self, ob):

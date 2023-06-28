@@ -147,6 +147,13 @@ def get_xml(num_agents, config):
     x = z = (mission["area_side_size"] -1) // 2
     y = 226
     delta = 10
+    floor_block = mission['floor_block_type']
+    border_block = mission['border_block_type']
+    draw_commands = [
+      f'<DrawCuboid x1="-{x}" y1="220" z1="-{z}" x2="{x}" y2="225" z2="{z}" type="{floor_block}"/>',
+      f'<DrawCuboid x1="-{x+2}" y1="226" z1="-{z+2}" x2="{x+2}" y2="226" z2="{z+2}" type="{border_block}"/>',
+      f'<DrawCuboid x1="-{x}" y1="226" z1="-{z}" x2="{x}" y2="226" z2="{z}" type="barrier"/>'
+    ]
     reset = "true" if mission["force_reset"] else "false"
     xml = '''<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
     <Mission xmlns="http://ProjectMalmo.microsoft.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -166,10 +173,7 @@ def get_xml(num_agents, config):
         </ServerInitialConditions>
         <ServerHandlers>
           <FlatWorldGenerator forceReset="'''+reset+'''" generatorString="'''+mission['flat_world_generator_str']+'''" seed=""/>
-          <DrawingDecorator>
-            <DrawCuboid x1="-'''+str(x)+'''" y1="220" z1="-'''+str(z)+'" x2="'+str(x)+'''" y2="225" z2="'''+str(z)+'''" type="'''+mission['floor_block_type']+'''"/>
-            <DrawCuboid x1="-'''+str(x+2)+'''" y1="226" z1="-'''+str(z+2)+'" x2="'+str(x+2)+'''" y2="226" z2="'''+str(z+2)+'''" type="'''+mission['border_block_type']+'''"/>
-            <DrawCuboid x1="-'''+str(x)+'''" y1="226" z1="-'''+str(z)+'" x2="'+str(x)+'''" y2="226" z2="'''+str(z)+'''" type="barrier"/>
+          <DrawingDecorator> ''' + '\n'.join(draw_commands) + '\n' + '''
             <DrawBlock x="0" y="'''+str(y + x)+'" z="'+str(-z - delta)+'''" type="fence"/>
           </DrawingDecorator>
           <ServerQuitFromTimeUp description="'''+ str(mission['quit_from_time_up_description']) +''''" timeLimitMs="'''+ str(mission['time_limit']) +'''"/>
@@ -251,23 +255,23 @@ def get_borders_xml():
             <DrawCuboid x1="-'''+str(x+1)+'''" y1="226" z1="-'''+str(z+1)+'''" x2="'''+str(x+1)+'''" y2="255" z2="-'''+str(z+1)+'''" type="barrier"/>
             <DrawCuboid x1="-'''+str(x+1)+'''" y1="255" z1="-'''+str(z+1)+'''" x2="'''+str(x+1)+'''" y2="255" z2="'''+str(z+1)+'''" type="barrier"/>"""
             
-def check_connected_players(NUM_AGENTS, client_pool_array, config, agent_hosts, DEBUG):
-  if NUM_AGENTS < 2:
-      last_num_agents = NUM_AGENTS
+def check_connected_players(num_agents, client_pool_array, config, agent_hosts, debug):
+  if num_agents < 2:
+      last_num_agents = num_agents
       print("Waiting for players to connect...", end="")
-      while NUM_AGENTS < 2:
-          NUM_AGENTS = update_client_pool(client_pool_array,config, NUM_AGENTS)
-          if NUM_AGENTS == 2:
+      while num_agents < 2:
+          num_agents = update_client_pool(client_pool_array,config, num_agents)
+          if num_agents == 2:
               print("All players connected!")
               # make the players quit the game to restart the mission
               for i in range(len(agent_hosts)):
                   agent_hosts[i].sendCommand("quit")
               # add new agent_hosts
-              agent_hosts += [MalmoPython.AgentHost() for _ in range(last_num_agents + 1, NUM_AGENTS + 1)]
+              agent_hosts += [MalmoPython.AgentHost() for _ in range(last_num_agents + 1, num_agents + 1)]
               # Set up debug output:
-              for i in range(last_num_agents + 1, NUM_AGENTS + 1):
-                  agent_hosts[i].setDebugOutput(DEBUG)
+              for i in range(last_num_agents + 1, num_agents + 1):
+                  agent_hosts[i].setDebugOutput(debug)
           #wait for 1 second
           time.sleep(1)
-  return NUM_AGENTS, agent_hosts
+  return num_agents, agent_hosts
   
