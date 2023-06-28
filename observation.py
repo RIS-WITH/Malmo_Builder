@@ -24,7 +24,7 @@ def update_chat_log(observations, chat_log, config):
     
 def read_server_chat_log(chat_log, config):
     # read config file log path
-    with open(config['server']['log_path']) as log_file:
+    with open(config['server']['log_path'], encoding='utf-8', errors='ignore') as log_file:
         # if the log file contains two lines
         if len(log_file.readlines()) > 1:
             # just read the last two lines

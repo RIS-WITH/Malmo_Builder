@@ -75,9 +75,10 @@ class Mission:
             
         # Disable command feedback for all agents
         self.agent_hosts[0].sendCommand("chat /gamerule sendCommandFeedback false")
-        # Admin make builder able to destroy blocks in one hit
-        self.agent_hosts[0].sendCommand("chat /effect @a haste 1000000 255 true")
-        
+        # Admin make builder able to destroy blocks in one hit but only one block at a time
+        power = self.config['agents']['power']
+        self.agent_hosts[0].sendCommand("chat /effect @a haste 1000000 " + str(power) + " true")
+        self.agent_hosts[0].sendCommand("chat /effect @a saturation 1000000 255 true")
     def run(self, debug):
         while self.running:
             # check if all agents are connected

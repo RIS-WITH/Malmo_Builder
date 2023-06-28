@@ -36,6 +36,9 @@ the weather of the mission
 the number of players who play in distant machines
 ### allow_architect_building
 whether allow the architect to build in the mission
+### power
+how strong is the agent ability in destroying blocks  
+values are from 0 to 255
 ### name
 the name of the agent
 ### placement
