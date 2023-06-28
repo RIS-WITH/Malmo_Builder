@@ -151,15 +151,15 @@ def write_world_state_json(lock, path_log, timestamp, entities, chat_log, invent
 
         # write the world state
         world_state = {
-            "entities": write_entities(entities),
-            "chat_history": write_chat_history(chat_log),
-            "timestamp": timestamp,
-            "blocks_in_grid": write_blocks_in_grid(grid),
-            "builder_inventory": write_builder_inventory(inventory),
-            "screenshots": write_screenshots(image_path, timestamp)
+            "Positions" : write_entities(entities),
+            "ChatHistory": write_chat_history(chat_log),
+            "Timestamp": timestamp,
+            "BlocksInGrid": write_blocks_in_grid(grid),
+            "BuilderInventory": write_builder_inventory(inventory),
+            "Screenshots": write_screenshots(image_path, timestamp)
         }
 
-        # append the world state to the json file
+        # append the world state to the json file # TODO: this is time and memory inefficient
         with open(json_path, 'r+') as f:
             data = json.load(f)
             data['WorldStates'].append(world_state)
@@ -173,7 +173,7 @@ def write_entities(entities):
     entity_list = []
     for entity in entities:
         entity_dict = {
-            str(entity.name) + "_position": {
+            str(entity.name): {
                 "X": entity.x,
                 "Y": entity.y - 226,
                 "Z": entity.z,
