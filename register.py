@@ -1,7 +1,7 @@
 import os
 from PIL import Image
 
-
+Y_OFFSET = 226
 def save_world_state(lock, agent, config, experiment_id, timestamp, entities, chat_log, inventory, grid):
     # get screenshot path and save screenshot
     image_path = None
@@ -110,7 +110,7 @@ def write_world_state_txt(lock, path_log, timestamp, entities, chat_log, invento
             if entities is not None:
                 file.write("[Builder Position] \n")
                 for entity in entities:
-                    file.write("\t" + str(entity.name) + " (x, y, z): (" + str(entity.x) + ", " + str(entity.y) + ", " + str(entity.z) + ") (yaw, pitch): (" + str(entity.yaw) + ", " + str(entity.pitch) + ")\n"  )
+                    file.write("\t" + str(entity.name) + " (x, y, z): (" + str(entity.x) + ", " + str(entity.y -Y_OFFSET) + ", " + str(entity.z) + ") (yaw, pitch): (" + str(entity.yaw) + ", " + str(entity.pitch) + ")\n"  )
             if image_path is not None:
                 file.write("[Screenshot Path] " + image_path + "\n")
             if chat_log is not None:
@@ -126,7 +126,7 @@ def write_world_state_txt(lock, path_log, timestamp, entities, chat_log, invento
             if grid is not None:
                 file.write("[Blocks In Grid] \n")
                 for key, block in list(grid.items()):
-                    file.write("\t" + str(block) + "\n")
+                    file.write("\t" + str(key) + " (x, y, z): (" + str(block.x) + ", " + str(block.y - Y_OFFSET) + ", " + str(block.z) + ") (type): (" + str(block.type) + ")\n")
             # close the file
             file.close()
 
@@ -161,7 +161,7 @@ def write_world_state_json(lock, path_log, timestamp, entities, chat_log, invent
             for ent in entities:
                 text_to_write += "\t\t\t\""+ ent.name + "_Position\": {\n"
                 text_to_write += "\t\t\t\t\"X\": " + str(ent.x) + ",\n"
-                text_to_write += "\t\t\t\t\"Y\": " + str(ent.y - 226) + ",\n"
+                text_to_write += "\t\t\t\t\"Y\": " + str(ent.y - Y_OFFSET) + ",\n"
                 text_to_write += "\t\t\t\t\"Z\": " + str(ent.z) + ",\n"
                 text_to_write += "\t\t\t\t\"Yaw\": " + str(ent.yaw) + ",\n"
                 text_to_write += "\t\t\t\t\"Pitch\": " + str(ent.pitch) + "\n"
@@ -184,7 +184,7 @@ def write_world_state_json(lock, path_log, timestamp, entities, chat_log, invent
             for key, block in list(grid.items()):
                 text_to_write += "\t\t\t\t{\n"
                 text_to_write += "\t\t\t\t\t\"X\": " + str(block.x) + ",\n"
-                text_to_write += "\t\t\t\t\t\"Y\": " + str(block.y - 226) + ",\n"
+                text_to_write += "\t\t\t\t\t\"Y\": " + str(block.y - Y_OFFSET) + ",\n"
                 text_to_write += "\t\t\t\t\t\"Z\": " + str(block.z) + ",\n"
                 text_to_write += "\t\t\t\t\t\"Type\": \"" + block.type + "\",\n"
                 text_to_write += "\t\t\t\t\t\"Colour\": \"" + block.color + "\"\n"
