@@ -59,7 +59,7 @@ the color of the inventory
 ## server
 *not employed yet (only locally)*
 ### ip
-the ip of the server
+the ip of the server 127. 0. 0. 1 by default but if you want to play in distant machines, you should change it to the ip of the server
 
 ## collect
 ### agents_position

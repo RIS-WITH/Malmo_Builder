@@ -103,7 +103,7 @@
         ]
     },
     "server" : {
-        "ip" : "140.93.7.238",
+        "ip" : "127.0.0.1",
         "port" : 10000,
         "log_path" : "../Minecraft/run/logs/latest.log"
     },
