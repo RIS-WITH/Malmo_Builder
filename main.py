@@ -4,47 +4,10 @@ from __future__ import division
 # multi-agent missions - two agents human in a flat environment.
 from builtins import range
 import sys
-import uuid
-import time
-import json
-from malmoutils import MalmoPython, get_xml, safe_start_mission, safe_wait_for_start, check_connected_players, config
-from observation import update_entities_info, update_chat_log, get_inventory_info, update_grid, same_position, update_builder_mode
-from register import save_world_state
-import threading
-import queue
+from malmoutils import MalmoPython, config
+from mission import Mission
 
-# Create one agent host for parsing:
-agent_hosts = [MalmoPython.AgentHost()]
-
-# Parse the command-line options:
-agent_hosts[0].addOptionalFlag( "debug,d", "Display debug information.")
-agent_hosts[0].addOptionalIntArgument("agents,n", "Number of agents to use, including observer.", 3)
-
-
-try:
-    agent_hosts[0].parse( sys.argv )
-except RuntimeError as e:
-    print('ERROR:',e)
-    print(agent_hosts[0].getUsage())
-    exit(1)
-if agent_hosts[0].receivedArgument("help"):
-    print(agent_hosts[0].getUsage())
-    exit(0)
-
-DEBUG = agent_hosts[0].receivedArgument("debug")
-INTEGRATION_TEST_MODE = agent_hosts[0].receivedArgument("test")
-agents_requested = agent_hosts[0].getIntArgument("agents")
-num_distant_agents = config["agents"]["num_distant_agents"]
-# remove the ADMIN(observer) from the number of agents and the number of distant agents
-NUM_AGENTS = agents_requested - 1 - num_distant_agents
-
-# Create the rest of the agent hosts - one for each human agent and one to control the observer for now one local and other waiting for connection:
-agent_hosts += [MalmoPython.AgentHost() for _ in range(1, NUM_AGENTS + 1) ]
-
-# Set up debug output:
-for ah in agent_hosts:
-    ah.setDebugOutput(DEBUG)    # Turn client-pool connection messages on/off.
-
+# enure that print statements flush immediately and are not buffered
 if sys.version_info[0] == 2:
     sys.stdout = os.fdopen(sys.stdout.fileno(), 'w', 0)  # flush print output immediately
 else:
@@ -92,15 +55,8 @@ class Main:
         for x in range(10000, 10000 + self.NUM_AGENTS + 1):
             self.client_pool_array.append([config['server']['ip'], x])
 
-# A log of all chats in the game
-chat_log = []
-
-# get the types of blocks to track
-grid_types = set()
-for agent in list(config['inventory'].keys()):
-    for item in config['inventory'][agent]:
-        grid_types.add(item['type'])
-    
+        # A log of all chats in the game
+        self.chat_log = [] 
 
         #get the number of missions to run
         self.num_missions = config['mission']['num_missions']

@@ -120,9 +120,9 @@ class Mission:
         if u"LineOfSight" in ob:
             los = ob.get(u"LineOfSight")
             if i == 1:
-                self.builder_mode = update_builder_mode(self.agent_hosts[0], los, self.names[0], self.builder_mode, self.size, self.grid_types)
+                self.builder_mode = update_builder_mode(self.agent_hosts[0], los, self.names[0], self.builder_mode, self.size, self.entities)
             if i == 2 and self.config['agents']['allow_architect_building']:
-                self.architect_mode  = update_builder_mode(self.agent_hosts[0], los, self.names[1], self.architect_mode, self.size, self.grid_types)
+                self.architect_mode  = update_builder_mode(self.agent_hosts[0], los, self.names[1], self.architect_mode, self.size, self.entities)
 
     def handle_chat_log(self, ob):
         if self.config['collect']['chat_history']:

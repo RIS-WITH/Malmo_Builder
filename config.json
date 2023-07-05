@@ -17,7 +17,7 @@
         "weather" : "clear"
     },
     "agents" : {
-        "num_distant_agents" : 1,
+        "num_distant_agents" : 0,
         "allow_architect_building" : 0,
         "power" : 119,
         "builder_1" : {
