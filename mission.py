@@ -28,6 +28,8 @@ class Mission:
         self.queue_entities = queue.Queue()
         self.lock = threading.Lock()
         self.size = None
+        self.client_pool = None
+        self.malmo_mission = None
         
         # Generate an experiment ID for this mission.
         # This is used to make sure the right clients join the right servers -
@@ -54,20 +56,20 @@ class Mission:
         if self.mission_no == 0:
             self.config['mission']['force_reset'] = 1
         # Create mission xml - use force reset if this is the first mission.
-        my_mission = MalmoPython.MissionSpec(get_xml(self.num_agents, self.config), True)
+        self.malmo_mission = MalmoPython.MissionSpec(get_xml(self.num_agents, self.config), True)
         # set the force reset back to the original value
         self.config['mission']['force_reset'] = temp_force_reset
 
         # redefine the client pool
-        client_pool = MalmoPython.ClientPool()
+        self.client_pool = MalmoPython.ClientPool()
         for id, port in self.client_pool_array:
-            client_pool.add(MalmoPython.ClientInfo(id, port))
+            self.client_pool.add(MalmoPython.ClientInfo(id, port))
 
         # Attempt to start the mission:
         for i in range(len(self.agent_hosts)):
             self.agent_hosts[i].setObservationsPolicy(MalmoPython.ObservationsPolicy.LATEST_OBSERVATION_ONLY)
             self.agent_hosts[i].setVideoPolicy(MalmoPython.VideoPolicy.LATEST_FRAME_ONLY)
-            safe_start_mission(self.agent_hosts[i], my_mission, client_pool, MalmoPython.MissionRecordSpec(), i, self.experiment_id)
+            safe_start_mission(self.agent_hosts[i], self.malmo_mission, self.client_pool, MalmoPython.MissionRecordSpec(), i, self.experiment_id)
 
         safe_wait_for_start(self.agent_hosts)
 
@@ -174,3 +176,5 @@ class Mission:
         print("Mission ended")
         # Mission has ended.
         time.sleep(2)
+        
+        return self.chat_log, self.client_pool_array, self.agent_hosts, self.num_agents

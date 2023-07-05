@@ -16,6 +16,7 @@ else:
             
 class Main:
     def __init__(self):
+        self.mission = None
         # Create one agent host for parsing:
         self.agent_hosts = [MalmoPython.AgentHost()]
 
@@ -63,10 +64,10 @@ class Main:
     def run(self):
         # Create and run the missions:
         for mission_no in range(0, self.num_missions + 1):
-            mission = Mission(config, self.agent_hosts, mission_no, self.client_pool_array, self.NUM_AGENTS, self.chat_log)
-            mission.start()
-            mission.run(debug=self.DEBUG)           
-            mission.end()
+            self.mission = Mission(config, self.agent_hosts, mission_no, self.client_pool_array, self.NUM_AGENTS, self.chat_log)
+            self.mission.start()
+            self.mission.run(debug=self.DEBUG)           
+            self.chat_log, self.client_pool_array, self.agent_hosts, self.NUM_AGENTS = self.mission.end()
 
 if __name__ == '__main__':
     game = Main()
