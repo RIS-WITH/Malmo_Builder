@@ -224,7 +224,7 @@ def check_grid_integrity(grid, floor, grid_size, radius, grid_types):
     
 def update_builder_mode(agent_host, los, name, builder_mode, size, entity):
     # other version with entity
-    if entity.name == name:
+    if u"name" in entity and entity.name == name:
         x_sight = int(los[u"x"])
         z_sight = int(los[u"z"])
         x = int(entity.x)
