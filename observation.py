@@ -17,21 +17,24 @@ def update_entities_info(observations, queue_entities, last_entities=None):
     queue_entities.put(sorted(entities, key=lambda x: x.name))
 
 def update_chat_log(observations, chat_log, config):
+    names = [config['agents']['builder_1']['name'], config['agents']['builder_2']['name']]
+    ## add <> to the names
+    names = ['<' + name + '>' for name in names]
     if "Chat" in observations:
-        return read_observation_chat_log(observations, chat_log)
+        return read_observation_chat_log(observations, chat_log, names)
     else:
-        return read_server_chat_log(chat_log, config)
+        return read_server_chat_log(chat_log, config['server']['log_path'], names)
     
-def read_server_chat_log(chat_log, config):
+def read_server_chat_log(chat_log, path, names):
     # read config file log path
-    with open(config['server']['log_path'], encoding='utf-8', errors='ignore') as log_file:
+    with open(path, encoding='utf-8', errors='ignore') as log_file:
         # if the log file contains two lines
         if len(log_file.readlines()) > 1:
             # just read the last two lines
             lines = log_file.readlines()[-2:]
             for line in lines:
                 # if it has chat in it
-                if "]: [CHAT]" in line and (config["agents"]["builder_1"]["name"] in line or config["agents"]["builder_2"]["name"] in line) and "ADMIN" not in line :
+                if "]: [CHAT]" in line and "ADMIN" not in line and (names[0] in line or names[1] in line):
                     # get the chat message
                     message = line.split("]: [CHAT] ")[1]
                     # remove the \n
@@ -42,7 +45,7 @@ def read_server_chat_log(chat_log, config):
         return False
     
     
-def read_observation_chat_log(observations, chat_log):
+def read_observation_chat_log(observations, chat_log, names):
     if "Chat" in observations:
         chats = observations["Chat"]
         # transform to list if it is not
@@ -50,7 +53,7 @@ def read_observation_chat_log(observations, chat_log):
             chats = [chats]
         for chat in chats:
             # ignore ADMIN messages
-            if "ADMIN" not in chat and (len(chat_log) == 0 or chat_log[-1] != chat):
+            if "ADMIN" not in chat and (len(chat_log) == 0 or chat_log[-1] != chat) and (names[0] in chat or names[1] in chat):
                 chat_log.append(chat)
                 return True
     return False
@@ -219,25 +222,48 @@ def check_grid_integrity(grid, floor, grid_size, radius, grid_types):
             return True
         
     
-def update_builder_mode(agent_host, los, name, builder_mode, size, grid_types):
-    if builder_mode and u"inRange" in los and los[u"inRange"] and u"hitType" in los:
-        # check if the agent is looking at a block in the grid or outside the grid
-        if los.get(u"hitType") == "block":
-            # get the block position
-            x = int(los[u"x"])
-            z = int(los[u"z"])
-            type_block = los[u"type"]
-            # if the agent is looking outside the grid make him unable to destroy or place blocks
-            if abs(x) > size or abs(z) > size or  type_block not in (list(grid_types) + ["barrier"] + ["air"]):
-                # make builder in adventure mode
-                agent_host.sendCommand("chat /gamemode 2 @a[name=" + name + "]")
-                builder_mode = 0
-        # destroy blocks that are not in the grid
-        TWO = 2
-        for x1, z1, x2, z2 in [(-size - TWO, size + 1, size+ TWO, size + TWO), (-size, -size - TWO, -size - TWO, size + TWO), (size + 1, -size - TWO, size + TWO, size + TWO), (-size - TWO, -size, size + TWO, -size - TWO)]:
-            agent_host.sendCommand(f"chat /fill {x1} 227 {z1} {x2} 254 {z2} minecraft:air")
-    elif abs(los['x']) <= size and abs(los['z']) <= size:
-        # make architect in survival mode
-        agent_host.sendCommand("chat /gamemode 0 @a[name=" + name + "]")
-        builder_mode = 1
+def update_builder_mode(agent_host, los, name, builder_mode, size, entity):
+    ## version 1 more controlled
+    # if builder_mode and u"inRange" in los and los[u"inRange"] and u"hitType" in los:
+    #     # check if the agent is looking at a block in the grid or outside the grid
+    #     if los.get(u"hitType") == "block":
+    #         # get the block position
+    #         x = int(los[u"x"])
+    #         z = int(los[u"z"])
+    #         # if the agent is looking outside the grid make him unable to destroy or place blocks
+    #         if (abs(x) > size or abs(z) > size) and los[u"distance"] < 3:
+    #             # make builder in adventure mode
+    #             agent_host.sendCommand("chat /gamemode 2 @a[name=" + name + "]")
+    #             builder_mode = 0
+    #         # destroy blocks that are not in the grid
+    #         border_len = 3
+    #         for x1, z1, x2, z2 in [(-size - border_len, size + 1, size+ border_len, size + border_len), (-size, -size - border_len, -size - border_len, size + border_len), (size + 1, -size - border_len, size + border_len, size + border_len), (-size - border_len, -size, size + border_len, -size - border_len)]:
+    #             agent_host.sendCommand(f"chat /fill {x1} 227 {z1} {x2} 254 {z2} minecraft:air")
+    # elif abs(los['x']) <= size and abs(los['z']) <= size and los['y'] >= 227 and los['y'] <= 254:
+    #     # make architect in survival mode
+    #     agent_host.sendCommand("chat /gamemode 0 @a[name=" + name + "]")
+    #     builder_mode = 1
+    # return builder_mode
+    
+    # other version with entity
+    if entity.name == name:
+        x_sight = int(los[u"x"])
+        z_sight = int(los[u"z"])
+        x = int(entity.x)
+        z = int(entity.z)
+        # if the agent is inside the grid and looking at a block in the grid
+        if abs(x) <= size + 2 and abs(z) <= size + 2 and abs(x_sight) <= size and abs(z_sight) <= size and not builder_mode:
+            # make architect in survival mode
+            agent_host.sendCommand("chat /gamemode 0 @a[name=" + name + "]")
+            builder_mode = 1
+        # else 
+        elif builder_mode and (abs(x) > size + 2 or abs(z) > size + 2 or ((abs(x_sight) > size or abs(z_sight) > size)) and los[u"distance"] < 3):
+            # make builder in adventure mode
+            agent_host.sendCommand("chat /gamemode 2 @a[name=" + name + "]")
+            builder_mode = 0
+            border_len = 3
+            for x1, z1, x2, z2 in [(-size - border_len, size + 1, size+ border_len, size + border_len), (-size, -size - border_len, -size - border_len, size + border_len), (size + 1, -size - border_len, size + border_len, size + border_len), (-size - border_len, -size, size + border_len, -size - border_len)]:
+                agent_host.sendCommand(f"chat /fill {x1} 227 {z1} {x2} 254 {z2} minecraft:air")
     return builder_mode
+        
+        

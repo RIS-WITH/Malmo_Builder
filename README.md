@@ -61,7 +61,8 @@ python3 run_mission.py
 
 3. run malmo_builder in the terminal 
 ### define the number of distant clients:
-In config.json file change the number of distant clients in the agents section  
+In config.json file change the number of distant clients in the agents section and change the IP address of the server if needed
+```sh  
 0 : for two local players  
 1 : for one local player and one remote player (same LAN network)  
 2 : for two remote players (same LAN network)
@@ -113,6 +114,7 @@ ESC > mods > malmo > settings > port > 0 > done
 ```sh
 python3 main.py
 ```
+**notice:** if for some reason malmo is not running after launching the client you can try resetting Minecraft folder
 ## Using Malmo Builder (remote player)
 1. install forge 1.11.2 of minecraft launcher
 2. copy the malmo jar file (can be found in the ``Mod`` folder of [Malmo Releases](https://github.com/microsoft/malmo/releases)) to the ```.minecraft/mods/``` (create the folder ```mods``` if does not exist)
@@ -122,7 +124,7 @@ python3 main.py
 1. install minecraft mod simply hax (https://www.curseforge.com/minecraft/mc-mods/simply-hax/files?version=1.11.2)
 2. add the mod to the ```MalmoPlatform/Minecraft/run/mods ``` folder in the server
 3. add the mod to the ```.minecraft/mods/``` (create the folder ```mods``` if does not exist) in the remote player device 
-4. When you run the mission you should be able to fly by pressing the ```space``` key twice and then pressing ```space``` and ```shift``` to go up and down
+4. When you run the mission you should be able to fly by pressing the ```space``` key twice and then pressing ```space``` and ```shift``` to go up and down  
 **notice:** if you have a problem with launching minecraft forge 1.11.2 you should consider restarting your device
 
 

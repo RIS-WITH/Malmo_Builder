@@ -150,9 +150,8 @@ def get_xml(num_agents, config):
     floor_block = mission['floor_block_type']
     border_block = mission['border_block_type']
     draw_commands = [
-      f'<DrawCuboid x1="-{x}" y1="220" z1="-{z}" x2="{x}" y2="225" z2="{z}" type="{floor_block}"/>',
       f'<DrawCuboid x1="-{x+2}" y1="226" z1="-{z+2}" x2="{x+2}" y2="226" z2="{z+2}" type="{border_block}"/>',
-      f'<DrawCuboid x1="-{x}" y1="226" z1="-{z}" x2="{x}" y2="226" z2="{z}" type="barrier"/>'
+      f'<DrawCuboid x1="-{x}" y1="220" z1="-{z}" x2="{x}" y2="226" z2="{z}" type="{floor_block}"/>'
     ]
     reset = "true" if mission["force_reset"] else "false"
     xml = '''<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
@@ -260,18 +259,19 @@ def check_connected_players(num_agents, client_pool_array, config, agent_hosts, 
       last_num_agents = num_agents
       print("Waiting for players to connect...", end="")
       while num_agents < 2:
-          num_agents = update_client_pool(client_pool_array,config, num_agents)
-          if num_agents == 2:
-              print("All players connected!")
-              # make the players quit the game to restart the mission
-              for i in range(len(agent_hosts)):
-                  agent_hosts[i].sendCommand("quit")
-              # add new agent_hosts
-              agent_hosts += [MalmoPython.AgentHost() for _ in range(last_num_agents + 1, num_agents + 1)]
-              # Set up debug output:
-              for i in range(last_num_agents + 1, num_agents + 1):
-                  agent_hosts[i].setDebugOutput(debug)
-          #wait for 1 second
-          time.sleep(1)
+        num_agents = update_client_pool(client_pool_array,config, num_agents)
+        if num_agents == 2:
+            print("All players connected!")
+            # make the players quit the game to restart the mission
+            for i in range(len(agent_hosts)):
+              time.sleep(0.5)
+              agent_hosts[i].sendCommand("quit")
+            # add new agent_hosts
+            agent_hosts += [MalmoPython.AgentHost() for _ in range(last_num_agents + 1, num_agents + 1)]
+            # Set up debug output:
+            for i in range(last_num_agents + 1, num_agents + 1):
+                agent_hosts[i].setDebugOutput(debug)
+        #wait for 1 second
+        time.sleep(1)
   return num_agents, agent_hosts
   

@@ -12,7 +12,7 @@
         "quit_from_time_up_description" : "Time up",
         "force_reset" : 1,
         "area_side_size" : 11,
-        "floor_block_type" : "quartz_block",
+        "floor_block_type" : "bedrock",
         "border_block_type" : "iron_block",
         "weather" : "clear"
     },
