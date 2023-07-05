@@ -12,13 +12,14 @@
         "quit_from_time_up_description" : "Time up",
         "force_reset" : 1,
         "area_side_size" : 11,
-        "floor_block_type" : "quartz_block",
+        "floor_block_type" : "bedrock",
         "border_block_type" : "iron_block",
         "weather" : "clear"
     },
     "agents" : {
         "num_distant_agents" : 1,
         "allow_architect_building" : 0,
+        "power" : 119,
         "builder_1" : {
             "name" : "builder",
             "placement" : "random"
@@ -102,7 +103,7 @@
         ]
     },
     "server" : {
-        "ip" : "140.93.7.238",
+        "ip" : "127.0.0.1",
         "port" : 10000,
         "log_path" : "../Minecraft/run/logs/latest.log"
     },

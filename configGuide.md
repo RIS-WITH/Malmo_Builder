@@ -36,6 +36,9 @@ the weather of the mission
 the number of players who play in distant machines
 ### allow_architect_building
 whether allow the architect to build in the mission
+### power
+how strong is the agent ability in destroying blocks  
+values are from 0 to 255
 ### name
 the name of the agent
 ### placement
@@ -56,7 +59,7 @@ the color of the inventory
 ## server
 *not employed yet (only locally)*
 ### ip
-the ip of the server
+the ip of the server 127. 0. 0. 1 by default but if you want to play in distant machines, you should change it to the ip of the server
 
 ## collect
 ### agents_position

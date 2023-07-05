@@ -2,7 +2,7 @@ import os
 from PIL import Image
 import json
 
-
+Y_OFFSET = 226
 def save_world_state(lock, agent, config, experiment_id, timestamp, entities, chat_log, inventory, grid):
     # get screenshot path and save screenshot
     image_path = None
