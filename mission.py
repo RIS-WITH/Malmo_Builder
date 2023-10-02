@@ -8,14 +8,15 @@ from observation import update_entities_info, update_chat_log, get_inventory_inf
 from register import save_world_state
 
 class Mission:
-    def __init__(self, config, agent_hosts, mission_no, client_pool_array, num_agents, chat_log):
+    def __init__(self, config, agent_hosts, mission_no, client_pool_array, num_required_agents, chat_log):
         self.config = config
         self.agent_hosts = agent_hosts
         self.client_pool_array = client_pool_array
         self.mission_no = mission_no
         self.grid_types = set()
         self.chat_log = chat_log
-        self.num_agents = num_agents
+        self.num_required_agents = num_required_agents
+        self.num_connected_agents = len(client_pool_array)
         self.running = True
         self.grid_change = threading.Event()
         self.names = []
@@ -56,7 +57,7 @@ class Mission:
         if self.mission_no == 0:
             self.config['mission']['force_reset'] = 1
         # Create mission xml - use force reset if this is the first mission.
-        self.malmo_mission = MalmoPython.MissionSpec(get_xml(self.num_agents, self.config), True)
+        self.malmo_mission = MalmoPython.MissionSpec(get_xml(self.num_required_agents, self.config), True)
         # set the force reset back to the original value
         self.config['mission']['force_reset'] = temp_force_reset
 
@@ -83,7 +84,7 @@ class Mission:
     def run(self, debug):
         while self.running:
             # check if all agents are connected
-            self.num_agents, self.agent_hosts = check_connected_players(self.num_agents, self.client_pool_array, self.config, self.agent_hosts, debug)
+            self.num_connected_agents, self.agent_hosts = check_connected_players(self.num_connected_agents, self.num_required_agents, self.client_pool_array, self.config, self.agent_hosts, debug)
             self.running = False
             # observe the world state for each agent
             for i in range(1, len(self.agent_hosts)):
