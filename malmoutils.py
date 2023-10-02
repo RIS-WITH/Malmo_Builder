@@ -254,13 +254,14 @@ def get_borders_xml():
             <DrawCuboid x1="-'''+str(x+1)+'''" y1="226" z1="-'''+str(z+1)+'''" x2="'''+str(x+1)+'''" y2="255" z2="-'''+str(z+1)+'''" type="barrier"/>
             <DrawCuboid x1="-'''+str(x+1)+'''" y1="255" z1="-'''+str(z+1)+'''" x2="'''+str(x+1)+'''" y2="255" z2="'''+str(z+1)+'''" type="barrier"/>"""
             
-def check_connected_players(num_agents, client_pool_array, config, agent_hosts, debug):
-  if num_agents < 2:
+def check_connected_players(num_agents, num_reqired, client_pool_array, config, agent_hosts, debug):
+  print("check_connected_players ", num_agents, " on ", num_reqired)
+  if num_agents < num_reqired:
       last_num_agents = num_agents
       print("Waiting for players to connect...", end="")
-      while num_agents < 2:
-        num_agents = update_client_pool(client_pool_array,config, num_agents)
-        if num_agents == 2:
+      while num_agents < num_reqired:
+        num_agents = update_client_pool(client_pool_array, config, num_agents)
+        if num_agents == num_reqired:
             print("All players connected!")
             # make the players quit the game to restart the mission
             for i in range(len(agent_hosts)):
