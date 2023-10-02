@@ -17,16 +17,18 @@
         "weather" : "clear"
     },
     "agents" : {
-        "num_distant_agents" : 0,
+        "num_distant_agents" : 2,
         "allow_architect_building" : 0,
         "power" : 119,
         "builder_1" : {
             "name" : "builder",
-            "placement" : "random"
+            "placement" : "random",
+            "ip" : "140.93.4.91"
         },
         "builder_2" : {
             "name" : "architect",
-            "placement" : "random"
+            "placement" : "random",
+            "ip" : "140.93.7.241"
         }
     },
     "inventory" : {
@@ -103,7 +105,7 @@
         ]
     },
     "server" : {
-        "ip" : "127.0.0.1",
+        "ip" : "140.93.4.120", 
         "port" : 10000,
         "log_path" : "../Minecraft/run/logs/latest.log"
     },
@@ -117,7 +119,7 @@
         "chat_history" : 1,
         "blocks_in_grid" : 1,
         "screenshot" : {
-            "save" : 1,
+            "save" : 0,
             "interval" : "every_move",
             "path" : "./screenshots"
         },

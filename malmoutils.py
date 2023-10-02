@@ -9,70 +9,6 @@ with open('config.json') as config_file:
 
 connected_users_ips = {}
 
-def find_nfs_file(path):
-   # search for the hidden file starting with .nfs and return the latest one
-  files = []
-  for root, dirs, files in os.walk(path):
-      for file in files:
-          if file.startswith(".nfs"):
-            files.append(os.path.join(root, file))
-  if len(files) > 0:
-    return files[-1]
-  else:
-    return None
-
-def get_connected_agents_ips(log_file_path):
-  with open(log_file_path) as log_file:
-    # just read the last ten lines
-    lines = log_file.readlines()[-10:]
-    for line in lines:
-      if "logged in with entity id" in line and "ADMIN" not in line:
-        line = line.split("]: ")[1]
-        #print("line: ", line)
-        username = line.split("[/")[0]
-        ip, port = line.split("[/")[1].split("]")[0].split(":")
-        # if you dont want a user who is in the same machine as the server
-        #if config["server"]["ip"] != ip:
-        connected_users_ips[username] = [ip, int(port)]
-        print("player logged: ", username)
-      if "left the game" in line:
-        username = line.split("]: ")[1].split(" left")[0]
-        if username in connected_users_ips:
-          del connected_users_ips[username]
-    return connected_users_ips
-  
-def update_client_pool(client_pool_array, config, num_agents):
-  num_connected_users = num_agents
-  # find .nfs file at server['path'] and save its name
-  # log file path
-  log_file_path = config['server']['log_path']
-  
-  # if file not found return (not tested)
-  if not os.path.exists(log_file_path):
-    # remove the file name from path
-    log_file_path = log_file_path.split("/")[0:-1] 
-    log_file_path = find_nfs_file(config['server']['path'])
-    if log_file_path == None:
-      print("log file not found try again or check the path in config.json")
-      exit(1)
-
-
-  # get the ips of the other users
-  agents = get_connected_agents_ips(log_file_path)
-
-
-  for key, value in agents.items():
-    print("key: ", key, "value: ", value)
-    # value[1] is the port of the connected user but we need malmo port
-    temp = [value[0], 10000]
-    if temp not in client_pool_array:
-      client_pool_array.append(temp)
-      num_connected_users += 1
-      ## TODO : change the name of the agent (not working as expected)
-      #config['agents']['builder_' + str(1)]['name'] = key
-      print ("adding player to the client pool: ", key)
-  return num_connected_users
-
 def agent_name(i, config=config):
     agents = config["agents"]
     i += 1
@@ -100,7 +36,7 @@ def treat_error_code(e, error_code, max_attempts, used_attempts):
     print("Server not quite ready yet - waiting...")
     time.sleep(2)
   elif error_code == MalmoPython.MissionErrorCode.MISSION_INSUFFICIENT_CLIENTS_AVAILABLE:
-      print("Not enough available Minecraft instances running.")
+      print(e)
       used_attempts += 1
       if used_attempts < max_attempts:
           print("Will wait in case they are starting up.", max_attempts - used_attempts, "attempts left.")
@@ -119,12 +55,15 @@ def treat_error_code(e, error_code, max_attempts, used_attempts):
       exit(1)
 
 def safe_wait_for_start(agent_hosts):
-    print("Waiting for the mission to start", end=' ')
+    print("Waiting for the mission to start")
+    print(agent_hosts)
     start_flags = [False for _ in agent_hosts]
     start_time = time.time()
     time_out = 120  # Allow a two minute timeout.
     while not all(start_flags) and time.time() - start_time < time_out:
         states = [a.peekWorldState() for a in agent_hosts]
+        for w in states:
+            print(w.has_mission_begun)
         start_flags = [w.has_mission_begun for w in states]
         errors = [e for w in states for e in w.errors]
         if len(errors) > 0:
@@ -134,7 +73,7 @@ def safe_wait_for_start(agent_hosts):
             print("Bailing now.")
             exit(1)
         time.sleep(0.1)
-        print(".", end=' ')
+        print(".", end=' ', flush=True)
     if time.time() - start_time >= time_out:
         print("Timed out while waiting for mission to start - bailing.")
         exit(1)
@@ -253,14 +192,79 @@ def get_borders_xml():
             <DrawCuboid x1="-'''+str(x+1)+'''" y1="226" z1="'''+str(z+1)+'''" x2="'''+str(x+1)+'''" y2="255" z2="'''+str(z+1)+'''" type="barrier"/>
             <DrawCuboid x1="-'''+str(x+1)+'''" y1="226" z1="-'''+str(z+1)+'''" x2="'''+str(x+1)+'''" y2="255" z2="-'''+str(z+1)+'''" type="barrier"/>
             <DrawCuboid x1="-'''+str(x+1)+'''" y1="255" z1="-'''+str(z+1)+'''" x2="'''+str(x+1)+'''" y2="255" z2="'''+str(z+1)+'''" type="barrier"/>"""
-            
+
+def find_nfs_file(path):
+   # search for the hidden file starting with .nfs and return the latest one
+  files = []
+  for root, dirs, files in os.walk(path):
+      for file in files:
+          if file.startswith(".nfs"):
+            files.append(os.path.join(root, file))
+  if len(files) > 0:
+    return files[-1]
+  else:
+    return None
+
+def get_connected_agents_ips(log_file_path):
+  with open(log_file_path) as log_file:
+    # just read the last ten lines
+    lines = log_file.readlines()[-10:]
+    for line in lines:
+      if "logged in with entity id" in line and "ADMIN" not in line:
+        line = line.split("]: ")[1]
+        username = line.split("[/")[0]
+        ip, port = line.split("[/")[1].split("]")[0].split(":")
+        # if you dont want a user who is in the same machine as the server
+        #if config["server"]["ip"] != ip:
+        connected_users_ips[username] = [ip, int(port)]
+        print("player logged: ", username)
+      if "left the game" in line:
+        username = line.split("]: ")[1].split(" left")[0]
+        if username in connected_users_ips:
+          del connected_users_ips[username]
+    return connected_users_ips
+
+def update_client_pool(client_pool_array, config, num_agents, minecrat_ids):
+  num_connected_users = num_agents
+  # find .nfs file at server['path'] and save its name
+  # log file path
+  log_file_path = config['server']['log_path']
+  
+  # if file not found return (not tested)
+  if not os.path.exists(log_file_path):
+    # remove the file name from path
+    log_file_path = log_file_path.split("/")[0:-1] 
+    log_file_path = find_nfs_file(config['server']['path'])
+    if log_file_path == None:
+      print("log file not found try again or check the path in config.json")
+      exit(1)
+
+  # get the ips of the other users
+  agents = get_connected_agents_ips(log_file_path)
+
+  for key, value in agents.items():
+    print("key: ", key, "value: ", value)
+    # value[1] is the port of the connected user but we need malmo port
+    temp = [value[0], 10000]
+    if value not in minecrat_ids:
+      if(not temp in client_pool_array):
+        client_pool_array.append(temp)
+      minecrat_ids.append(value)
+      num_connected_users += 1
+      ## TODO : change the name of the agent (not working as expected)
+      #config['agents']['builder_' + str(1)]['name'] = key
+      print ("adding player to the client pool: ", key)
+       
+  return num_connected_users
+          
 def check_connected_players(num_agents, num_reqired, client_pool_array, config, agent_hosts, debug):
   print("check_connected_players ", num_agents, " on ", num_reqired)
+  minecrat_ids = []
   if num_agents < num_reqired:
       last_num_agents = num_agents
       print("Waiting for players to connect...", end="")
       while num_agents < num_reqired:
-        num_agents = update_client_pool(client_pool_array, config, num_agents)
+        num_agents = update_client_pool(client_pool_array, config, num_agents, minecrat_ids)
         if num_agents == num_reqired:
             print("All players connected!")
             # make the players quit the game to restart the mission

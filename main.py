@@ -38,11 +38,15 @@ class Main:
         self.INTEGRATION_TEST_MODE = self.agent_hosts[0].receivedArgument("test")
         self.agents_requested = self.agent_hosts[0].getIntArgument("agents")
         self.num_distant_agents = config["agents"]["num_distant_agents"]
+        print("playing with ", self.num_distant_agents, " distant agents")
         # remove the ADMIN(observer) from the number of agents and the number of distant agents
-        self.NUM_AGENTS = self.agents_requested - 1 - self.num_distant_agents
+        self.num_local_agents = self.agents_requested - 1 - self.num_distant_agents
+        print("number of agents is ", self.num_local_agents)
 
-        # Create the rest of the agent hosts - one for each human agent and one to control the observer for now one local and other waiting for connection:
-        self.agent_hosts += [MalmoPython.AgentHost() for _ in range(1, self.NUM_AGENTS + 1) ]
+        # Create the rest of the agent hosts - one for each human agent and one to control the observer for now one local and 
+        # other waiting for connection:
+        self.agent_hosts += [MalmoPython.AgentHost() for _ in range(1, self.num_local_agents + 2) ]
+        print("agent host is ", self.agent_hosts)
 
         # Set up debug output:
         for ah in self.agent_hosts:
@@ -51,9 +55,14 @@ class Main:
         # Set up a client pool.
         # The IP address used in the client pool will be broadcast to other agents who
         # are attempting to find the server
+        print("agents requested is ", self.agents_requested)
         self.client_pool_array = []
-        for x in range(10000, 10000 + self.NUM_AGENTS + 1):
+        for x in range(10000, 10000 + self.num_local_agents + 2):
             self.client_pool_array.append([config['server']['ip'], x])
+        for x in range(1, self.num_distant_agents + 1):
+            dist_ip = config["agents"]["builder_" + str(x)]["ip"]
+            self.client_pool_array.append([dist_ip, 10000])
+        print("client pool ", self.client_pool_array)
 
         # A log of all chats in the game
         self.chat_log = [] 
@@ -64,10 +73,14 @@ class Main:
     def run(self):
         # Create and run the missions:
         for mission_no in range(0, self.num_missions + 1):
-            self.mission = Mission(config, self.agent_hosts, mission_no, self.client_pool_array, self.NUM_AGENTS, self.chat_log)
+            if(mission_no != 0):
+                if([config['server']['ip'], 10001] in self.client_pool_array):
+                    self.client_pool_array.remove([config['server']['ip'], 10001])
+                    self.agent_hosts.remove(self.agent_hosts[1])
+            self.mission = Mission(config, self.agent_hosts, mission_no, self.client_pool_array, self.agents_requested - 1, self.num_distant_agents, self.chat_log)
             self.mission.start()
             self.mission.run(debug=self.DEBUG)           
-            self.chat_log, self.client_pool_array, self.agent_hosts, self.NUM_AGENTS = self.mission.end()
+            self.chat_log, self.client_pool_array, self.agent_hosts, self.num_local_agents = self.mission.end()
 
 if __name__ == '__main__':
     game = Main()
