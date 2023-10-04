@@ -203,7 +203,11 @@ def block_check(grid, los, block_grid, key, grid_types):
         # check if the block is in line of sight
         if los[u'hitType'] == "block" and los[u'inRange'] and los[u'type'] == block_grid.type:
             # create a blockInfo using los info
-            block_los = BlockInfo(los[u'x'], los[u'y'], los[u'z'], los[u'type'], los[u'colour'])
+            block_los = None
+            if(u'colour' in los.keys()):
+                block_los = BlockInfo(los[u'x'], los[u'y'], los[u'z'], los[u'type'], los[u'colour'])
+            else:
+                block_los = BlockInfo(los[u'x'], los[u'y'], los[u'z'], los[u'type'], 'none')
 
             # if they are the same add the block to the grid
             if compare_block(block_grid, block_los):
