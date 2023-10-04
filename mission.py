@@ -135,7 +135,6 @@ class Mission:
     def handle_player_rights(self, i, ob):
         # depending on his sight, the player can build or not
         if u"LineOfSight" in ob:
-            #print("handle_player_rights ", i, " -- ", ob)
             los = ob.get(u"LineOfSight")
             if i == 1:
                 self.builder_mode = update_builder_mode(self.agent_hosts[0], los, self.names[0], self.builder_mode, self.size, self.entities)
