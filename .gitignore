@@ -1,3 +1,6 @@
 /__pycache__
 screenshots/*Builder
 corpus/data*
+
+# VsCode files
+.vscode/settings.json
