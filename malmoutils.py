@@ -9,6 +9,10 @@ with open('config.json') as config_file:
 
 connected_users_ips = {}
 
+def setConfiguration(config_path):
+  global config
+  config = json.load(open(config_path))
+
 def agent_name(i, config=config):
     agents = config["agents"]
     i += 1

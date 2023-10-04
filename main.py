@@ -4,7 +4,8 @@ from __future__ import division
 # multi-agent missions - two agents human in a flat environment.
 from builtins import range
 import sys
-from malmoutils import MalmoPython, config
+import malmoutils
+from malmoutils import MalmoPython, setConfiguration
 from mission import Mission
 
 # enure that print statements flush immediately and are not buffered
@@ -37,7 +38,7 @@ class Main:
         self.DEBUG = self.agent_hosts[0].receivedArgument("debug")
         self.INTEGRATION_TEST_MODE = self.agent_hosts[0].receivedArgument("test")
         self.agents_requested = self.agent_hosts[0].getIntArgument("agents")
-        self.num_distant_agents = config["agents"]["num_distant_agents"]
+        self.num_distant_agents = malmoutils.config["agents"]["num_distant_agents"]
         print("playing with ", self.num_distant_agents, " distant agents")
         # remove the ADMIN(observer) from the number of agents and the number of distant agents
         self.num_local_agents = self.agents_requested - 1 - self.num_distant_agents
@@ -59,9 +60,9 @@ class Main:
         print("agents requested is ", self.agents_requested)
         self.client_pool_array = []
         for x in range(10000, 10000 + self.num_local_agents + 2):
-            self.client_pool_array.append([config['server']['ip'], x])
+            self.client_pool_array.append([malmoutils.config['server']['ip'], x])
         #for x in range(1, self.num_distant_agents + 1):
-        #    dist_ip = config["agents"]["builder_" + str(x)]["ip"]
+        #    dist_ip = malmoutils.config["agents"]["builder_" + str(x)]["ip"]
         #    self.client_pool_array.append([dist_ip, 10000])
         print("client pool ", self.client_pool_array)
 
@@ -69,21 +70,24 @@ class Main:
         self.chat_log = [] 
 
         #get the number of missions to run
-        self.num_missions = config['mission']['num_missions']
+        self.num_missions = malmoutils.config['mission']['num_missions']
 
     def run(self):
         # Create and run the missions:
         for mission_no in range(0, self.num_missions + 1):
             if(mission_no != 0):
-                if([config['server']['ip'], 10001] in self.client_pool_array):
-                    self.client_pool_array.remove([config['server']['ip'], 10001])
+                if([malmoutils.config['server']['ip'], 10001] in self.client_pool_array):
+                    self.client_pool_array.remove([malmoutils.config['server']['ip'], 10001])
                     self.agent_hosts.remove(self.agent_hosts[1])
-            self.mission = Mission(config, self.agent_hosts, mission_no, self.client_pool_array, self.agents_requested - 1, self.num_connected, self.chat_log)
+            self.mission = Mission(malmoutils.config, self.agent_hosts, mission_no, self.client_pool_array, self.agents_requested - 1, self.num_connected, self.chat_log)
             self.mission.start()
             self.mission.run(debug=self.DEBUG)           
             self.chat_log, self.client_pool_array, self.agent_hosts, self.num_connected = self.mission.end()
 
 if __name__ == '__main__':
+    if len(sys.argv) > 1:
+        print("use configuration file ", sys.argv[1])
+        setConfiguration(sys.argv[1])
     game = Main()
     game.run()
 
