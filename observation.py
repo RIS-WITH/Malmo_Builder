@@ -267,5 +267,9 @@ def update_builder_mode(agent_host, los, name, builder_mode, size, entities):
                 for x1, z1, x2, z2 in [(-size - border_len, size + 1, size+ border_len, size + border_len), (-size, -size - border_len, -size - border_len, size + border_len), (size + 1, -size - border_len, size + border_len, size + border_len), (-size - border_len, -size, size + border_len, -size - border_len)]:
                     agent_host.sendCommand(f"chat /fill {x1} 227 {z1} {x2} 254 {z2} minecraft:air")
     return builder_mode
+
+def update_architect_mode(agent_host, name):
+    agent_host.sendCommand("chat /gamemode 2 @a[name=" + name + "]")
+    return 0
         
         

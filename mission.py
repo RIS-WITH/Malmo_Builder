@@ -4,7 +4,7 @@ import json
 import queue
 import uuid
 from malmoutils import MalmoPython, get_xml, safe_start_mission, safe_wait_for_start, check_connected_players
-from observation import update_entities_info, update_chat_log, get_inventory_info, update_grid, same_position, update_builder_mode, checkForceQuit
+from observation import update_entities_info, update_chat_log, get_inventory_info, update_grid, same_position, update_builder_mode, update_architect_mode, checkForceQuit
 from register import save_world_state
 
 class Mission:
@@ -140,6 +140,8 @@ class Mission:
                 self.builder_mode = update_builder_mode(self.agent_hosts[0], los, self.names[0], self.builder_mode, self.size, self.entities)
             if i == 2 and self.config['agents']['allow_architect_building']:
                 self.architect_mode  = update_builder_mode(self.agent_hosts[0], los, self.names[1], self.architect_mode, self.size, self.entities)
+            elif i == 2 and not self.config['agents']['allow_architect_building']:
+                self.architect_mode  = update_architect_mode(self.agent_hosts[0], self.names[1])
 
     def handle_chat_log(self, ob):
         if self.config['collect']['chat_history']:
