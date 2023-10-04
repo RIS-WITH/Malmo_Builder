@@ -58,6 +58,16 @@ def read_observation_chat_log(observations, chat_log, names):
                 return True
     return False
 
+def checkForceQuit(observations):
+    if "Chat" in observations:
+        chats = observations["Chat"]
+        if type(chats) is not list:
+            chats = [chats]
+        for chat in chats:
+            if("__end" in chat):
+                return True
+    return False
+
 def get_inventory_info(observation, entities):
     inventory = {}
     if "inventory" in observation:

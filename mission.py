@@ -4,7 +4,7 @@ import json
 import queue
 import uuid
 from malmoutils import MalmoPython, get_xml, safe_start_mission, safe_wait_for_start, check_connected_players
-from observation import update_entities_info, update_chat_log, get_inventory_info, update_grid, same_position, update_builder_mode
+from observation import update_entities_info, update_chat_log, get_inventory_info, update_grid, same_position, update_builder_mode, checkForceQuit
 from register import save_world_state
 
 class Mission:
@@ -17,7 +17,6 @@ class Mission:
         self.chat_log = chat_log
         self.num_required_agents = num_required_agents
         self.num_connected_agents = num_connected_agents
-        self.running = True
         self.grid_change = threading.Event()
         self.names = []
         self.grid = {}
@@ -89,20 +88,28 @@ class Mission:
         
     def run(self, debug):
         print("[run] ", self.num_connected_agents, " agents on ", self.num_required_agents)
-        while self.running:
+        running = True
+        while running:
             # check if all agents are connected
             self.num_connected_agents, self.agent_hosts = check_connected_players(self.num_connected_agents, self.num_required_agents, self.client_pool_array, self.config, self.agent_hosts, debug)
-            self.running = False
+            running = False
             # observe the world state for each agent
+            force_quit = False
             for i in range(1, len(self.agent_hosts)):
                 world_state = self.agent_hosts[i].peekWorldState()
                 if world_state.is_mission_running:
-                    self.running = True
-                    self.handle_world_state(i, world_state)
+                    running = True
+                    if(self.handle_world_state(i, world_state)):
+                        force_quit = True
+            
+            if force_quit:
+                for i in range(len(self.agent_hosts)):
+                    self.agent_hosts[i].sendCommand("quit")
             time.sleep(0.05)
         print()
         
     def handle_world_state(self, i, world_state):
+        force_quit = False
         obs_num = world_state.number_of_observations_since_last_state
         if obs_num > 0:
             # read last observation
@@ -114,6 +121,7 @@ class Mission:
             self.entities = self.queue_entities.get()
             self.handle_player_rights(i, ob)
             change = self.handle_chat_log(ob)
+            force_quit = self.handleForceQuit(ob)
             self.handle_inventory(ob)
             change = self.handle_grid(ob) or change
             self.handle_entity_position()
@@ -122,6 +130,7 @@ class Mission:
                                   self.config['collect']['agents_position']['angle_precision']) or change):
                 self.handle_data_logging(timestamp)
             self.last_entity = self.entities
+        return force_quit
 
     def handle_player_rights(self, i, ob):
         # depending on his sight, the player can build or not
@@ -139,6 +148,9 @@ class Mission:
         else:
             self.chat_log = None
             return False
+        
+    def handleForceQuit(self, obs):
+        return checkForceQuit(obs)
 
     def handle_inventory(self, ob):
         if not self.config['collect']['agents_inventory']:
