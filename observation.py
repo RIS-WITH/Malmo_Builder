@@ -236,26 +236,36 @@ def check_grid_integrity(grid, floor, grid_size, radius, grid_types):
             return True
         
     
-def update_builder_mode(agent_host, los, name, builder_mode, size, entity):
+def update_builder_mode(agent_host, los, name, builder_mode, size, entities):
     # other version with entity
-    if u"name" in entity and entity.name == name:
-        x_sight = int(los[u"x"])
-        z_sight = int(los[u"z"])
-        x = int(entity.x)
-        z = int(entity.z)
-        # if the agent is inside the grid and looking at a block in the grid
-        if abs(x) <= size + 2 and abs(z) <= size + 2 and abs(x_sight) <= size and abs(z_sight) <= size and not builder_mode:
-            # make architect in survival mode
-            agent_host.sendCommand("chat /gamemode 0 @a[name=" + name + "]")
-            builder_mode = 1
-        # else 
-        elif builder_mode and (abs(x) > size + 2 or abs(z) > size + 2 or ((abs(x_sight) > size or abs(z_sight) > size)) and los[u"distance"] < 3):
-            # make builder in adventure mode
-            agent_host.sendCommand("chat /gamemode 2 @a[name=" + name + "]")
-            builder_mode = 0
-            border_len = 3
-            for x1, z1, x2, z2 in [(-size - border_len, size + 1, size+ border_len, size + border_len), (-size, -size - border_len, -size - border_len, size + border_len), (size + 1, -size - border_len, size + border_len, size + border_len), (-size - border_len, -size, size + border_len, -size - border_len)]:
-                agent_host.sendCommand(f"chat /fill {x1} 227 {z1} {x2} 254 {z2} minecraft:air")
+    for entity in entities:
+        if hasattr(entity, u"name") and entity.name == name:
+            x_sight = los[u"x"]
+            if x_sight > 1:
+                x_sight = x_sight -1
+            z_sight = los[u"z"]
+            if z_sight > 1:
+                z_sight = z_sight -1
+            x = int(entity.x)
+            z = int(entity.z)
+            int_size = int(size)
+            # if the agent is inside the grid and looking at a block in the grid
+            if abs(x) <= int_size + 2 and abs(z) <= int_size + 2 and abs(x_sight) <= int_size and abs(z_sight) <= int_size:
+                # make architect in survival mode
+                if not builder_mode:
+                    agent_host.sendCommand("chat /gamemode 0 @a[name=" + name + "]")
+                    builder_mode = 1
+            else:
+            #elif builder_mode and (abs(x) > int_size + 2 or abs(z) > int_size + 2 or ((abs(x_sight) > int_size or abs(z_sight) > int_size)) and los[u"distance"] < 3):
+                # make builder in adventure mode
+                if builder_mode:
+                    agent_host.sendCommand("chat /gamemode 2 @a[name=" + name + "]")
+                    builder_mode = 0
+                
+                #if los[u"distance"] < 3:
+                border_len = 3
+                for x1, z1, x2, z2 in [(-size - border_len, size + 1, size+ border_len, size + border_len), (-size, -size - border_len, -size - border_len, size + border_len), (size + 1, -size - border_len, size + border_len, size + border_len), (-size - border_len, -size, size + border_len, -size - border_len)]:
+                    agent_host.sendCommand(f"chat /fill {x1} 227 {z1} {x2} 254 {z2} minecraft:air")
     return builder_mode
         
         
