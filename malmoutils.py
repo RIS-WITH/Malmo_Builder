@@ -62,8 +62,6 @@ def safe_wait_for_start(agent_hosts):
     time_out = 120  # Allow a two minute timeout.
     while not all(start_flags) and time.time() - start_time < time_out:
         states = [a.peekWorldState() for a in agent_hosts]
-        for w in states:
-            print(w.has_mission_begun)
         start_flags = [w.has_mission_begun for w in states]
         errors = [e for w in states for e in w.errors]
         if len(errors) > 0:
@@ -215,16 +213,16 @@ def get_connected_agents_ips(log_file_path):
         username = line.split("[/")[0]
         ip, port = line.split("[/")[1].split("]")[0].split(":")
         # if you dont want a user who is in the same machine as the server
-        #if config["server"]["ip"] != ip:
-        connected_users_ips[username] = [ip, int(port)]
-        print("player logged: ", username)
+        if config["server"]["ip"] != ip:
+          connected_users_ips[username] = [ip, int(port)]
+          print("player logged: ", username)
       if "left the game" in line:
         username = line.split("]: ")[1].split(" left")[0]
         if username in connected_users_ips:
           del connected_users_ips[username]
     return connected_users_ips
 
-def update_client_pool(client_pool_array, config, num_agents, minecrat_ids):
+def update_client_pool(client_pool_array, config, num_agents):
   num_connected_users = num_agents
   # find .nfs file at server['path'] and save its name
   # log file path
@@ -243,13 +241,11 @@ def update_client_pool(client_pool_array, config, num_agents, minecrat_ids):
   agents = get_connected_agents_ips(log_file_path)
 
   for key, value in agents.items():
-    print("key: ", key, "value: ", value)
+    #print("key: ", key, "value: ", value)
     # value[1] is the port of the connected user but we need malmo port
     temp = [value[0], 10000]
-    if value not in minecrat_ids:
-      if(not temp in client_pool_array):
-        client_pool_array.append(temp)
-      minecrat_ids.append(value)
+    if(not temp in client_pool_array):
+      client_pool_array.append(temp)
       num_connected_users += 1
       ## TODO : change the name of the agent (not working as expected)
       #config['agents']['builder_' + str(1)]['name'] = key
@@ -258,13 +254,11 @@ def update_client_pool(client_pool_array, config, num_agents, minecrat_ids):
   return num_connected_users
           
 def check_connected_players(num_agents, num_reqired, client_pool_array, config, agent_hosts, debug):
-  print("check_connected_players ", num_agents, " on ", num_reqired)
-  minecrat_ids = []
   if num_agents < num_reqired:
       last_num_agents = num_agents
-      print("Waiting for players to connect...", end="")
+      print("Waiting for players to connect...: ", num_agents, " on ", num_reqired)
       while num_agents < num_reqired:
-        num_agents = update_client_pool(client_pool_array, config, num_agents, minecrat_ids)
+        num_agents = update_client_pool(client_pool_array, config, num_agents)
         if num_agents == num_reqired:
             print("All players connected!")
             # make the players quit the game to restart the mission

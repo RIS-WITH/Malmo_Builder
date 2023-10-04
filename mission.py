@@ -8,7 +8,7 @@ from observation import update_entities_info, update_chat_log, get_inventory_inf
 from register import save_world_state
 
 class Mission:
-    def __init__(self, config, agent_hosts, mission_no, client_pool_array, num_required_agents, num_dist_agent, chat_log):
+    def __init__(self, config, agent_hosts, mission_no, client_pool_array, num_required_agents, num_connected_agents, chat_log):
         self.config = config
         self.agent_hosts = agent_hosts
         self.client_pool_array = client_pool_array
@@ -16,7 +16,7 @@ class Mission:
         self.grid_types = set()
         self.chat_log = chat_log
         self.num_required_agents = num_required_agents
-        self.num_connected_agents = num_required_agents - num_dist_agent
+        self.num_connected_agents = num_connected_agents
         self.running = True
         self.grid_change = threading.Event()
         self.names = []
@@ -88,7 +88,7 @@ class Mission:
         self.agent_hosts[0].sendCommand("chat /effect @a haste 1000000 255 true")
         
     def run(self, debug):
-        print("[run]")
+        print("[run] ", self.num_connected_agents, " agents on ", self.num_required_agents)
         while self.running:
             # check if all agents are connected
             self.num_connected_agents, self.agent_hosts = check_connected_players(self.num_connected_agents, self.num_required_agents, self.client_pool_array, self.config, self.agent_hosts, debug)
@@ -126,6 +126,7 @@ class Mission:
     def handle_player_rights(self, i, ob):
         # depending on his sight, the player can build or not
         if u"LineOfSight" in ob:
+            #print("handle_player_rights ", i, " -- ", ob)
             los = ob.get(u"LineOfSight")
             if i == 1:
                 self.builder_mode = update_builder_mode(self.agent_hosts[0], los, self.names[0], self.builder_mode, self.size, self.entities)

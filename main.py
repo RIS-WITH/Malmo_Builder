@@ -42,6 +42,7 @@ class Main:
         # remove the ADMIN(observer) from the number of agents and the number of distant agents
         self.num_local_agents = self.agents_requested - 1 - self.num_distant_agents
         print("number of agents is ", self.num_local_agents)
+        self.num_connected = self.num_local_agents 
 
         # Create the rest of the agent hosts - one for each human agent and one to control the observer for now one local and 
         # other waiting for connection:
@@ -59,9 +60,9 @@ class Main:
         self.client_pool_array = []
         for x in range(10000, 10000 + self.num_local_agents + 2):
             self.client_pool_array.append([config['server']['ip'], x])
-        for x in range(1, self.num_distant_agents + 1):
-            dist_ip = config["agents"]["builder_" + str(x)]["ip"]
-            self.client_pool_array.append([dist_ip, 10000])
+        #for x in range(1, self.num_distant_agents + 1):
+        #    dist_ip = config["agents"]["builder_" + str(x)]["ip"]
+        #    self.client_pool_array.append([dist_ip, 10000])
         print("client pool ", self.client_pool_array)
 
         # A log of all chats in the game
@@ -77,10 +78,10 @@ class Main:
                 if([config['server']['ip'], 10001] in self.client_pool_array):
                     self.client_pool_array.remove([config['server']['ip'], 10001])
                     self.agent_hosts.remove(self.agent_hosts[1])
-            self.mission = Mission(config, self.agent_hosts, mission_no, self.client_pool_array, self.agents_requested - 1, self.num_distant_agents, self.chat_log)
+            self.mission = Mission(config, self.agent_hosts, mission_no, self.client_pool_array, self.agents_requested - 1, self.num_connected, self.chat_log)
             self.mission.start()
             self.mission.run(debug=self.DEBUG)           
-            self.chat_log, self.client_pool_array, self.agent_hosts, self.num_local_agents = self.mission.end()
+            self.chat_log, self.client_pool_array, self.agent_hosts, self.num_connected = self.mission.end()
 
 if __name__ == '__main__':
     game = Main()
